@@ -3,7 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.getData),
-    path('<int:pk>', views.tableContents, name='reactionTableContents')
+    path('<int:pk>', views.reactionContents, name='reactionContents'),
+    path('table/<int:pk>', views.tableContents, name='tableContents')
 ]
-    
+
 

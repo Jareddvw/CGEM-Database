@@ -11,7 +11,7 @@ class T_RNA(models.Model):
 
 class Monomer(models.Model):
     monomer_name = models.CharField(max_length=250, blank=True, default='')
-    #SMILES is only thing required for all monomers
+    #SMILES is only thing required for all monomers. SMILES is primary key for monomer
     monomer_smiles = models.TextField(default='')
     monomer_LG = models.CharField(max_length=100, blank=True, default='')
 
@@ -64,7 +64,7 @@ class Reference(models.Model):
     # at least one author is required
     authors = models.ManyToManyField(Author, related_name="authors")
     def __str__(self):
-        return self.title
+        return '%d: %s' % (self.pk, self.title)
 
 #Usually only present if the reaction uses a flexizyme
 class MicrohelixAssay(models.Model):
@@ -75,19 +75,19 @@ class MicrohelixAssay(models.Model):
     acylation_yield = models.FloatField(null=True, blank=True)
     assay_notes = models.TextField(max_length=None, blank=True, default='')
     def __str__(self):
-        return self.reaction.__str__()
+        return 'Assay # %d' % (self.pk)
 
 ## Primary object of the database ##
 class Reaction(models.Model):
     #a reference can have multiple rxns listed, and reaction can have multiple references
-    reference = models.ManyToManyField(Reference, related_name="references")
+    references = models.ManyToManyField(Reference, related_name="reactions")
     #a reaction will either have a flexizyme, a synthetase, or neither (chemical acylation) so null for both.
     #if the associated flexizyme or synthetase is deleted, the reaction will be deleted too.
-    flexizyme = models.ForeignKey(Flexizyme, on_delete=models.CASCADE, null=True, blank=True)
-    synthetase = models.ForeignKey(Synthetase, on_delete=models.CASCADE, null=True, blank=True)
+    flexizyme = models.ForeignKey(Flexizyme, on_delete=models.CASCADE, null=True, blank=True, related_name = 'reactions')
+    synthetase = models.ForeignKey(Synthetase, on_delete=models.CASCADE, null=True, blank=True, related_name ='reactions')
     ## double check this but each reaction and monomer have a one-to-one relationship. ##
     # if the monomer is deleted its associated reaction will be deleted too.
-    monomer = models.OneToOneField(Monomer, on_delete=models.CASCADE)
+    monomer = models.OneToOneField(Monomer, on_delete=models.CASCADE, related_name="reaction")
     # deleting a tRNA deletes all associated reactions with that tRNA
     tRNA = models.ForeignKey(T_RNA, on_delete=models.CASCADE)
 
@@ -113,14 +113,19 @@ class Reaction(models.Model):
     ]
     rib_readout = models.CharField(max_length=2, choices=READOUT_CHOICES, blank=True, default='')
     rib_incorporation_notes = models.TextField(blank=True, default='')
-    #yield is percentage
+    # yield is percentage
     reaction_yield = models.FloatField(blank=True, null=True)
-    #Kcat in min^-1
+    # Kcat in min^-1
     reaction_Kcat = models.FloatField(blank=True, null=True)
-    #Km in mM
+    # Km in mM
     reaction_Km = models.FloatField(blank=True, null=True)
-    #records when reaction was added to DB
+    # records when reaction was added to DB
     date_added = models.DateField(auto_now=True)
-    assay = models.OneToOneField(MicrohelixAssay, blank=True, null=True, on_delete=models.SET_NULL)
+    # assay field will be set to null if the associated MicrohelixAssay is deleted
+    assay = models.OneToOneField(MicrohelixAssay, blank=True, null=True, on_delete=models.SET_NULL, related_name="reaction")
+
+    def __str__(self):
+        return 'Reaction %d: %s' % (self.pk, self.monomer.__str__())
+        
 
 

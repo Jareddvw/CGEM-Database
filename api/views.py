@@ -11,6 +11,19 @@ from .serializers import *
 
 
 @api_view(['GET'])
+def reactionContents(request, pk):
+    try:
+        reaction = Reaction.objects.get(pk=pk)
+    except Reaction.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = ReactionSerializer(reaction)
+        return Response(serializer.data)
+
+
+
+@api_view(['GET'])
 def tableContents(request, pk):
     try:
         reaction = Reaction.objects.get(pk=pk)
