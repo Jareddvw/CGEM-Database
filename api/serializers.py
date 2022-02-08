@@ -4,7 +4,7 @@ from base.models import *
 
 #serializers for database models in base.models
 
-################ Helper Serializers ################ May not actually need these, just set depth = 2 in ReactionSerializer
+################ Helper Serializers ################ 
 
 # Serializes Microhelix assay serialization
 class AssaySerializer(serializers.ModelSerializer):
@@ -12,7 +12,6 @@ class AssaySerializer(serializers.ModelSerializer):
         model = MicrohelixAssay
         fields = '__all__'
     
-
 class MonomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Monomer
@@ -21,7 +20,10 @@ class MonomerSerializer(serializers.ModelSerializer):
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
-        fields = '__all__'
+        fields = [
+            'first_name',
+            'last_name'
+        ]
 
 class ReferencesSerializer(serializers.ModelSerializer):
     authors = AuthorSerializer(many=True)
@@ -30,6 +32,21 @@ class ReferencesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# Need to serialize Flexizyme and Synthetase 
+class FlexizymeSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Flexizyme
+        fields = [
+            'flex_name',
+            'flex_sequence'
+        ]
+
+class SynthetaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Synthetase
+        fields = '__all__'
+        depth = 2
+
 
 ############### Reaction Content Serializers ##############
 
@@ -37,6 +54,9 @@ class ReferencesSerializer(serializers.ModelSerializer):
 class ReactionTableContentsSerializer(serializers.ModelSerializer):
 
     acylation_yield = serializers.SerializerMethodField('get_acylation_yield_from_assay')
+    synthetase = serializers.SerializerMethodField('get_synthetase')
+    flexizyme = serializers.SerializerMethodField('get_flexizyme')
+    monomer = serializers.SerializerMethodField('get_monomer')
 
     class Meta:
         model = Reaction
@@ -50,8 +70,28 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
             'internal_incorporation',
             'acylation_yield',
         ]
-        depth = 1
-    
+
+    def get_monomer(self, reaction):
+        if reaction.monomer:
+            name = reaction.monomer.__str__()
+            return name
+        else:
+            return reaction.monomer
+
+    def get_synthetase(self, reaction):
+        if reaction.synthetase:
+            synth = reaction.synthetase.__str__()
+            return synth
+        else:
+            return reaction.synthetase
+
+    def get_flexizyme(self, reaction):
+        if reaction.flexizyme:
+            flex = reaction.flexizyme.__str__()
+            return flex
+        else:
+            return reaction.flexizyme
+
     def get_acylation_yield_from_assay(self, reaction):
         if reaction.assay:
             y = reaction.assay.acylation_yield
@@ -63,37 +103,11 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
 # for individual reaction page — gives all attributes of the given reaction
 class ReactionSerializer(serializers.ModelSerializer):
 
-    # flexizyme = serializers.SerializerMethodField(read_only=True)
-
     class Meta:
         model = Reaction
-        # fields = [
-        #     'id',
-        #     'references',
-        #     'flexizyme',
-        #     'synthetase',
-        #     'monomer',
-        #     'tRNA',
-        #     'ribosome_name',
-        #     'n_term_incorporation',
-        #     'internal_incorporation',
-        #     'rib_readout',
-        #     'rib_incorporation_notes',
-        #     'reaction_yield',
-        #     'reaction_Kcat',
-        #     'reaction_Km',
-        #     'date_added',
-        #     'assay'
-        # ]
         fields = '__all__'
-        # depth = 2
+        depth = 2
         
-    # def get_flexizyme(self, reaction):
-    #     if reaction.flexizyme:
-    #         return reaction.flexizyme
-    #     else:
-    #         return ''
-
 
 # make different serializers for different uses e.g. 
 # for table display only need like 5 fields returned

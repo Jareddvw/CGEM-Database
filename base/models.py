@@ -69,7 +69,6 @@ class Reference(models.Model):
 #Usually only present if the reaction uses a flexizyme
 class MicrohelixAssay(models.Model):
 
-    #if the Reaction associated with the assay is deleted, the assay will be deleted as well
     conditions = models.TextField(max_length=None, blank=True, default='')
     #acylation_yield should be a percentage so need to input as value between 0 and 1
     acylation_yield = models.FloatField(null=True, blank=True)
@@ -103,7 +102,7 @@ class Reaction(models.Model):
     # for nterm and internal incorporation, can make charfield here then set choices in frontend
     # answers will be yes, no, percentage value, or "no data"(null/''?). Alternatively can make ChoiceField
     n_term_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='')
-    internal_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='')
+    internal_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='', null=True)
 
     READOUT_CHOICES = [
         ('LC', 'LC-MS'),
