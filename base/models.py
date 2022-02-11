@@ -44,9 +44,9 @@ class Synthetase(models.Model):
     accession_id = models.CharField(max_length=50, blank=True)
     pbd_id = models.CharField(max_length=10, blank=True)
     # not sure if synthetase should be allowed to have no associated organism but rn it is allowed
-    organism_id = models.ManyToManyField(Organism, related_name="organisms", blank=True)
+    organism_id = models.ManyToManyField(Organism, related_name="synthetases", blank=True)
     # WT synthetase e.g. will have no mutations
-    mutations = models.ManyToManyField(SynthMutations, related_name="mutations", blank=True)
+    mutations = models.ManyToManyField(SynthMutations, related_name="synthetases", blank=True)
     def __str__(self):
         return self.synth_common_name
 
@@ -62,13 +62,12 @@ class Reference(models.Model):
     title = models.TextField(default='')
     publication_date = models.DateField(auto_now=False)
     # at least one author is required
-    authors = models.ManyToManyField(Author, related_name="authors")
+    authors = models.ManyToManyField(Author, related_name="references")
     def __str__(self):
         return '%d: %s' % (self.pk, self.title)
 
 #Usually only present if the reaction uses a flexizyme
 class MicrohelixAssay(models.Model):
-
     conditions = models.TextField(max_length=None, blank=True, default='')
     #acylation_yield should be a percentage so need to input as value between 0 and 1
     acylation_yield = models.FloatField(null=True, blank=True)

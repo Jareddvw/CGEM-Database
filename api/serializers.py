@@ -6,30 +6,38 @@ from base.models import *
 
 ################ Helper Serializers ################ 
 
-# Serializes Microhelix assay serialization
 class AssaySerializer(serializers.ModelSerializer):
     class Meta:
         model = MicrohelixAssay
         fields = '__all__'
-    
+
 class MonomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Monomer
         fields = '__all__'
 
+
+# references and authors have manytomany relationship
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = [
+            'id',
             'first_name',
             'last_name'
         ]
 
-class ReferencesSerializer(serializers.ModelSerializer):
-    authors = AuthorSerializer(many=True)
+class ReferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reference
-        fields = '__all__'
+        fields = [
+            'id',
+            'DOI',
+            'title',
+            'publication_date',
+            'authors'
+        ]
+        depth = 1
 
 
 # Need to serialize Flexizyme and Synthetase 
@@ -103,11 +111,13 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
 # for individual reaction page — gives all attributes of the given reaction
 class ReactionSerializer(serializers.ModelSerializer):
 
+    assay = AssaySerializer()
+    flexizyme = FlexizymeSerializer()
+    synthetase = SynthetaseSerializer()
+    # references = ReferenceSerializer()
+
     class Meta:
         model = Reaction
         fields = '__all__'
         depth = 2
         
-
-# make different serializers for different uses e.g. 
-# for table display only need like 5 fields returned
