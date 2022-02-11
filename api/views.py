@@ -3,11 +3,50 @@ from rest_framework import serializers
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import generics
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import LimitOffsetPagination
 
 from base.models import *
 from .serializers import *
 
 # Create your views here.
+
+class ReactionTableViewPagination(LimitOffsetPagination):
+    default_limit = 10
+    max_limit = 25
+
+class ReactionTableView(generics.ListAPIView):
+    """
+    GET
+    """
+    queryset = Reaction.objects.all()
+    serializer_class = ReactionTableContentsSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_fields = [
+        'id',
+        'assay__acylation_yield',
+        'flexizyme__flex_name',
+        'synthetase__synth_common_name',
+        'synthetase__organism_id__organism_name',
+        'monomer__monomer_name',
+        'monomer__monomer_smiles',
+        'monomer__monomer_LG'
+    ]
+    search_fields = [
+        'id',
+        'flexizyme__flex_name',
+        'synthetase__synth_common_name',
+        'synthetase__organism_id__organism_name',
+        'monomer__monomer_name',
+        'monomer__monomer_smiles',
+        'monomer__monomer_LG'
+    ]
+
+    pagination_class = ReactionTableViewPagination
+    
+
 
 # views for a specific reaction
 @api_view(['GET'])
@@ -62,20 +101,18 @@ def createReactionContents(request):
 
 
 
-
-
 ###### View for seeing items in table format e.g. as search results ###### 
 
-@api_view(['GET'])
-def tableContents(request, pk):
-    try:
-        reaction = Reaction.objects.get(pk=pk)
-    except Reaction.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+# @api_view(['GET'])
+# def tableContents(request, pk):
+#     try:
+#         reaction = Reaction.objects.get(pk=pk)
+#     except Reaction.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
     
-    if request.method == 'GET':
-        serializer = ReactionTableContentsSerializer(reaction)
-        return Response(serializer.data)
+#     if request.method == 'GET':
+#         serializer = ReactionTableContentsSerializer(reaction)
+#         return Response(serializer.data)
 
 
 
