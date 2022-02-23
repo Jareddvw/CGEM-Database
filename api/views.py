@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import generics
+from rest_framework import mixins
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
@@ -14,8 +15,6 @@ from rest_framework.pagination import LimitOffsetPagination
 from base.models import *
 from .serializers import *
 
-# Create your views here.
-
 
 ###### Views for reactions in table format e.g. as search results or "browse all" page #######
 class ReactionTableViewPagination(LimitOffsetPagination):
@@ -23,9 +22,7 @@ class ReactionTableViewPagination(LimitOffsetPagination):
     max_limit = 25
 
 class ReactionTableView(generics.ListAPIView):
-    """
-    GET
-    """
+
     queryset = Reaction.objects.all()
     serializer_class = ReactionTableContentsSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
@@ -34,7 +31,8 @@ class ReactionTableView(generics.ListAPIView):
         'assay__acylation_yield',
         'flexizyme__flex_name',
         'synthetase__synth_common_name',
-        'synthetase__organism_id__organism_name',
+        'synthetase__parent_synthetase',
+        'synthetase__organisms__organism_name',
         'monomer__monomer_name',
         'monomer__monomer_smiles',
         'monomer__monomer_LG',
@@ -44,7 +42,8 @@ class ReactionTableView(generics.ListAPIView):
         'id',
         'flexizyme__flex_name',
         'synthetase__synth_common_name',
-        'synthetase__organism_id__organism_name',
+        'synthetase__organisms__organism_name',
+        'synthetase__parent_synthetase',
         'monomer__monomer_name',
         'monomer__monomer_smiles',
         'monomer__monomer_LG',
@@ -61,41 +60,35 @@ class ReactionTableView(generics.ListAPIView):
 ###### create etc for references ######
 
 
+# this function searches the given model class for an item with the given field attribute string 
+# (e.g. 'mutation_name' = 'C313V'), and if it exists, adds it as an attribute of newObject. If it does not
+# exist, the item must be created and then added to newObject.
+def genericCreateLoop(data, modelClass, modelName, fieldName, newObject, view):
+    for obj in data[modelName]:
+        modelObjects = getattr(modelClass, 'objects')
+        try: 
+            obj_item = modelObjects.get(fieldName=getattr(obj, fieldName))
+        except:
+            view.as_view().create(obj)
+            obj_item = modelObjects.get(fieldName=obj[fieldName])
+            getattr(newObject, fieldName).add(obj_item)
+
+
 class ReferencePagination(LimitOffsetPagination):
     default_limit = 10
     max_limit = 25
 
-class ReferenceViewSet(viewsets.ModelViewSet):
+class ReferenceViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
     serializer_class = ReferenceSerializer
 
     def get_queryset(self):
         reference = Reference.objects.all()
         return reference
     
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        new_reference = Reference.objects.create(
-            DOI = data['DOI'],
-            title = data['title'],
-            publication_date = data['publication_date']
-        )
-
-        new_reference.save()
-
-        # for this to work, author must already be in Author.objects, so to create a new reference with
-        # new authors, you must first create the authors with AuthorViewSet then create the Reference.
-        for author in data["authors"]:
-            try:
-                author_object = Author.objects.get(first_name=author['first_name'])
-            except:
-                Author.objects.create(first_name=author['first_name'], last_name=author['last_name'])
-                author_object = Author.objects.get(first_name=author['first_name'])
-                new_reference.authors.add(author_object)
-        
-        serializer = ReferenceSerializer(new_reference)
-        return Response(serializer.data)
-    
     pagination_class = ReferencePagination
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_fields = ['DOI', 'title']
+    search_fields = ['DOI', 'title', 'authors__first_name', 'authors__last_name']
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
@@ -104,73 +97,54 @@ class AuthorViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         author = Author.objects.all()
         return author
-
-
-# class ReferenceTableView(generics.ListAPIView):
-#     """
-#     GET
-#     """
-#     queryset = Reference.objects.all()
-#     serializer_class = ReferenceSerializer
-#     filter_backends = (DjangoFilterBackend, SearchFilter)
-#     filter_fields = ['DOI', 'title']
-#     search_fields = ['DOI', 'title', 'authors__first_name', 'authors__last_name']
-
-#     pagination_class = ReferencePagination
-
-
-###### Views for a specific reaction ###########
-
-@api_view(['GET'])
-def reactionContents(request, pk):
-    try:
-        reaction = Reaction.objects.get(pk=pk)
-    except Reaction.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
     
-    if request.method == 'GET':
-        serializer = ReactionSerializer(reaction)
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        new_auth = Author.objects.create(
+            first_name = data['first_name'],
+            last_name = data['last_name']
+        )
+        new_auth.save()
+        serializer = AuthorSerializer(new_auth)
         return Response(serializer.data)
 
-@api_view(['PATCH'])
-def updateReactionContents(request, pk):
-    try:
-        reaction = Reaction.objects.get(pk=pk)
-    except Reaction.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+
+class FlexizymeView(viewsets.ModelViewSet):
+    serializer_class = FlexizymeSerializer
+
+    def get_queryset(self):
+        flex = Flexizyme.objects.all()
+        return flex
+
+# organism and mutation views for Sythetase View
+class OrganismView(viewsets.ModelViewSet):
+    serializer_class = OrganismSerializer
+    def get_queryset(self):
+        organisms = Organism.objects.all()
+        return organisms
+
+class MutationView(viewsets.ModelViewSet):
+    serializer_class = MutationSerializer
+    def get_queryset(self):
+        mutations = SynthMutations.objects.all()
+        return mutations
+
+class SynthetaseView(viewsets.ModelViewSet, mixins.CreateModelMixin):
+    serializer_class = SynthetaseSerializer
+    def get_queryset(self):
+        synth = Synthetase.objects.all()
+        return synth
+
+###### Views for a specific reaction. With POST, PATCH, and DELETE methods ###########
+
+class ReactionViewSingle(viewsets.ModelViewSet, mixins.CreateModelMixin):
+    serializer_class = ReactionSerializer
+    def get_queryset(self):
+        reaction = Reaction.objects.all()
+        return reaction
     
-    if request.method == 'PATCH':
-        serializer = ReactionSerializer(reaction, data=request.data, partial=True)
-        data = {}
-        if serializer.is_valid():
-            serializer.save()
-            data["success"] = "update successful"
-            return Response(data=data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['DELETE'])
-def deleteReactionContents(request, pk):
-    try:
-        reaction = Reaction.objects.get(pk=pk)
-    except Reaction.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    if request.method == 'DELETE':
-        operation = reaction.delete()
-        data = {}
-        if operation:
-            data['success'] = 'deletion successful'
-        else: 
-            data['failure'] = 'deletion failed'
-        return Response(data=data)
-
-
-@api_view(['POST'])
-def createReactionContents(request):
-    #account = Account.objects.get(pk=1)
-    return
-
+    def post(self, request):
+        return self.create(request)
 
 
 

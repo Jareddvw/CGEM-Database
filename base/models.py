@@ -39,12 +39,16 @@ class SynthMutations(models.Model):
     def __str__(self):
         return self.mutation_name
 
+class ParentSynth(models.Model):
+    name = models.CharField(max_length=25)
+
 class Synthetase(models.Model):
     synth_common_name = models.CharField(max_length=100)
+    parent_synthetase = models.ForeignKey(ParentSynth, null=True, blank=True, related_name="child_synthetases", on_delete=models.SET_NULL)
     accession_id = models.CharField(max_length=50, blank=True)
     pbd_id = models.CharField(max_length=10, blank=True)
     # not sure if synthetase should be allowed to have no associated organism but rn it is allowed
-    organism_id = models.ManyToManyField(Organism, related_name="synthetases", blank=True)
+    organisms = models.ManyToManyField(Organism, related_name="synthetases", blank=True)
     # WT synthetase e.g. will have no mutations
     mutations = models.ManyToManyField(SynthMutations, related_name="synthetases", blank=True)
     def __str__(self):
@@ -61,6 +65,7 @@ class Reference(models.Model):
     DOI = models.CharField(max_length=50)
     title = models.TextField(default='')
     publication_date = models.DateField(auto_now=False)
+    journal = models.CharField(max_length=75, blank=True, default='')
     # at least one author is required
     authors = models.ManyToManyField(Author, related_name="references")
     def __str__(self):
@@ -95,13 +100,15 @@ class Reaction(models.Model):
     INCORPORATION_CHOICES = [
         ('Y', 'Yes'),
         ('N', 'No'),
-        # percentage value
-        ('P', models.FloatField())
+        ('A', 'Not tested')
     ]
     # for nterm and internal incorporation, can make charfield here then set choices in frontend
     # answers will be yes, no, percentage value, or "no data"(null/''?). Alternatively can make ChoiceField
     n_term_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='')
-    internal_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='', null=True)
+    # in frontend will need to make it so if N-term or internal incorporation choices are yes, can then input a numerical value as a percentage.
+    n_term_percent = models.FloatField(blank=True, null=True)
+    internal_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='')
+    internal_percent = models.FloatField(blank=True, null=True)
 
     READOUT_CHOICES = [
         ('LC', 'LC-MS'),
