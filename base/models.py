@@ -41,6 +41,8 @@ class SynthMutations(models.Model):
 
 class ParentSynth(models.Model):
     name = models.CharField(max_length=25)
+    def __str__(self):
+        return self.name
 
 class Synthetase(models.Model):
     synth_common_name = models.CharField(max_length=100)
@@ -90,7 +92,7 @@ class Reaction(models.Model):
     synthetase = models.ForeignKey(Synthetase, on_delete=models.CASCADE, null=True, blank=True, related_name ='reactions')
     ## double check this but each reaction and monomer have a one-to-one relationship. ##
     # if the monomer is deleted its associated reaction will be deleted too.
-    monomer = models.OneToOneField(Monomer, on_delete=models.CASCADE, related_name="reaction")
+    monomer = models.ForeignKey(Monomer, on_delete=models.CASCADE, related_name="reactions")
     # deleting a tRNA deletes all associated reactions with that tRNA
     tRNA = models.ForeignKey(T_RNA, on_delete=models.CASCADE)
 
@@ -126,7 +128,8 @@ class Reaction(models.Model):
     reaction_Km = models.FloatField(blank=True, null=True)
     # records when reaction was added to DB
     date_added = models.DateField(auto_now=True)
-    # assay field will be set to null if the associated MicrohelixAssay is deleted
+    # assay field will be set to null if the associated MicrohelixAssay is deleted.
+    # Potential problem: can build up lots of assays that won't be deleted because no way to delete them.
     assay = models.OneToOneField(MicrohelixAssay, blank=True, null=True, on_delete=models.SET_NULL, related_name="reaction")
 
     def __str__(self):

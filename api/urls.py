@@ -10,6 +10,7 @@ router.register('single', views.ReactionViewSingle, basename='singleReaction')
 router.register('synthetases', views.SynthetaseView, basename='synthetases')
 router.register('mutations', views.MutationView, basename='mutations')
 router.register('flexizymes', views.FlexizymeView, basename='flexizymes')
+router.register('assays', views.AssayView, basename='microhelixAssays')
 
 
 urlpatterns = [

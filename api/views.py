@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import generics
 from rest_framework import mixins
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
 
@@ -25,7 +25,7 @@ class ReactionTableView(generics.ListAPIView):
 
     queryset = Reaction.objects.all()
     serializer_class = ReactionTableContentsSerializer
-    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
     filter_fields = [
         'id',
         'assay__acylation_yield',
@@ -59,21 +59,6 @@ class ReactionTableView(generics.ListAPIView):
 ###### View for all references in table view ######
 ###### create etc for references ######
 
-
-# this function searches the given model class for an item with the given field attribute string 
-# (e.g. 'mutation_name' = 'C313V'), and if it exists, adds it as an attribute of newObject. If it does not
-# exist, the item must be created and then added to newObject.
-def genericCreateLoop(data, modelClass, modelName, fieldName, newObject, view):
-    for obj in data[modelName]:
-        modelObjects = getattr(modelClass, 'objects')
-        try: 
-            obj_item = modelObjects.get(fieldName=getattr(obj, fieldName))
-        except:
-            view.as_view().create(obj)
-            obj_item = modelObjects.get(fieldName=obj[fieldName])
-            getattr(newObject, fieldName).add(obj_item)
-
-
 class ReferencePagination(LimitOffsetPagination):
     default_limit = 10
     max_limit = 25
@@ -87,8 +72,8 @@ class ReferenceViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
     
     pagination_class = ReferencePagination
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    filter_fields = ['DOI', 'title']
-    search_fields = ['DOI', 'title', 'authors__first_name', 'authors__last_name']
+    filter_fields = ['DOI', 'title', 'journal']
+    search_fields = ['DOI', 'title', 'journal', 'authors__first_name', 'authors__last_name']
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
@@ -129,15 +114,21 @@ class MutationView(viewsets.ModelViewSet):
         mutations = SynthMutations.objects.all()
         return mutations
 
-class SynthetaseView(viewsets.ModelViewSet, mixins.CreateModelMixin):
+class SynthetaseView(viewsets.ModelViewSet):
     serializer_class = SynthetaseSerializer
     def get_queryset(self):
         synth = Synthetase.objects.all()
         return synth
 
-###### Views for a specific reaction. With POST, PATCH, and DELETE methods ###########
+class AssayView(viewsets.ModelViewSet):
+    serializer_class = AssaySerializer
+    def get_queryset(self):
+        return MicrohelixAssay.objects.all()
+    
 
-class ReactionViewSingle(viewsets.ModelViewSet, mixins.CreateModelMixin):
+###### Views for a specific reaction. With GET, POST, PUT, and DELETE methods ###########
+
+class ReactionViewSingle(viewsets.ModelViewSet):
     serializer_class = ReactionSerializer
     def get_queryset(self):
         reaction = Reaction.objects.all()
@@ -145,6 +136,48 @@ class ReactionViewSingle(viewsets.ModelViewSet, mixins.CreateModelMixin):
     
     def post(self, request):
         return self.create(request)
+
+    def put(self, request, id=None):
+        return self.update(request, id)
+    
+    # not sure about this 
+    # def patch(self, request, *args, **kwargs):
+    #     kwargs['partial'] = True
+    #     return self.partial_update(request, *args, **kwargs)
+    
+    def delete(self, request, id=None):
+        return self.destroy(request, id)
+
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_fields = [
+        'id',
+        'assay__acylation_yield',
+        'flexizyme__flex_name',
+        'synthetase__synth_common_name',
+        'synthetase__parent_synthetase',
+        'synthetase__organisms__organism_name',
+        'monomer__monomer_name',
+        'monomer__monomer_smiles',
+        'monomer__monomer_LG',
+        'date_added',
+    ]
+    search_fields = [
+        'id',
+        'flexizyme__flex_name',
+        'synthetase__synth_common_name',
+        'synthetase__organisms__organism_name',
+        'synthetase__parent_synthetase__name',
+        'monomer__monomer_name',
+        'monomer__monomer_smiles',
+        'monomer__monomer_LG',
+        'references__DOI',
+        'references__title',
+        'references__authors__first_name',
+        'references__authors__last_name'
+    ]
+
+
+
 
 
 
