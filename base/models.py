@@ -11,7 +11,7 @@ class T_RNA(models.Model):
 
 class Monomer(models.Model):
     monomer_name = models.CharField(max_length=250, blank=True, default='')
-    #SMILES is only thing required for all monomers. SMILES is primary key for monomer
+    #SMILES is only thing required for all monomers.
     monomer_smiles = models.TextField(default='')
     monomer_LG = models.CharField(max_length=100, blank=True, default='')
 
@@ -90,7 +90,7 @@ class Reaction(models.Model):
     #if the associated flexizyme or synthetase is deleted, the reaction will be deleted too.
     flexizyme = models.ForeignKey(Flexizyme, on_delete=models.CASCADE, null=True, blank=True, related_name = 'reactions')
     synthetase = models.ForeignKey(Synthetase, on_delete=models.CASCADE, null=True, blank=True, related_name ='reactions')
-    ## double check this but each reaction and monomer have a one-to-one relationship. ##
+    ## there are multiple reactions with the same monomer. ##
     # if the monomer is deleted its associated reaction will be deleted too.
     monomer = models.ForeignKey(Monomer, on_delete=models.CASCADE, related_name="reactions")
     # deleting a tRNA deletes all associated reactions with that tRNA

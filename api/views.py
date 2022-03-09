@@ -139,12 +139,12 @@ class ReactionViewSingle(viewsets.ModelViewSet):
 
     def put(self, request, id=None):
         return self.update(request, id)
-    
-    # not sure about this 
-    # def patch(self, request, *args, **kwargs):
-    #     kwargs['partial'] = True
-    #     return self.partial_update(request, *args, **kwargs)
-    
+        # return self.retrieve(self, request, id=id)
+
+    def patch(self, request, id=None):
+        return self.partial_update(request, id)
+        # return self.retrieve(self, request, id=id)
+
     def delete(self, request, id=None):
         return self.destroy(request, id)
 

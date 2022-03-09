@@ -302,8 +302,12 @@ class ReactionSerializer(serializers.ModelSerializer):
         assay = validated_data.get('assay', 0)
         if assay:
             validated_data.pop('assay')
-            new_assay = MicrohelixAssay.objects.create(**assay)
-            currentObj.update(assay=new_assay)
+            try: 
+                current_assay=MicrohelixAssay.objects.get(id=instance.assay.id)
+                MicrohelixAssay.objects.filter(id=current_assay.id).update(**assay)
+            except:
+                new_assay = MicrohelixAssay.objects.create(**assay)
+                currentObj.update(assay=new_assay)
         monomer = validated_data.get('monomer', 0)
         if monomer: 
             validated_data.pop('monomer')
