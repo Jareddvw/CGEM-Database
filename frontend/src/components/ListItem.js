@@ -15,7 +15,7 @@ const ListItem = ({ reaction }) => {
         <td> {reaction.internal_percent || reaction.internal_incorporation || 'not recorded'} </td>
         <td> {reaction.acylation_yield || 'not measured'} </td>
     </tr>
-  )
+  );
 }
 
 export default ListItem

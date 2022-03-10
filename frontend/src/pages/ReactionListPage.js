@@ -37,14 +37,14 @@ const ReactionListPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {reactions.map((reaction, index) => (
-                        <ListItem key = {index} reaction = {reaction} />
+                    {reactions.map((reaction) => (
+                        <ListItem key = {reaction.index} reaction = {reaction} />
                     ))}
                 </tbody>
             </Table>
         </div>
     </div>
-  )
+  );
 }
 
 export default ReactionListPage
