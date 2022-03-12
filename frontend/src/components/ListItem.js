@@ -10,7 +10,7 @@ const ListItem = ({ reaction }) => {
             </Link>
         </td>
         <td> {reaction.flexizyme} </td>
-        <td> {reaction.synthetase}</td>
+        <td> {reaction.synthetase} </td>
         <td> {reaction.n_term_percent || reaction.n_term_incorporation || 'not recorded'} </td>
         <td> {reaction.internal_percent || reaction.internal_incorporation || 'not recorded'} </td>
         <td> {reaction.acylation_yield || 'not measured'} </td>

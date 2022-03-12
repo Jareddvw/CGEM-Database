@@ -11,12 +11,12 @@ const Header = () => {
             <Navbar.Collapse className="justify-content-end">
             <Nav className="justify-content-end">
                 <Nav.Link href="#about">About</Nav.Link>
-                <NavDropdown title="Explore" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Advanced Search</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Structure Search</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Browse Reactions</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">Contribute</NavDropdown.Item>
+                <NavDropdown title="Actions" id="basic-nav-dropdown">
+                    <NavDropdown.Item href="#action/3.1">Advanced Search</NavDropdown.Item>
+                    <NavDropdown.Item href="#action/3.2">Structure Search</NavDropdown.Item>
+                    <NavDropdown.Item href="#action/3.3">Browse Reactions</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item href="#action/3.4">Contribute</NavDropdown.Item>
                 </NavDropdown>
                 <Nav.Link href="#signin">Sign in</Nav.Link>
             </Nav>

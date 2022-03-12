@@ -1,8 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useMatch } from 'react-router-dom'
-import { Container, Table, Nav } from 'react-bootstrap'
-import SmilesDrawer from 'smiles-drawer'
+import { Container, Table, Row, Col } from 'react-bootstrap'
+import MonomerDrawing from '../components/MonomerDrawing'
+import FlexOrSynthInfo from '../components/FlexOrSynthInfo'
+import RibosomeInfo from '../components/RibosomeInfo'
+import MicrohelixAssay from '../components/MicrohelixAssay'
+import TRNA_info from '../components/TRNA_info'
 
 const ReactionPage = () => {
 
@@ -28,17 +32,6 @@ const ReactionPage = () => {
 
     }
 
-    let smilesDrawer = new SmilesDrawer.Drawer({ width: 350, height: 250, padding: 10 })
-    let input = document.getElementById("drawing")
-    let smiles = reaction?.monomer?.monomer_smiles
-    if (input != null) {
-        SmilesDrawer.parse(smiles, function (tree) {
-            smilesDrawer.draw(tree, input, 'light', false);
-        }, function (err) {
-            console.log(err);
-        })
-    }
-
    return (
     <Container>
         <br></br>
@@ -61,15 +54,16 @@ const ReactionPage = () => {
             </tbody>
         </Table>
         <br></br>
-        <div style={{color: 'maroon'}}>
-            Monomer Structure:
-        </div>
-        <Nav>
-            <canvas id="drawing">
-            </canvas>
-        </Nav>
-        <div style={{color: 'maroon'}}>
-            Flexizyme:
+        <Row>
+            <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} />
+            <FlexOrSynthInfo synthetase={reaction?.synthetase} flexizyme={reaction?.flexizyme} />
+            <TRNA_info tRNA={reaction?.tRNA} />
+        </Row>
+        <br />
+        <MicrohelixAssay reaction={reaction} />
+        <br />
+        <div>
+            <RibosomeInfo reaction={reaction} />
         </div>
     </Container>
   );
