@@ -1,8 +1,5 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import ReactionListItem from '../components/ReactionListItem'
-
-import Table from 'react-bootstrap/Table'
 import ReactionList from '../components/ReactionList'
 
 // Page for list of all reactions in database (different from search results page)

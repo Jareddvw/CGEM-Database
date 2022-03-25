@@ -1,13 +1,15 @@
 import React from 'react'
 import { Card, Overlay } from 'react-bootstrap'
 import SmilesDrawer from 'smiles-drawer'
-import { useEffect } from 'react'
+import { useEffect, componentDidMount } from 'react'
 
 const StructureListItem = ({ smiles }) => {
 
-    let smilesDrawer = new SmilesDrawer.Drawer({ width: 350, height: 250})
-    let input = document.getElementById({smiles})
+    
+
     let drawTree = () => {
+        let smilesDrawer = new SmilesDrawer.Drawer({ width: 350, height: 250})
+        let input = document.getElementById({smiles})
         if (input != null) {
             SmilesDrawer.parse(smiles, function (tree) {
                 smilesDrawer.draw(tree, input, 'light', false);
@@ -17,10 +19,10 @@ const StructureListItem = ({ smiles }) => {
         }
     }
 
-    useEffect( () => {
+    useEffect(() => {
         drawTree()
-    }
-    )
+    }, []);
+
 
   return (
     <>

@@ -37,6 +37,8 @@ class ReactionTableView(generics.ListAPIView):
         'monomer__monomer_smiles',
         'monomer__monomer_LG',
         'date_added',
+        'n_term_incorporation',
+        'internal_incorporation'
     ]
     search_fields = [
         'id',
@@ -52,6 +54,14 @@ class ReactionTableView(generics.ListAPIView):
         'references__authors__first_name',
         'references__authors__last_name',
         'references__journal'
+    ]
+    ordering_fields = [
+        'id',
+        'internal_incorporation',
+        'internal_percent',
+        'assay__acylation_yield',
+        'n_term_percent',
+        'n_term_incorporation'
     ]
 
     pagination_class = ReactionTableViewPagination

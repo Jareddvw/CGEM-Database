@@ -14,22 +14,20 @@ const StructureList = () => {
     }, [])
 
     let getReactions = async () => {
-
         let response = await fetch('/api/')
         let data = await response.json()
         setReactions(data.results) 
-
     }
 
-if (reactions !== []) {
-  return (
-    <>
-        {reactions.map((reaction) => 
-        <StructureListItem key={reaction?.id} smiles = {reaction?.monomer?.monomer_smiles} /> 
-        )}
-    </>
-  )
-        }
+    if (reactions !== []) {
+        return (
+            <>
+                {reactions.map((reaction) => 
+                    <StructureListItem key={reaction?.id} smiles = {reaction?.monomer?.monomer_smiles} /> 
+                )}
+            </>
+        )
+    }
 }
 
 export default StructureList

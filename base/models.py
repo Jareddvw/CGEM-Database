@@ -106,10 +106,10 @@ class Reaction(models.Model):
     ]
     # for nterm and internal incorporation, can make charfield here then set choices in frontend
     # answers will be yes, no, percentage value, or "no data"(null/''?). Alternatively can make ChoiceField
-    n_term_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='')
+    n_term_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='A')
     # in frontend will need to make it so if N-term or internal incorporation choices are yes, can then input a numerical value as a percentage.
     n_term_percent = models.FloatField(blank=True, null=True)
-    internal_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='')
+    internal_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='A')
     internal_percent = models.FloatField(blank=True, null=True)
 
     READOUT_CHOICES = [

@@ -10,13 +10,13 @@ import TRNA_info from '../components/TRNA_info'
 import StructureListItem from '../components/StructureListItem'
 
 const ReactionPage = () => {
-
+    
     const match = useMatch({
         path: "/reaction/:id/",
         strict: true,
         sensitive: true,
       });
-    
+
     const id = match.params.id
 
     let [reaction, setReaction] = useState({})
@@ -26,11 +26,9 @@ const ReactionPage = () => {
     }, [])
 
     let getReaction = async () => {
-
         let response = await fetch(`/api/single/${id}`)
         let data = await response.json()
         setReaction(data)
-
     }
 
     if (reaction) {
