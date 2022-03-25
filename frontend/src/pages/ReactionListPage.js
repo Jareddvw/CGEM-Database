@@ -1,10 +1,11 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import ListItem from '../components/ListItem'
+import ReactionListItem from '../components/ReactionListItem'
 
 import Table from 'react-bootstrap/Table'
+import ReactionList from '../components/ReactionList'
 
-
+// Page for list of all reactions in database (different from search results page)
 
 const ReactionListPage = () => {
 
@@ -23,27 +24,9 @@ const ReactionListPage = () => {
     }
 
   return (
-    <div className="text-center">
-        <div className = 'reaction-list'>
-            <Table striped bordered hover size="sm" responsive="sm">
-                <thead>
-                    <tr>
-                        <th>Name or SMILES</th>
-                        <th>Flexizyme</th>
-                        <th>Synthetase</th>
-                        <th>N-terminal incorporation</th>
-                        <th>Internal incorporation</th>
-                        <th>Acylation yield</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {reactions.map((reaction) => (
-                        <ListItem key = {reaction.index} reaction = {reaction} />
-                    ))}
-                </tbody>
-            </Table>
-        </div>
-    </div>
+    <>
+        <ReactionList reactions={reactions} />
+    </>
   );
 }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const ListItem = ({ reaction }) => {
+const ReactionListItem = ({ reaction }) => {
   return (
     <tr className="text-center">
         <td> 
@@ -18,4 +18,4 @@ const ListItem = ({ reaction }) => {
   );
 }
 
-export default ListItem
+export default ReactionListItem

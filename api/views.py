@@ -43,14 +43,15 @@ class ReactionTableView(generics.ListAPIView):
         'flexizyme__flex_name',
         'synthetase__synth_common_name',
         'synthetase__organisms__organism_name',
-        'synthetase__parent_synthetase',
+        'synthetase__parent_synthetase__name',
         'monomer__monomer_name',
         'monomer__monomer_smiles',
         'monomer__monomer_LG',
         'references__DOI',
         'references__title',
         'references__authors__first_name',
-        'references__authors__last_name'
+        'references__authors__last_name',
+        'references__journal'
     ]
 
     pagination_class = ReactionTableViewPagination
@@ -124,7 +125,7 @@ class AssayView(viewsets.ModelViewSet):
     serializer_class = AssaySerializer
     def get_queryset(self):
         return MicrohelixAssay.objects.all()
-    
+
 
 ###### Views for a specific reaction. With GET, POST, PUT, and DELETE methods ###########
 
@@ -133,7 +134,7 @@ class ReactionViewSingle(viewsets.ModelViewSet):
     def get_queryset(self):
         reaction = Reaction.objects.all()
         return reaction
-    
+
     def post(self, request):
         return self.create(request)
 
@@ -175,9 +176,6 @@ class ReactionViewSingle(viewsets.ModelViewSet):
         'references__authors__first_name',
         'references__authors__last_name'
     ]
-
-
-
 
 
 

@@ -7,6 +7,7 @@ import FlexOrSynthInfo from '../components/FlexOrSynthInfo'
 import RibosomeInfo from '../components/RibosomeInfo'
 import MicrohelixAssay from '../components/MicrohelixAssay'
 import TRNA_info from '../components/TRNA_info'
+import StructureListItem from '../components/StructureListItem'
 
 const ReactionPage = () => {
 
@@ -32,6 +33,7 @@ const ReactionPage = () => {
 
     }
 
+    if (reaction) {
    return (
     <Container>
         <br></br>
@@ -55,7 +57,10 @@ const ReactionPage = () => {
         </Table>
         <br></br>
         <Row>
-            <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} />
+            <div style={{width: 400}}>
+                <h6> Monomer Structure: </h6>
+                <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} />
+            </div>
             <FlexOrSynthInfo synthetase={reaction?.synthetase} flexizyme={reaction?.flexizyme} />
             <TRNA_info tRNA={reaction?.tRNA} />
         </Row>
@@ -67,6 +72,9 @@ const ReactionPage = () => {
         </div>
     </Container>
   );
+   } else {
+       return <div></div>
+   }
 }
 
 export default ReactionPage

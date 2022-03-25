@@ -134,6 +134,9 @@ class Reaction(models.Model):
 
     def __str__(self):
         return 'Reaction %d: %s' % (self.pk, self.monomer.__str__())
+
+    class Meta:
+        ordering = ('id',)
         
 
 
