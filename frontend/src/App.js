@@ -8,6 +8,7 @@ import ReactionPage from './pages/ReactionPage'
 import StructureList from './pages/StructureList';
 import Footer from './components/Footer'
 import SearchPage from './pages/SearchPage';
+import GeneralSearch from './pages/GeneralSearch';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/all-reactions" element={<ReactionListPage />} />
           <Route path="/structures" exact element={<StructureList />} />
           <Route path="/reaction/:id" element={<ReactionPage />} />
+          <Route path="/search/:searchTerm" element={<GeneralSearch />} />
         </Routes>
       
       <br></br>

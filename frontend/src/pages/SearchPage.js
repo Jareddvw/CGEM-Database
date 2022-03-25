@@ -12,7 +12,7 @@ const SearchPage = () => {
     const handleEnterKeyPressed = (e) => {
         if (e.key === "Enter") {
             if (searchTerm) {
-                history.push(`/search=${searchTerm.replaceAll(' ', '+')}`)
+                history.push(`/search/${searchTerm.replaceAll(' ', '+')}`)
             }
         }
     }
@@ -21,7 +21,7 @@ const SearchPage = () => {
       <>
         <Container>
             <h1>{searchTerm}</h1>
-            <Row className = 'mt-5'><h4 style={{textDecoration: 'none' }} className='text-center'>Find a Reaction</h4></Row>
+            <Row className = 'mt-5 mb-2'><h4 style={{textDecoration: 'none' }} className='text-center'>Find a Reaction</h4></Row>
             <Row></Row>
             <Row className='align-items-center'>
                 <Form className = 'mt-2'>

@@ -6,7 +6,7 @@ const Footer = () => {
 
   return (
     <>
-        <Navbar bg="dark" variant="dark" fixed="bottom"></Navbar>
+        <Navbar bg="dark" variant="dark" expand="md" fixed="bottom"></Navbar>
     </>
   )
 }
