@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react'
 import StructureListItem from '../components/StructureListItem'
 import MonomerDrawing from '../components/MonomerDrawing'
 import SmilesDrawer from 'smiles-drawer'
-import { Card, Container, Row } from 'react-bootstrap'
+import { Container, Row, Col, CardGroup, Card } from 'react-bootstrap'
 
 
-const StructureList = () => {
+const StructureListPage = () => {
 
     let [reactions, setReactions] = useState([])
 
@@ -24,9 +24,10 @@ const StructureList = () => {
         return (
             <>
                 <Container>
-                    <Row>
+                    <Row className="g-0" lg={4} md={2} sm={1}>
                         {reactions.map((reaction) => 
-                            <StructureListItem key={reaction.id} smiles={reaction?.monomer_smiles} width="350" height="250" />
+                            <Col key={reaction.id}><StructureListItem id = {reaction?.id} name = {reaction.monomer}
+                                smiles={reaction?.monomer_smiles} width="250" height="150" /></Col>
                         )}
                     </Row>
                 </Container>
@@ -35,4 +36,4 @@ const StructureList = () => {
     }
 }
 
-export default StructureList
+export default StructureListPage

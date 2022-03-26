@@ -87,9 +87,8 @@ class Reaction(models.Model):
     #a reference can have multiple rxns listed, and reaction can have multiple references
     references = models.ManyToManyField(Reference, related_name="reactions")
     #a reaction will either have a flexizyme, a synthetase, or neither (chemical acylation) so null for both.
-    #if the associated flexizyme or synthetase is deleted, the reaction will be deleted too.
-    flexizyme = models.ForeignKey(Flexizyme, on_delete=models.CASCADE, null=True, blank=True, related_name = 'reactions')
-    synthetase = models.ForeignKey(Synthetase, on_delete=models.CASCADE, null=True, blank=True, related_name ='reactions')
+    flexizyme = models.ForeignKey(Flexizyme, on_delete=models.SET_NULL, null=True, blank=True, related_name = 'reactions')
+    synthetase = models.ForeignKey(Synthetase, on_delete=models.SET_NULL, null=True, blank=True, related_name ='reactions')
     ## there are multiple reactions with the same monomer. ##
     # if the monomer is deleted its associated reaction will be deleted too.
     monomer = models.ForeignKey(Monomer, on_delete=models.CASCADE, related_name="reactions")

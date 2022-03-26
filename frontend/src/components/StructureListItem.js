@@ -2,8 +2,9 @@ import { useRef } from 'react'
 import { Card, Overlay, OverlayTrigger } from 'react-bootstrap'
 import SmilesDrawer from 'smiles-drawer'
 import Canvas from './Canvas'
+import { Link } from 'react-router-dom'
 
-const StructureListItem = ({ smiles, width, height }) => {
+const StructureListItem = ({ id, smiles, width, height, name }) => {
 
     let drawTree = (current) => {
         let smilesDrawer = new SmilesDrawer.Drawer({ width: width, height: height})
@@ -17,11 +18,15 @@ const StructureListItem = ({ smiles, width, height }) => {
     }
 
     let returnStatement = (
-        <>
-            <Card className="m-1" style={{width: 400}}>
-                <Canvas draw={drawTree} width={width} height={height} />
-            </Card>
-        </>
+    <>
+        <Card className="m-1 hoverCard" style={{width: 300}}>
+            <Link to={`/reaction/${id}`} className="Link m-1" style={{textDecoration: 'none', color:'black'}}> 
+                <Card.Body>
+                    <Canvas draw={drawTree} width={width} height={height} />
+                </Card.Body>
+            </Link>
+        </Card>
+    </>
       )
 
   return returnStatement
