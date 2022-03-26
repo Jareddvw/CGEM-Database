@@ -17,7 +17,7 @@ class Monomer(models.Model):
 
     def __str__(self):
         #returns monomer_smiles if name is blank
-        return self.monomer_name or self.monomer_smiles
+        return self.monomer_smiles
 
 class Flexizyme(models.Model):
     #flexizyme name and sequence are both required

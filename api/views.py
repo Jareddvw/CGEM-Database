@@ -38,7 +38,8 @@ class ReactionTableView(generics.ListAPIView):
         'monomer__monomer_LG',
         'date_added',
         'n_term_incorporation',
-        'internal_incorporation'
+        'internal_incorporation',
+        'rib_readout'
     ]
     search_fields = [
         'id',
@@ -53,7 +54,8 @@ class ReactionTableView(generics.ListAPIView):
         'references__title',
         'references__authors__first_name',
         'references__authors__last_name',
-        'references__journal'
+        'references__journal',
+        'rib_readout'
     ]
     ordering_fields = [
         'id',

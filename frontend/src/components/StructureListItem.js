@@ -2,38 +2,28 @@ import React from 'react'
 import { Card, Overlay } from 'react-bootstrap'
 import SmilesDrawer from 'smiles-drawer'
 import { useEffect, componentDidMount } from 'react'
+import Canvas from './Canvas'
 
 const StructureListItem = ({ smiles }) => {
 
-    
-
-    let drawTree = () => {
+    let drawTree = (current) => {
         let smilesDrawer = new SmilesDrawer.Drawer({ width: 350, height: 250})
-        let input = document.getElementById({smiles})
-        if (input != null) {
+        if (current !== null) {
             SmilesDrawer.parse(smiles, function (tree) {
-                smilesDrawer.draw(tree, input, 'light', false);
+                smilesDrawer.draw(tree, current, 'light', false);
             }, function (err) {
                 console.log(err);
             })
         }
     }
 
-    useEffect(() => {
-        drawTree()
-    }, []);
-
-
-  return (
+  let returnStatement = (
     <>
-        <Card style={{ width: '25rem' }}>
-            <Card.Body>
-                <canvas id={smiles}>
-                </canvas>
-            </Card.Body>
-        </Card>
+        <Canvas draw={drawTree} />
     </>
   )
+
+  return returnStatement
 }
 
 export default StructureListItem

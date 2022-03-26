@@ -1,22 +1,23 @@
 import React from 'react'
 import SmilesDrawer from 'smiles-drawer'
+import Canvas from './Canvas'
 
 const MonomerDrawing = ({ smiles }) => {
 
-    let smilesDrawer = new SmilesDrawer.Drawer({ width: 350, height: 250})
-    let input = document.getElementById('drawing')
-    if (input != null) {
-        SmilesDrawer.parse(smiles, function (tree) {
-            smilesDrawer.draw(tree, input, 'light', false);
-        }, function (err) {
-            console.log(err);
-        })
+    let drawTree = (current) => {
+        let smilesDrawer = new SmilesDrawer.Drawer({ width: 350, height: 250})
+        if (current !== null && smiles) {
+            SmilesDrawer.parse(smiles, function (tree) {
+                smilesDrawer.draw(tree, current, 'light', false);
+            }, function (err) {
+                console.log(err);
+            })
+        }
     }
 
     let returnStatement = (
         <>
-            <canvas id='drawing'>
-            </canvas>
+            <Canvas draw={drawTree} />
         </>
       )
 

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import StructureListItem from '../components/StructureListItem'
 import MonomerDrawing from '../components/MonomerDrawing'
 import SmilesDrawer from 'smiles-drawer'
+import { Card } from 'react-bootstrap'
 
 
 const StructureList = () => {
@@ -19,11 +20,12 @@ const StructureList = () => {
         setReactions(data.results) 
     }
 
+    console.log(reactions)
     if (reactions !== []) {
         return (
             <>
                 {reactions.map((reaction) => 
-                    <StructureListItem key={reaction?.id} smiles = {reaction?.monomer?.monomer_smiles} /> 
+                    <Card key={reaction?.id} style={{width:'22rem'}}><MonomerDrawing smiles={reaction?.monomer} /></Card>
                 )}
             </>
         )

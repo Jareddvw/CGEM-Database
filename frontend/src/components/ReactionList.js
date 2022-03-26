@@ -22,7 +22,7 @@ const ReactionList = ({ reactions }) => {
                     </thead>
                     <tbody>
                         {reactions.map((reaction) => (
-                            <ReactionListItem key = {reaction.index} reaction = {reaction} />
+                            <ReactionListItem key = {reaction.id} reaction = {reaction} />
                         ))}
                     </tbody>
                 </Table>
