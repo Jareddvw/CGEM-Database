@@ -16,5 +16,5 @@ admin.site.register(Reference)
 admin.site.register(Organism)
 admin.site.register(MicrohelixAssay)
 admin.site.register(SynthMutations)
-admin.site.register(ParentSynth)
+# admin.site.register(ParentSynth)
 

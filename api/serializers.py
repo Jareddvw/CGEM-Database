@@ -21,10 +21,10 @@ class OrganismSerializer(serializers.ModelSerializer):
         model = Organism
         fields = '__all__'
 
-class ParentSynthSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ParentSynth
-        fields = '__all__'
+# class ParentSynthSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = ParentSynth
+#         fields = '__all__'
 
 class MutationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -93,25 +93,27 @@ class FlexizymeSerializer(serializers.ModelSerializer):
 class SynthetaseSerializer(serializers.ModelSerializer):
     organisms = OrganismSerializer(many = True)
     mutations = MutationSerializer(many = True)
-    parent_synthetase = ParentSynthSerializer()
+    # parent_synthetase = ParentSynthSerializer()
 
     class Meta:
         model = Synthetase
         fields = '__all__'
         depth = 2
-    
+
     def create(self, validated_data):
         organisms = validated_data.pop('organisms')
         mutations = validated_data.pop('mutations')
-        parent = validated_data.pop('parent_synthetase')
+        # parent = validated_data.pop('parent_synthetase')
 
-        try:
-            new_parent = ParentSynth.objects.get(name=parent['name'])
-        except:
-            ParentSynth.objects.create(**parent)
-            new_parent = ParentSynth.objects.get(name=parent['name'])
+        # try:
+        #     new_parent = ParentSynth.objects.get(name=parent['name'])
+        # except:
+        #     ParentSynth.objects.create(**parent)
+        #     new_parent = ParentSynth.objects.get(name=parent['name'])
 
-        new_synth = Synthetase.objects.create(**validated_data, parent_synthetase = new_parent)
+        # new_synth = Synthetase.objects.create(**validated_data, parent_synthetase = new_parent)
+
+        new_synth = Synthetase.objects.create(**validated_data) 
         for organism in organisms:
             try:
                 new_org = Organism.objects.get(organism_name=organism['organism_name'])
@@ -133,19 +135,23 @@ class SynthetaseSerializer(serializers.ModelSerializer):
         # organisms and mutations are ManyToMany relationships
         organisms = validated_data.pop('organisms')
         mutations = validated_data.pop('mutations')
-        # parent_synthetase is ForeignKey relationship
-        parent = validated_data.pop('parent_synthetase')
 
-        if parent:
-            try:
-                new_parent = ParentSynth.objects.get(name=parent['name'])
-            except:
-                ParentSynth.objects.create(**parent)
-                new_parent = ParentSynth.objects.get(name=parent['name'])
-        else:
-            new_parent = parent
+        # parent_synthetase is ForeignKey relationship
+
+        # parent = validated_data.pop('parent_synthetase')
+
+        # if parent:
+        #     try:
+        #         new_parent = ParentSynth.objects.get(name=parent['name'])
+        #     except:
+        #         ParentSynth.objects.create(**parent)
+        #         new_parent = ParentSynth.objects.get(name=parent['name'])
+        # else:
+        #     new_parent = parent
         # only updates the object with the given id.
-        Synthetase.objects.filter(id=instance.id).update(**validated_data, parent_synthetase=new_parent)
+        # Synthetase.objects.filter(id=instance.id).update(**validated_data, parent_synthetase=new_parent)
+
+        Synthetase.objects.filter(id=instance.id).update(**validated_data)
         instance.organisms.clear()
         instance.mutations.clear()
 
@@ -175,6 +181,7 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
     synthetase = serializers.SerializerMethodField('get_synthetase')
     flexizyme = serializers.SerializerMethodField('get_flexizyme')
     monomer = serializers.SerializerMethodField('get_monomer')
+    monomer_smiles = serializers.SerializerMethodField('get_monomer_smiles')
 
     class Meta:
         model = Reaction
@@ -184,12 +191,18 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
             'flexizyme',
             'synthetase',
             'monomer',
+            'monomer_smiles',
             'n_term_incorporation',
             'n_term_percent',
             'internal_incorporation',
             'internal_percent',
             'acylation_yield',
         ]
+
+    def get_monomer_smiles(self, reaction):
+        if reaction.monomer:
+            name = reaction.monomer.monomer_smiles
+            return name
 
     def get_monomer(self, reaction):
         if reaction.monomer:
@@ -275,10 +288,12 @@ class ReactionSerializer(serializers.ModelSerializer):
 
         if synthetase:
             try:
-                new_synth = Synthetase.objects.get(synth_common_name=flexizyme['synth_common_name'])
+                new_synth = Synthetase.objects.get(synth_common_name=synthetase['synth_common_name'])
             except:
-                Synthetase.objects.create(**synthetase)
-                new_synth = Synthetase.objects.get(synth_common_name=flexizyme['synth_common_name'])
+                synth_serializer = SynthetaseSerializer(data=synthetase)
+                if synth_serializer.is_valid():
+                    synth_serializer.save()
+                new_synth = Synthetase.objects.get(synth_common_name=synthetase['synth_common_name'])
         else:
             new_synth = synthetase
 

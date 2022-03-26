@@ -46,7 +46,7 @@ class ReactionTableView(generics.ListAPIView):
         'flexizyme__flex_name',
         'synthetase__synth_common_name',
         'synthetase__organisms__organism_name',
-        'synthetase__parent_synthetase__name',
+        'synthetase__parent_synthetase',
         'monomer__monomer_name',
         'monomer__monomer_smiles',
         'monomer__monomer_LG',

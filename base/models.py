@@ -17,7 +17,7 @@ class Monomer(models.Model):
 
     def __str__(self):
         #returns monomer_smiles if name is blank
-        return self.monomer_smiles
+        return self.monomer_name or self.monomer_smiles
 
 class Flexizyme(models.Model):
     #flexizyme name and sequence are both required
@@ -39,14 +39,14 @@ class SynthMutations(models.Model):
     def __str__(self):
         return self.mutation_name
 
-class ParentSynth(models.Model):
-    name = models.CharField(max_length=25)
-    def __str__(self):
-        return self.name
+# class ParentSynth(models.Model):
+#     name = models.CharField(max_length=25)
+#     def __str__(self):
+#         return self.name
 
 class Synthetase(models.Model):
     synth_common_name = models.CharField(max_length=100)
-    parent_synthetase = models.ForeignKey(ParentSynth, null=True, blank=True, related_name="child_synthetases", on_delete=models.SET_NULL)
+    parent_synthetase = models.CharField(max_length=50, null=False, blank=False)
     accession_id = models.CharField(max_length=50, blank=True)
     pbd_id = models.CharField(max_length=10, blank=True)
     # not sure if synthetase should be allowed to have no associated organism but rn it is allowed
