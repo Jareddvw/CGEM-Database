@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
-const Canvas = ({draw}) => {
+const Canvas = ({ draw, width, height }) => {
 
     const canvas = useRef();
 
@@ -13,8 +13,8 @@ const Canvas = ({draw}) => {
     return (
         <canvas
         ref={canvas} 
-        width="100"
-        height="100"
+        width={width}
+        height={height}
         />
     )
 };

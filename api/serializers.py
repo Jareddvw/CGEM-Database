@@ -288,7 +288,7 @@ class ReactionSerializer(serializers.ModelSerializer):
 
         if synthetase:
             try:
-                new_synth = Synthetase.objects.get(synth_common_name=synthetase['synth_common_name'])
+                new_synth = Synthetase.objects.filter(synth_common_name=synthetase['synth_common_name']).first()
             except:
                 synth_serializer = SynthetaseSerializer(data=synthetase)
                 if synth_serializer.is_valid():
@@ -313,7 +313,7 @@ class ReactionSerializer(serializers.ModelSerializer):
         # Monomer, tRNA, Flexizyme, and Synthetase are ForeignKeys. TRNA and Monomer may not be False.
         # References is a ManyToManyField
 
-        currentObj = Reaction.objects.filter(id=instance.id)
+        currentObj = Reaction.objects.get(id=instance.id)
         assay = validated_data.get('assay', 0)
         if assay:
             validated_data.pop('assay')
@@ -322,7 +322,7 @@ class ReactionSerializer(serializers.ModelSerializer):
                 MicrohelixAssay.objects.filter(id=current_assay.id).update(**assay)
             except:
                 new_assay = MicrohelixAssay.objects.create(**assay)
-                currentObj.update(assay=new_assay)
+                instance.update(assay=new_assay)
         monomer = validated_data.get('monomer', 0)
         if monomer: 
             validated_data.pop('monomer')
@@ -330,7 +330,7 @@ class ReactionSerializer(serializers.ModelSerializer):
                 new_monomer = Monomer.objects.get(monomer_smiles=monomer['monomer_smiles'])
             except:
                 new_monomer = Monomer.objects.create(**monomer)
-            currentObj.update(monomer=new_monomer)
+            instance.update(monomer=new_monomer)
         flexizyme = validated_data.get('flexizyme', 0)
         if flexizyme: 
             validated_data.pop('flexizyme')
@@ -338,7 +338,7 @@ class ReactionSerializer(serializers.ModelSerializer):
                 new_flex = Flexizyme.objects.get(flex_name=flexizyme['flex_name'])
             except:
                 new_flex = Flexizyme.objects.create(**flexizyme)
-            currentObj.update(flexizyme=new_flex)    
+            instance.update(flexizyme=new_flex)    
         synthetase = validated_data.get('synthetase', 0)
         if synthetase: 
             validated_data.pop('synthetase')
@@ -346,7 +346,7 @@ class ReactionSerializer(serializers.ModelSerializer):
                 new_synth = Synthetase.objects.get(synth_common_name=synthetase['synth_common_name'])
             except:
                 new_synth = Synthetase.objects.create(**synthetase)
-            currentObj.update(synthetase=new_synth)
+            instance.update(synthetase=new_synth)
         tRNA = validated_data.get('tRNA', 0)
         if tRNA:
             validated_data.pop('tRNA')
@@ -354,7 +354,7 @@ class ReactionSerializer(serializers.ModelSerializer):
                 new_trna = T_RNA.objects.get(tRNA_name=tRNA['tRNA_name'])
             except:
                 new_trna = T_RNA.objects.create(**tRNA)
-            currentObj.update(tRNA = new_trna)
+            instance.update(tRNA = new_trna)
         references = validated_data.get('references', 0)
         if references:
             validated_data.pop('references')

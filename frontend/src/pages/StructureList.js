@@ -20,14 +20,13 @@ const StructureList = () => {
         setReactions(data.results) 
     }
 
-    console.log(reactions)
     if (reactions !== []) {
         return (
             <>
                 <Container>
                     <Row>
                         {reactions.map((reaction) => 
-                            <Card key={reaction?.id} style={{width:'23rem'}}><MonomerDrawing smiles={reaction?.monomer_smiles} /></Card>
+                            <StructureListItem key={reaction.id} smiles={reaction?.monomer_smiles} width="350" height="250" />
                         )}
                     </Row>
                 </Container>

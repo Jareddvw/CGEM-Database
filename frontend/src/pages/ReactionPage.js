@@ -57,7 +57,7 @@ const ReactionPage = () => {
         <Row>
             <div style={{width: 400}}>
                 <h6> Monomer Structure: </h6>
-                <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} />
+                <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} width="350" height="250" />
             </div>
             <FlexOrSynthInfo synthetase={reaction?.synthetase} flexizyme={reaction?.flexizyme} />
             <TRNA_info tRNA={reaction?.tRNA} />
@@ -67,6 +67,9 @@ const ReactionPage = () => {
         <br />
         <div>
             <RibosomeInfo reaction={reaction} />
+        </div>
+        <div>
+            <h5> References: </h5>
         </div>
     </Container>
   );
