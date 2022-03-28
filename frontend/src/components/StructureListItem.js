@@ -19,8 +19,8 @@ const StructureListItem = ({ id, smiles, width, height, name }) => {
 
     let returnStatement = (
     <>
-        <Card className="m-1 hoverCard" style={{width: 300}}>
-            <Link to={`/reaction/${id}`} className="Link m-1" style={{textDecoration: 'none', color:'black'}}> 
+        <Card className="m-1 hoverCard" style={{width: 400, height:300}}>
+            <Link to={`/reaction/${id}`} className="Link mb-5" style={{textDecoration: 'none', color:'black'}}> 
                 <Card.Body>
                     <Canvas draw={drawTree} width={width} height={height} />
                 </Card.Body>

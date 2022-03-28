@@ -4,6 +4,7 @@ import StructureListItem from '../components/StructureListItem'
 import MonomerDrawing from '../components/MonomerDrawing'
 import SmilesDrawer from 'smiles-drawer'
 import { Container, Row, Col, CardGroup, Card } from 'react-bootstrap'
+import StructureList from '../components/StructureList'
 
 
 const StructureListPage = () => {
@@ -24,12 +25,7 @@ const StructureListPage = () => {
         return (
             <>
                 <Container>
-                    <Row className="g-0" lg={4} md={2} sm={1}>
-                        {reactions.map((reaction) => 
-                            <Col key={reaction.id}><StructureListItem id = {reaction?.id} name = {reaction.monomer}
-                                smiles={reaction?.monomer_smiles} width="250" height="150" /></Col>
-                        )}
-                    </Row>
+                    <StructureList reactions={reactions} />
                 </Container>
             </>
         )

@@ -8,6 +8,7 @@ import RibosomeInfo from '../components/RibosomeInfo'
 import MicrohelixAssay from '../components/MicrohelixAssay'
 import TRNA_info from '../components/TRNA_info'
 import StructureListItem from '../components/StructureListItem'
+import References from '../components/References'
 
 const ReactionPage = () => {
     
@@ -63,18 +64,18 @@ const ReactionPage = () => {
             <TRNA_info tRNA={reaction?.tRNA} />
         </Row>
         <br />
-        <MicrohelixAssay reaction={reaction} />
+            <MicrohelixAssay reaction={reaction} />
         <br />
         <div>
             <RibosomeInfo reaction={reaction} />
         </div>
         <div>
-            <h5> References: </h5>
+            <References references={reaction?.references} />
         </div>
     </Container>
   );
    } else {
-       return <div></div>
+       return <div> Waiting for reaction information to load... </div>
    }
 }
 

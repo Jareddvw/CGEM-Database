@@ -2,6 +2,11 @@ import React from 'react'
 import { Table } from 'react-bootstrap'
 
 const RibosomeInfo = ({ reaction }) => {
+
+    let percent_or_YNA = (n_or_internal) => {
+        
+    }
+
   return (
       <>
         <Table size='sm' responsive='md' striped>
