@@ -14,3 +14,7 @@
         hsla(0, 0%, 0%, 0.3), 0 -6px 16px -6px hsla(0, 0%, 0%, 0.03);
     transition: all ease 200ms;
 }
+
+.nav {
+    background-color: rgb(32, 6, 49);
+}

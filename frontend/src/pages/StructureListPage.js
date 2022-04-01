@@ -20,16 +20,23 @@ const StructureListPage = () => {
         let data = await response.json()
         setReactions(data.results) 
     }
+    
 
-    if (reactions !== []) {
-        return (
-            <>
-                <Container>
-                    <StructureList reactions={reactions} />
-                </Container>
-            </>
-        )
-    }
+
+    return (
+        <>
+            <Container>
+                {/* <Form className = 'mt-2'>
+                        <Form.Control size="lg" type="text" placeholder="Search by Monomer, Flexizyme, Synthetase, tRNA..." 
+                            onChange={event => {setSMILES(event.target.value)}} onSubmit={(e) => e.preventDefault()} 
+                            onKeyPress={handleEnterKeyPressed} />  
+                </Form> */}
+
+                {reactions != null ? <StructureList reactions={reactions} /> : <> Waiting for data to load... </>}
+            </Container>
+        </>
+    )
+
 }
 
 export default StructureListPage

@@ -14,7 +14,10 @@ const ReactionListPage = () => {
 
     useEffect(() => {
         getReactions()
-    }, [ordering, cardView])
+    }, [ordering])
+
+    useEffect(() => {
+    }, [cardView])
 
     let getReactions = async () => {
         let response = await fetch('/api/?ordering=' + ordering)

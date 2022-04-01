@@ -9,7 +9,6 @@ const References = ({ references }) => {
                     <h6 className='mt-3 mb-3'> References: </h6>
                     {references.map((reference, index) => <ReferenceItem key={reference.id} 
                         number={index + 1} reference={reference} />)}
-                    
                 </Container>
             </>
         )

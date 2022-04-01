@@ -25,7 +25,7 @@ const SearchPage = () => {
             <Row></Row>
             <Row className='align-items-center'>
                 <Form className = 'mt-2'>
-                        <Form.Control size="lg" type="text" placeholder="Search by Monomer, Flexizyme, Synthetase, tRNA..." 
+                        <Form.Control size="lg" type="text" placeholder="Search by Monomer, Flexizyme, Synthetase, tRNA, SMILES..." 
                             onChange={event => {setSearchTerm(event.target.value)}} onSubmit={(e) => e.preventDefault()} 
                             onKeyPress={handleEnterKeyPressed} />  
                 </Form>
