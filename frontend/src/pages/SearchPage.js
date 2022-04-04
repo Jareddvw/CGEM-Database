@@ -2,6 +2,7 @@ import { Container, Nav, Row, Col, Form, Stack, Button } from 'react-bootstrap'
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
+import MonomerDrawing from '../components/MonomerDrawing'
 
 const SearchPage = () => {
     
@@ -29,7 +30,8 @@ const SearchPage = () => {
                             onChange={event => {setSearchTerm(event.target.value)}} onSubmit={(e) => e.preventDefault()} 
                             onKeyPress={handleEnterKeyPressed} />  
                 </Form>
-            </Row>   
+            </Row>  
+            <MonomerDrawing smiles={searchTerm} width='600' height='600'></MonomerDrawing>
         </Container>
       </>
   )

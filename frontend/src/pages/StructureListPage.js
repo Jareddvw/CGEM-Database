@@ -3,35 +3,44 @@ import { useState, useEffect } from 'react'
 import StructureListItem from '../components/StructureListItem'
 import MonomerDrawing from '../components/MonomerDrawing'
 import SmilesDrawer from 'smiles-drawer'
-import { Container, Row, Col, CardGroup, Card } from 'react-bootstrap'
+import { Container, Row, Col, CardGroup, Card, Form } from 'react-bootstrap'
 import StructureList from '../components/StructureList'
-
+import { createBrowserHistory } from 'history'
 
 const StructureListPage = () => {
 
     let [reactions, setReactions] = useState([])
+    const [SMILES, setSMILES] = useState('')
 
     useEffect(() => {
         getReactions()
     }, [])
+
+    useEffect(() => {
+    }, [SMILES])
 
     let getReactions = async () => {
         let response = await fetch('/api/')
         let data = await response.json()
         setReactions(data.results) 
     }
-    
-
 
     return (
         <>
             <Container>
-                {/* <Form className = 'mt-2'>
-                        <Form.Control size="lg" type="text" placeholder="Search by Monomer, Flexizyme, Synthetase, tRNA..." 
-                            onChange={event => {setSMILES(event.target.value)}} onSubmit={(e) => e.preventDefault()} 
-                            onKeyPress={handleEnterKeyPressed} />  
-                </Form> */}
-
+                <Row className='mt-3'> Monomer SMILES: 
+                    <div style={{width:700}}>
+                        <Form.Control
+                            onChange={(e)=>setSMILES(e.target.value)} 
+                            onSubmit={(e)=>setSMILES(e.target.value)} 
+                            type="text" placeholder="SMILES" >
+                        </Form.Control>
+                    </div>
+                </Row>
+                {SMILES != '' ? 
+                    (<Row className='align-items-center'>
+                        <MonomerDrawing smiles={SMILES} width='400' height='300' />
+                    </Row>) : <Row className='mb-3' ></Row>}
                 {reactions != null ? <StructureList reactions={reactions} /> : <> Waiting for data to load... </>}
             </Container>
         </>

@@ -1,8 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import ReactionList from '../components/ReactionList'
 import { Container, Row, Col, Form } from 'react-bootstrap'
-import StructureList from '../components/StructureList'
+import ReactionOrStructureList from '../components/ReactionOrStructureList'
 
 // Page for list of all reactions in database (different from search results page)
 
@@ -41,7 +40,7 @@ const ReactionListPage = () => {
                         <option value="assay__acylation_yield">Microhelix assay yield</option>
                     </select>
                 </div>
-                <Col offset>
+                <Col>
                     <div>
                         <select style={{width:300}}
                             onChange={(e)=>setCardView(e.target.value)} 
@@ -53,7 +52,7 @@ const ReactionListPage = () => {
                 </Col>
             </Row>
         </Container>
-        {cardView === "true" ? <StructureList reactions={reactions} /> : <ReactionList reactions={reactions} />}
+        <ReactionOrStructureList reactions={reactions} cardView={cardView} />
     </>
   );
 }

@@ -5,7 +5,7 @@ import Canvas from './Canvas'
 import { Link } from 'react-router-dom'
 
 const StructureListItem = ({ id, smiles, width, height, name, 
-    flexizyme, synthetase, acylation_yield }) => {
+    flexizyme, synthetase, acylation_yield, card }) => {
 
     let drawTree = (current) => {
         let smilesDrawer = new SmilesDrawer.Drawer({ width: width, height: height})

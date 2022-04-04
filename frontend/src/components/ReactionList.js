@@ -5,6 +5,7 @@ import Table from 'react-bootstrap/Table'
 
 
 const ReactionList = ({ reactions }) => {
+    
   return (
     <>
         <div className="text-center">

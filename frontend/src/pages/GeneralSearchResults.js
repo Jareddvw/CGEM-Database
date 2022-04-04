@@ -2,6 +2,7 @@ import { useMatch } from 'react-router-dom'
 import ReactionList from '../components/ReactionList'
 import { useState, useEffect } from 'react'
 import { Row } from 'react-bootstrap'
+import ReactionOrStructureList from '../components/ReactionOrStructureList'
 
 const GeneralSearch = () => {
 
@@ -34,7 +35,7 @@ const GeneralSearch = () => {
         return (
             <>
                 <Row className = 'mb-3 mt-3'><h4 className='text-center'>Search Results for "{searchTerm}": </h4></Row>
-                <ReactionList reactions={reactions} />
+                <ReactionOrStructureList reactions={reactions} />
             </>
           );
     } else {
