@@ -6,8 +6,8 @@ const ContributePage = () => {
     <>
         <Container className='mb-5'>
             <h4 className='mt-3 mb-3'> Contribute to the CGEM database </h4>
-            <Row className='mt-3 mb-3'> Want to submit reactions to the database? 
-                You can contribute by submitting a CSV file. </Row>
+            <Row className='mb-3'>Make sure every row of your submission has the following required fields: 
+                DOI, monomer SMILES, tRNA name, tRNA sequence, ribosome (name or WT).</Row>
 
             <SubmitCSV />
         </Container>
