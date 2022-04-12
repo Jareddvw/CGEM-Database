@@ -63,10 +63,10 @@ class Author(models.Model):
         return self.last_name + ', ' + self.first_name
 
 class Reference(models.Model):
-    # DOI, title, publication date are required
-    DOI = models.CharField(max_length=50)
+    # DOI, is required
+    DOI = models.TextField(max_length=50)
     title = models.TextField(default='', blank=True)
-    publication_date = models.DateField(auto_now=False, blank=True)
+    publication_date = models.DateField(auto_now=False, blank=True, null=True)
     journal = models.CharField(max_length=75, blank=True, default='')
     # at least one author is required
     authors = models.ManyToManyField(Author, related_name="references", blank=True)

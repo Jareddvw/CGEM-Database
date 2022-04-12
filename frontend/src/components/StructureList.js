@@ -1,8 +1,8 @@
 import React from 'react'
 import StructureListItem from './StructureListItem'
-import { Container, Row, Col, Popover, Overlay, OverlayTrigger } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 
-const StructureList = ({ reactions }) => {
+const StructureList = ({ reactions, nolink }) => {
 
   return (
     <>
@@ -12,7 +12,7 @@ const StructureList = ({ reactions }) => {
                     <Col key={reaction.id}>
 
                       <StructureListItem id = {reaction?.id} name = {reaction.monomer} flexizyme = {reaction?.flexizyme}
-                        synthetase = {reaction?.synthetase} smiles={reaction?.monomer_smiles} width="350" height="250" />
+                        synthetase = {reaction?.synthetase} smiles={reaction?.monomer_smiles} width="350" height="250" nolink={nolink} />
                         
                     </Col>
                 )}

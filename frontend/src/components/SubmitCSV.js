@@ -1,12 +1,15 @@
 import React from 'react'
 import { useRef, useState } from 'react';
 import { parse } from 'papaparse';
-import ReactionList from './ReactionList';
+import StructureList from './StructureList';
+import { createBrowserHistory } from 'history'
 
 const SubmitCSV = () => {
     const [fileName, setFileName] = useState(null);
-    const [fileData, setFileData] = useState([])
+    const [displayedData, setDisplayedData] = useState([])
+    const [postData, setPostData] = useState([])
     const inputRef = useRef(null);
+    let history = createBrowserHistory()
 
     const handleUpload = () => {
         inputRef.current?.click();
@@ -27,11 +30,35 @@ const SubmitCSV = () => {
         const text = await file.text()
         const parsedText = parse(text, {header: true})
         let result = reformatData(parsedText.data)
-        result = result.map((reaction) => (JSON.stringify(reaction)))
-        setFileData(result)
+        
+        let displayedData = result.map((reaction) => {
+            return {
+            "flexizyme": ((reaction["flexizyme"] != null) ? reaction["flexizyme"]["flex_name"] : null),
+            "synthetase": ((reaction["synthetase"] != null) ? reaction["synthetase"]["synth_common_name"] : null),
+            "monomer": (reaction["monomer"]["monomer_smiles"] || reaction["monomer"]["monomer_name"]),
+            "monomer_smiles": reaction["monomer"]["monomer_smiles"],
+            "n_term_incorporation": "Y",
+            "n_term_percent": null,
+            "internal_incorporation": "",
+            "internal_percent": null,
+            "acylation_yield": 0.88
+            }
+        })
+        setDisplayedData(displayedData)
+        setPostData(result)
     }
 
     const handleSubmit = () => {
+        for (const reaction of postData) {
+            fetch('/api/single/', {
+                method: 'post',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(reaction)
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+        }
     }
 
     const reformatData = (parsedData) => {
@@ -39,6 +66,7 @@ const SubmitCSV = () => {
         for (const entry of parsedData) {
             let newEntry = {}
             if ("Flexizyme name" in entry) {
+                newEntry["synthetase"] = null
                 newEntry["flexizyme"] = {"flex_name": entry["Flexizyme name"]}
                 newEntry["assay"] = {
                     "conditions": entry["Assay conditions"],
@@ -60,9 +88,9 @@ const SubmitCSV = () => {
                         return {"mutation_name": mutation}
                     })
                 }
-                newEntry["reaction_yield"] = entry["Yield of reaction"]
-                newEntry["reaction_Kcat"] = entry["Kcat (min^-1)"]
-                newEntry["reaction_Km"] = entry["Km (mM)"]
+                newEntry["reaction_yield"] = parseFloat(entry["Yield of reaction"]) || null
+                newEntry["reaction_Kcat"] = parseFloat(entry["Kcat (min^-1)"]) || null
+                newEntry["reaction_Km"] = parseFloat(entry["Km (mM)"]) || null
             } else {
                 newEntry["flexizyme"] = null
                 newEntry["assay"] = null
@@ -82,11 +110,28 @@ const SubmitCSV = () => {
                     return {
                         "DOI": DOI,
                         "title": "",
-                        "publication_date": "",
+                        "publication_date": null,
                         "journal": "",
                         "authors": null
             }})
+            try {
+                newEntry["n_term_percent"] = parseFloat(entry["N-terminal incorporation"])
+                newEntry["n_term_incorporation"] = "Y"
+            } catch {
+                newEntry["n_term_percent"] = null
+                newEntry["n_term_incorporation"] = entry["N-terminal incorporation"]
+            }
+
+            try {
+                newEntry["internal_percent"] = parseFloat(entry["Internal incorporation"])
+                newEntry["internal_incorporation"] = "Y"
+            } catch {
+                newEntry["internal_percent"] = null
+                newEntry["internal_incorporation"] = entry["N-terminal incorporation"]
+            }
             newEntry["ribosome_name"] = entry["Ribosome name (required)"]
+            newEntry["rib_readout"] = entry["Readout"]
+            newEntry["rib_incorporation_notes"] = entry["Ribosomal incorporation notes"]
             
             result.push(newEntry)
         }
@@ -121,7 +166,8 @@ const SubmitCSV = () => {
                     Submit
                 </button>
             </div>
-            {fileData != [] ? (<ReactionList reactions={(fileData)} />) : (<></>)}
+            {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)}
+            {postData.length != 0 ? JSON.stringify(postData) : <></>}
         </>
     )
 }

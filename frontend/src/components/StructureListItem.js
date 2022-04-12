@@ -5,7 +5,7 @@ import Canvas from './Canvas'
 import { Link } from 'react-router-dom'
 
 const StructureListItem = ({ id, smiles, width, height, name, 
-    flexizyme, synthetase, acylation_yield, card }) => {
+    flexizyme, synthetase, acylation_yield, nolink }) => {
 
     let drawTree = (current) => {
         let smilesDrawer = new SmilesDrawer.Drawer({ width: width, height: height})
@@ -26,26 +26,48 @@ const StructureListItem = ({ id, smiles, width, height, name,
           </Popover.Body>
         </Popover>
       ); 
+    
+    let returnStatement = (<></>)
 
-    let returnStatement = (
-    <>
-        <Card className="m-1 hoverCard mb-3" style={{width: 400, height:350}}>
-            <Link to={`/reaction/${id}`} className="Link" style={{textDecoration: 'none', color:'black'}}> 
-                <Card.Header>
-                    <strong>{name}</strong>
-                <br></br>
-                {flexizyme ? flexizyme + ". acylation yield: " + (acylation_yield || 'not measured')
-                    : synthetase || 'chemical acylation'} 
-                <br></br>
+    if (nolink) {
+        returnStatement = (
+            <>
+                <Card className="m-1 hoverCard mb-3" style={{width: 400, height:350}}>
+                    <Card.Header>
+                        <strong>{name}</strong>
+                    <br></br>
+                    {flexizyme ? flexizyme + ". acylation yield: " + (acylation_yield || 'not measured')
+                        : synthetase || 'chemical acylation'} 
+                    <br></br>
+    
+                    </Card.Header>
+                    <Card.Body>
+                        <Canvas draw={drawTree} width={width} height={height} />
+                    </Card.Body>
+                </Card>
+            </>
+        )
+    } else {
+        returnStatement = (
+            <>
+                <Card className="m-1 hoverCard mb-3" style={{width: 400, height:350}}>
+                    <Link to={`/reaction/${id}`} className="Link" style={{textDecoration: 'none', color:'black'}}> 
+                        <Card.Header>
+                            <strong>{name}</strong>
+                        <br></br>
+                        {flexizyme ? flexizyme + ". acylation yield: " + ('not measured' || acylation_yield)
+                            : synthetase || 'chemical acylation'} 
+                        <br></br>
 
-                </Card.Header>
-                <Card.Body>
-                    <Canvas draw={drawTree} width={width} height={height} />
-                </Card.Body>
-            </Link>
-        </Card>
-    </>
-      )
+                        </Card.Header>
+                        <Card.Body>
+                            <Canvas draw={drawTree} width={width} height={height} />
+                        </Card.Body>
+                    </Link>
+                </Card>
+            </>
+        )
+    }
 
   return returnStatement
 }

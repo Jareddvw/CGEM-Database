@@ -18,8 +18,8 @@ from .serializers import *
 
 ###### Views for reactions in table format e.g. as search results or "browse all" page #######
 class ReactionTableViewPagination(LimitOffsetPagination):
-    default_limit = 10
-    max_limit = 25
+    default_limit = 50
+    max_limit = 100
 
 class ReactionTableView(generics.ListAPIView):
 

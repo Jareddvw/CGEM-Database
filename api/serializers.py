@@ -47,7 +47,8 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 # ReferenceSerializer used to test create method before applying to Reaction
 class ReferenceSerializer(serializers.ModelSerializer):
-    authors = AuthorSerializer(many = True)
+    authors = AuthorSerializer(many = True, allow_null=True)
+
     class Meta:
         model = Reference
         fields = '__all__'
@@ -56,13 +57,14 @@ class ReferenceSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         authors = validated_data.pop('authors')
         ref = Reference.objects.create(**validated_data)
-        for author in authors:
-            try:
-                new_auth = Author.objects.get(first_name=author['first_name'], last_name=author['last_name'])
-            except:
-                Author.objects.create(**author)
-                new_auth = Author.objects.get(first_name=author['first_name'], last_name=author['last_name'])
-            ref.authors.add(new_auth)
+        if authors:
+            for author in authors:
+                try:
+                    new_auth = Author.objects.get(first_name=author['first_name'], last_name=author['last_name'])
+                except:
+                    Author.objects.create(**author)
+                    new_auth = Author.objects.get(first_name=author['first_name'], last_name=author['last_name'])
+                ref.authors.add(new_auth)
         return ref
     
     def update(self, instance, validated_data):
@@ -154,21 +156,22 @@ class SynthetaseSerializer(serializers.ModelSerializer):
         Synthetase.objects.filter(id=instance.id).update(**validated_data)
         instance.organisms.clear()
         instance.mutations.clear()
-
-        for organism in organisms:
-            try:
-                new_org = Organism.objects.get(organism_name=organism['organism_name'])
-            except:
-                Organism.objects.create(**organism)
-                new_org = Organism.objects.get(organism_name=organism['organism_name'])
-            instance.organisms.add(new_org)
-        for mutation in mutations:
-            try:
-                new_mut = SynthMutations.objects.get(mutation_name=mutation['mutation_name'])
-            except:
-                SynthMutations.objects.create(**mutation)
-                new_mut = SynthMutations.objects.get(mutation_name=mutation['mutation_name'])
-            instance.mutations.add(new_mut)
+        if organisms:
+            for organism in organisms:
+                try:
+                    new_org = Organism.objects.get(organism_name=organism['organism_name'])
+                except:
+                    Organism.objects.create(**organism)
+                    new_org = Organism.objects.get(organism_name=organism['organism_name'])
+                instance.organisms.add(new_org)
+        if mutations:
+            for mutation in mutations:
+                try:
+                    new_mut = SynthMutations.objects.get(mutation_name=mutation['mutation_name'])
+                except:
+                    SynthMutations.objects.create(**mutation)
+                    new_mut = SynthMutations.objects.get(mutation_name=mutation['mutation_name'])
+                instance.mutations.add(new_mut)
         return instance
 
 
@@ -279,7 +282,7 @@ class ReactionSerializer(serializers.ModelSerializer):
             try:
                 # this way you can create a new reaction using only the flexizyme name. If the flexizyme is already 
                 # there, you won't need to add in the sequence either because it may already be there.
-                new_flex = Flexizyme.objects.get(flex_name=flexizyme['flex_name'])
+                new_flex = Flexizyme.objects.filter(flex_name=flexizyme['flex_name']).first()
             except:
                 Flexizyme.objects.create(**flexizyme)
                 new_flex = Flexizyme.objects.get(flex_name=flexizyme['flex_name'])
@@ -290,9 +293,9 @@ class ReactionSerializer(serializers.ModelSerializer):
             try:
                 new_synth = Synthetase.objects.filter(synth_common_name=synthetase['synth_common_name']).first()
             except:
-                synth_serializer = SynthetaseSerializer(data=synthetase)
-                if synth_serializer.is_valid():
-                    synth_serializer.save()
+                new_synth = SynthetaseSerializer(data=synthetase)
+                new_synth.is_valid(raise_exception=True)
+                new_synth.save()
                 new_synth = Synthetase.objects.get(synth_common_name=synthetase['synth_common_name'])
         else:
             new_synth = synthetase
@@ -300,9 +303,12 @@ class ReactionSerializer(serializers.ModelSerializer):
         new_reaction = Reaction.objects.create(**validated_data, assay=new_assay, monomer=new_monomer, flexizyme=new_flex, synthetase=new_synth, tRNA=new_trna)
         for reference in references:
             try: 
-                new_ref = Reference.objects.get(DOI=reference['DOI'])
+                new_ref = Reference.objects.filter(DOI=reference['DOI']).first()
             except:
-                new_ref = ReferenceSerializer.create(reference)
+                new_ref = ReferenceSerializer(data=reference)
+                new_ref.is_valid(raise_exception=True)
+                new_ref.save()
+                new_ref = Reference.objects.get(DOI=reference['DOI'])
             new_reaction.references.add(new_ref)
         return new_reaction
 
