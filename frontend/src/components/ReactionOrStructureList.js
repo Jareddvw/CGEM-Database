@@ -10,9 +10,7 @@ const ReactionOrStructureList = ( {cardView, reactions } ) => {
 
     return (
         <>
-        
-            
-            {cardView == "false" ? <ReactionList reactions={reactions} /> : <StructureList reactions={reactions} />}
+            {cardView === "false" ? <ReactionList reactions={reactions} /> : <StructureList reactions={reactions} />}
         </>
     )
 }

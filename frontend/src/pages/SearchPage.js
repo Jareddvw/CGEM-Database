@@ -1,6 +1,5 @@
-import { Container, Nav, Row, Col, Form, Stack, Button } from 'react-bootstrap'
+import { Container, Row, Form } from 'react-bootstrap'
 import { useState } from 'react'
-import { Navigate } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import MonomerDrawing from '../components/MonomerDrawing'
 

@@ -1,11 +1,8 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import StructureListItem from '../components/StructureListItem'
 import MonomerDrawing from '../components/MonomerDrawing'
-import SmilesDrawer from 'smiles-drawer'
-import { Container, Row, Col, CardGroup, Card, Form } from 'react-bootstrap'
+import { Container, Row, Form } from 'react-bootstrap'
 import StructureList from '../components/StructureList'
-import { createBrowserHistory } from 'history'
 
 const StructureListPage = () => {
 
@@ -37,7 +34,7 @@ const StructureListPage = () => {
                         </Form.Control>
                     </div>
                 </Row>
-                {SMILES != '' ? 
+                {SMILES !== '' ? 
                     (<Row className='align-items-center'>
                         <MonomerDrawing smiles={SMILES} width='400' height='300' />
                     </Row>) : <Row className='mb-3' ></Row>}

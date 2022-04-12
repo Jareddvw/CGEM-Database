@@ -1,13 +1,11 @@
-import React from 'react'
 import { useState, useEffect } from 'react'
 import { useMatch } from 'react-router-dom'
-import { Container, Table, Row, Col } from 'react-bootstrap'
+import { Container, Table, Row } from 'react-bootstrap'
 import MonomerDrawing from '../components/MonomerDrawing'
 import FlexOrSynthInfo from '../components/FlexOrSynthInfo'
 import RibosomeInfo from '../components/RibosomeInfo'
 import MicrohelixAssay from '../components/MicrohelixAssay'
 import TRNA_info from '../components/TRNA_info'
-import StructureListItem from '../components/StructureListItem'
 import References from '../components/References'
 
 const ReactionPage = () => {

@@ -1,6 +1,5 @@
 import React from 'react'
 import {Navbar} from 'react-bootstrap'
-import SmilesDrawer from 'smiles-drawer'
 
 const Footer = () => {
 

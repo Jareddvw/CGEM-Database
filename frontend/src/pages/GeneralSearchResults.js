@@ -1,5 +1,4 @@
 import { useMatch } from 'react-router-dom'
-import ReactionList from '../components/ReactionList'
 import { useState, useEffect } from 'react'
 import { Row } from 'react-bootstrap'
 import ReactionOrStructureList from '../components/ReactionOrStructureList'
