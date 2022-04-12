@@ -56,7 +56,7 @@ class ReferenceSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         authors = validated_data.pop('authors')
-        ref = Reference.objects.create(**validated_data)
+        ref = Reference(**validated_data)
         if authors:
             for author in authors:
                 try:

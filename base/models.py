@@ -63,6 +63,7 @@ class Author(models.Model):
         return self.last_name + ', ' + self.first_name
 
 class Reference(models.Model):
+    id = models.AutoField(primary_key=True)
     # DOI, is required
     DOI = models.TextField(max_length=50)
     title = models.TextField(default='', blank=True)
