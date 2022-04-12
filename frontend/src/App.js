@@ -10,6 +10,7 @@ import Footer from './components/Footer'
 import SearchPage from './pages/SearchPage';
 import GeneralSearch from './pages/GeneralSearchResults';
 import AdvSearchPage from './pages/AdvSearchPage';
+import ContributePage from './pages/ContributePage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/reaction/:id" element={<ReactionPage />} />
           <Route path="/search/:searchTerm" element={<GeneralSearch />} />
           <Route path="/advanced" exact element={<AdvSearchPage />} />
+          <Route path="/contribute" exact element={<ContributePage />} />
         </Routes>
       
       <br></br>

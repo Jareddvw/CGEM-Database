@@ -65,13 +65,13 @@ class Author(models.Model):
 class Reference(models.Model):
     # DOI, title, publication date are required
     DOI = models.CharField(max_length=50)
-    title = models.TextField(default='')
-    publication_date = models.DateField(auto_now=False)
+    title = models.TextField(default='', blank=True)
+    publication_date = models.DateField(auto_now=False, blank=True)
     journal = models.CharField(max_length=75, blank=True, default='')
     # at least one author is required
-    authors = models.ManyToManyField(Author, related_name="references")
+    authors = models.ManyToManyField(Author, related_name="references", blank=True)
     def __str__(self):
-        return '%d: %s' % (self.pk, self.title)
+        return '%d: %s' % (self.pk, self.DOI)
 
 #Usually only present if the reaction uses a flexizyme
 class MicrohelixAssay(models.Model):
@@ -110,13 +110,7 @@ class Reaction(models.Model):
     internal_incorporation = models.CharField(max_length=1, choices=INCORPORATION_CHOICES, blank=True, default='')
     internal_percent = models.FloatField(blank=True, null=True)
 
-    READOUT_CHOICES = [
-        ('LC', 'LC-MS'),
-        ('SD','SDS-PAGE'),
-        ('GF','GFP Fluorescence'),
-        ('PE','Protein Expression')
-    ]
-    rib_readout = models.CharField(max_length=2, choices=READOUT_CHOICES, blank=True, default='')
+    rib_readout = models.CharField(max_length=30, blank=True, default='')
     rib_incorporation_notes = models.TextField(blank=True, default='')
     # yield is percentage
     reaction_yield = models.FloatField(blank=True, null=True)
