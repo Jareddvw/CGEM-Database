@@ -39,11 +39,6 @@ class SynthMutations(models.Model):
     def __str__(self):
         return self.mutation_name
 
-# class ParentSynth(models.Model):
-#     name = models.CharField(max_length=25)
-#     def __str__(self):
-#         return self.name
-
 class Synthetase(models.Model):
     synth_common_name = models.CharField(max_length=100)
     parent_synthetase = models.CharField(max_length=50, null=False, blank=False)
@@ -56,23 +51,14 @@ class Synthetase(models.Model):
     def __str__(self):
         return self.synth_common_name
 
-class Author(models.Model):
-    first_name = models.CharField(max_length=25, blank=True, default='')
-    last_name = models.CharField(max_length=25)
-    def __str__(self):
-        return self.last_name + ', ' + self.first_name
-
-class Reference(models.Model):
-    id = models.AutoField(primary_key=True)
-    # DOI, is required
-    DOI = models.TextField(max_length=50)
-    title = models.TextField(default='', blank=True)
-    publication_date = models.DateField(auto_now=False, blank=True, null=True)
-    journal = models.CharField(max_length=75, blank=True, default='')
-    # at least one author is required
-    authors = models.ManyToManyField(Author, related_name="references", blank=True)
-    def __str__(self):
-        return '%d: %s' % (self.pk, self.DOI)
+# class Reference(models.Model):
+#     # DOI, is required
+#     DOI = models.TextField(max_length=50)
+#     title = models.TextField(default='', blank=True)
+#     publication_date = models.DateField(auto_now=False, blank=True, null=True)
+#     journal = models.CharField(max_length=75, blank=True, default='')
+#     def __str__(self):
+#         return '%d: %s' % (self.pk, self.DOI)
 
 #Usually only present if the reaction uses a flexizyme
 class MicrohelixAssay(models.Model):
@@ -86,7 +72,9 @@ class MicrohelixAssay(models.Model):
 ## Primary object of the database ##
 class Reaction(models.Model):
     #a reference can have multiple rxns listed, and reaction can have multiple references
-    references = models.ManyToManyField(Reference, related_name="reactions")
+
+    # references = models.ManyToManyField(Reference, related_name="reactions")
+
     #a reaction will either have a flexizyme, a synthetase, or neither (chemical acylation) so null for both.
     flexizyme = models.ForeignKey(Flexizyme, on_delete=models.SET_NULL, null=True, blank=True, related_name = 'reactions')
     synthetase = models.ForeignKey(Synthetase, on_delete=models.SET_NULL, null=True, blank=True, related_name ='reactions')

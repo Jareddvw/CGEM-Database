@@ -4,8 +4,7 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register('references', views.ReferenceViewSet, basename='references')
-router.register('authors', views.AuthorViewSet, basename='authors')
+# router.register('references', views.ReferenceViewSet, basename='references')
 router.register('single', views.ReactionViewSingle, basename='singleReaction')
 router.register('synthetases', views.SynthetaseView, basename='synthetases')
 router.register('mutations', views.MutationView, basename='mutations')

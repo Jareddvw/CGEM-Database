@@ -50,11 +50,9 @@ class ReactionTableView(generics.ListAPIView):
         'monomer__monomer_name',
         'monomer__monomer_smiles',
         'monomer__monomer_LG',
-        'references__DOI',
-        'references__title',
-        'references__authors__first_name',
-        'references__authors__last_name',
-        'references__journal',
+        # 'references__DOI',
+        # 'references__title',
+        # 'references__journal',
         'rib_readout'
     ]
     ordering_fields = [
@@ -76,35 +74,17 @@ class ReferencePagination(LimitOffsetPagination):
     default_limit = 10
     max_limit = 25
 
-class ReferenceViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
-    serializer_class = ReferenceSerializer
+# class ReferenceViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
+#     serializer_class = ReferenceSerializer
 
-    def get_queryset(self):
-        reference = Reference.objects.all()
-        return reference
+#     def get_queryset(self):
+#         reference = Reference.objects.all()
+#         return reference
     
-    pagination_class = ReferencePagination
-    filter_backends = (DjangoFilterBackend, SearchFilter)
-    filter_fields = ['DOI', 'title', 'journal']
-    search_fields = ['DOI', 'title', 'journal', 'authors__first_name', 'authors__last_name']
-
-
-class AuthorViewSet(viewsets.ModelViewSet):
-    serializer_class = AuthorSerializer
-
-    def get_queryset(self):
-        author = Author.objects.all()
-        return author
-    
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        new_auth = Author.objects.create(
-            first_name = data['first_name'],
-            last_name = data['last_name']
-        )
-        new_auth.save()
-        serializer = AuthorSerializer(new_auth)
-        return Response(serializer.data)
+#     pagination_class = ReferencePagination
+#     filter_backends = (DjangoFilterBackend, SearchFilter)
+#     filter_fields = ['DOI', 'title', 'journal']
+#     search_fields = ['DOI', 'title', 'journal']
 
 
 class FlexizymeView(viewsets.ModelViewSet):
@@ -183,10 +163,8 @@ class ReactionViewSingle(viewsets.ModelViewSet):
         'monomer__monomer_name',
         'monomer__monomer_smiles',
         'monomer__monomer_LG',
-        'references__DOI',
-        'references__title',
-        'references__authors__first_name',
-        'references__authors__last_name'
+        # 'references__DOI',
+        # 'references__title',
     ]
 
 
