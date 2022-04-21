@@ -51,14 +51,19 @@ class Synthetase(models.Model):
     def __str__(self):
         return self.synth_common_name
 
-# class Reference(models.Model):
-#     # DOI, is required
-#     DOI = models.TextField(max_length=50)
-#     title = models.TextField(default='', blank=True)
-#     publication_date = models.DateField(auto_now=False, blank=True, null=True)
-#     journal = models.CharField(max_length=75, blank=True, default='')
-#     def __str__(self):
-#         return '%d: %s' % (self.pk, self.DOI)
+class Reference(models.Model):
+    # DOI, is required
+    DOI = models.CharField(max_length=50, primary_key=True)
+    title = models.CharField(max_length=250, default='', blank=True)
+    publication_date = models.DateField(auto_now=False, blank=True, null=True)
+    journal = models.CharField(max_length=75, blank=True, default='')
+    def __str__(self):
+        return '%d: %s' % (self.pk, self.DOI)
+
+#Through table used for reaction—reference manytomanyfield
+class Reaction_references(models.Model):
+    reference_doi = models.OneToOneField(Reference, primary_key=True, on_delete=models.CASCADE)
+    reaction_id = models.ForeignKey('Reaction', on_delete=models.CASCADE)
 
 #Usually only present if the reaction uses a flexizyme
 class MicrohelixAssay(models.Model):
@@ -73,7 +78,7 @@ class MicrohelixAssay(models.Model):
 class Reaction(models.Model):
     #a reference can have multiple rxns listed, and reaction can have multiple references
 
-    # references = models.ManyToManyField(Reference, related_name="reactions")
+    references = models.ManyToManyField(Reference, related_name="reactions", through=Reaction_references)
 
     #a reaction will either have a flexizyme, a synthetase, or neither (chemical acylation) so null for both.
     flexizyme = models.ForeignKey(Flexizyme, on_delete=models.SET_NULL, null=True, blank=True, related_name = 'reactions')
