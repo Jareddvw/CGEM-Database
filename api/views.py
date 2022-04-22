@@ -74,17 +74,17 @@ class ReferencePagination(LimitOffsetPagination):
     default_limit = 10
     max_limit = 25
 
-# class ReferenceViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
-#     serializer_class = ReferenceSerializer
+class ReferenceViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
+    serializer_class = ReferenceSerializer
 
-#     def get_queryset(self):
-#         reference = Reference.objects.all()
-#         return reference
+    def get_queryset(self):
+        reference = Reference.objects.all()
+        return reference
     
-#     pagination_class = ReferencePagination
-#     filter_backends = (DjangoFilterBackend, SearchFilter)
-#     filter_fields = ['DOI', 'title', 'journal']
-#     search_fields = ['DOI', 'title', 'journal']
+    pagination_class = ReferencePagination
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_fields = ['DOI', 'title', 'journal']
+    search_fields = ['DOI', 'title', 'journal']
 
 
 class FlexizymeView(viewsets.ModelViewSet):

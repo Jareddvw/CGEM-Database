@@ -31,12 +31,11 @@ class TRNASerializer(serializers.ModelSerializer):
         model = T_RNA
         fields = '__all__'
 
-# ReferenceSerializer used to test create method before applying to Reaction
-# class ReferenceSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Reference
-#         fields = '__all__'
-#         depth = 1
+class ReferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reference
+        fields = '__all__'
+        depth = 1
 
 
 # Need to serialize Flexizyme and Synthetase, plus sythetase FKs for Synthetase View
@@ -48,7 +47,6 @@ class FlexizymeSerializer(serializers.ModelSerializer):
 class SynthetaseSerializer(serializers.ModelSerializer):
     organisms = OrganismSerializer(many = True)
     mutations = MutationSerializer(many = True)
-    # parent_synthetase = ParentSynthSerializer()
 
     class Meta:
         model = Synthetase
@@ -58,15 +56,6 @@ class SynthetaseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         organisms = validated_data.pop('organisms')
         mutations = validated_data.pop('mutations')
-        # parent = validated_data.pop('parent_synthetase')
-
-        # try:
-        #     new_parent = ParentSynth.objects.get(name=parent['name'])
-        # except:
-        #     ParentSynth.objects.create(**parent)
-        #     new_parent = ParentSynth.objects.get(name=parent['name'])
-
-        # new_synth = Synthetase.objects.create(**validated_data, parent_synthetase = new_parent)
 
         new_synth = Synthetase.objects.create(**validated_data) 
         for organism in organisms:
@@ -183,7 +172,7 @@ class ReactionSerializer(serializers.ModelSerializer):
     ##### Not sure if monomer and tRNA should be allowed to be null.
     monomer = MonomerSerializer()
     tRNA = TRNASerializer()
-    # references = ReferenceSerializer(many=True)
+    references = ReferenceSerializer(many=True)
 
     class Meta:
         model = Reaction
@@ -197,7 +186,7 @@ class ReactionSerializer(serializers.ModelSerializer):
         monomer = validated_data.pop('monomer')
         flexizyme = validated_data.pop('flexizyme')
         synthetase = validated_data.pop('synthetase')
-        # references = validated_data.pop('references')
+        references = validated_data.pop('references')
         tRNA = validated_data.pop('tRNA')
 
         # assay is not a required field so this action should only be performed if assay is provided
@@ -220,10 +209,10 @@ class ReactionSerializer(serializers.ModelSerializer):
             try:
                 # this way you can create a new reaction using only the flexizyme name. If the flexizyme is already 
                 # there, you won't need to add in the sequence either because it may already be there.
-                new_flex = Flexizyme.objects.filter(flex_name=flexizyme['flex_name']).first()
+                new_flex, _ = Flexizyme.objects.get_or_create(flex_name=flexizyme['flex_name'])
             except:
                 Flexizyme.objects.create(**flexizyme)
-                new_flex = Flexizyme.objects.get(flex_name=flexizyme['flex_name'])
+                new_flex = Flexizyme.objects.filter(flex_name=flexizyme['flex_name']).first()
         else:
             new_flex = flexizyme
 
@@ -234,23 +223,25 @@ class ReactionSerializer(serializers.ModelSerializer):
                 new_synth = SynthetaseSerializer(data=synthetase)
                 if new_synth.is_valid():
                     new_synth.save()
+                print(new_synth)
                 new_synth = Synthetase.objects.get(synth_common_name=synthetase['synth_common_name'])
+                print(new_synth)
         else:
             new_synth = synthetase
 
-        new_reaction = Reaction.objects.create(**validated_data, assay=new_assay, monomer=new_monomer, flexizyme=new_flex, synthetase=new_synth, tRNA=new_trna)
-        # for reference in references:
-        #     try: 
-        #         new_ref, created = Reference.objects.get_or_create(
-        #             DOI=reference['DOI'], 
-        #             title=reference['title'], 
-        #             journal=reference['journal'])
-        #     except:
-        #         new_ref = ReferenceSerializer(data=reference)
-        #         new_ref.is_valid(raise_exception=True)
-        #         new_ref.save()
-        #         new_ref = Reference.objects.get(DOI=reference['DOI'])
-        #     new_reaction.references.add(new_ref)
+        new_reaction = Reaction.objects.create(assay=new_assay, monomer=new_monomer, tRNA=new_trna, **validated_data)
+        new_reaction.flexizyme = new_flex
+        new_reaction.synthetase = new_synth
+        new_reaction.save()
+        for reference in references:
+            try:
+                new_ref = Reference.objects.filter(DOI=reference['DOI']).first()
+                if not new_ref:
+                    new_ref, _ = Reference.objects.get_or_create(**reference)
+            except:
+                Reference.objects.create(**reference)
+                new_ref = Reference.objects.filter(DOI=reference['DOI']).first()
+            new_reaction.references.add(new_ref)
         return new_reaction
 
 
@@ -302,17 +293,17 @@ class ReactionSerializer(serializers.ModelSerializer):
             except:
                 new_trna = T_RNA.objects.create(**tRNA)
             currentObj.update(tRNA = new_trna)
-        # references = validated_data.get('references', 0)
-        # if references:
-        #     validated_data.pop('references')
-        #     # clears existing references for this Reaction before adding in the new ones. So when calling update on references, must be sure to treat as PUT rather than PATCH.
-        #     instance.references.clear()
-        #     for reference in references:
-        #         try: 
-        #             new_ref = Reference.objects.get(DOI=reference['DOI'])
-        #         except:
-        #             new_ref = ReferenceSerializer.create(reference)
-        #         instance.references.add(new_ref)
+        references = validated_data.get('references', 0)
+        if references:
+            validated_data.pop('references')
+            # clears existing references for this Reaction before adding in the new ones. So when calling update on references, must be sure to treat as PUT rather than PATCH.
+            instance.references.clear()
+            for reference in references:
+                try: 
+                    new_ref = Reference.objects.get(DOI=reference['DOI'])
+                except:
+                    new_ref = ReferenceSerializer.create(reference)
+                instance.references.add(new_ref)
         currentObj.update(**validated_data)
         return instance
 
