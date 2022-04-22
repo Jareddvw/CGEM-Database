@@ -24,21 +24,16 @@ class Flexizyme(models.Model):
     flex_name = models.CharField(max_length=50)
     flex_sequence = models.TextField(blank=True, default='')
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['flex_name', 'flex_sequence'], name='unique flexizyme name')
-        ]
-
     def __str__(self):
         return self.flex_name
 
-#synthetases to organisms is many-to-many relationship
+# synthetases to organisms is many-to-many relationship
 class Organism(models.Model):
     organism_name = models.CharField(max_length=50)
     def __str__(self):
         return self.organism_name
 
-#synthetases to mutations is also many-to-many
+# synthetases to mutations is also many-to-many
 class SynthMutations(models.Model):
     mutation_name = models.CharField(max_length=25)
     def __str__(self):
@@ -47,11 +42,8 @@ class SynthMutations(models.Model):
 class ParentSynth(models.Model):
     parent_name = models.CharField(max_length=50, null=False, blank=False)
     # potentially will only have pbd structure codes for parent synthetase, not for synthetase mutant
-    parent_pbd_id = models.CharField(max_length=10, blank=True)
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['parent_name', 'parent_pbd_id'], name='unique parent')
-        ]
+    parent_pbd_id = models.CharField(max_length=10, blank=True, default='')
+
 
 class Synthetase(models.Model):
     synth_common_name = models.CharField(max_length=100)
@@ -63,11 +55,6 @@ class Synthetase(models.Model):
     # WT synthetase e.g. will have no mutations
     mutations = models.ManyToManyField(SynthMutations, related_name="synthetases", blank=True)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['synth_common_name', 'accession_id'], name='unique synthetase')
-        ]
-
     def __str__(self):
         return self.synth_common_name
 
@@ -78,14 +65,8 @@ class Reference(models.Model):
     publication_date = models.DateField(auto_now=False, blank=True, null=True)
     journal = models.CharField(max_length=75, blank=True, default='')
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['DOI', 'title', 'journal'], name='unique reference')
-        ]
-
     def __str__(self):
         return '%d: %s' % (self.pk, self.DOI)
-
 
 #Usually only present if the reaction uses a flexizyme
 class MicrohelixAssay(models.Model):

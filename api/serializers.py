@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from base.models import *
 
+from drf_writable_nested.serializers import WritableNestedModelSerializer
+
 #serializers for database models in base.models
 
 ################ Helper Serializers ################ 
@@ -16,16 +18,6 @@ class MonomerSerializer(serializers.ModelSerializer):
         model = Monomer
         fields = '__all__'
 
-class OrganismSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Organism
-        fields = '__all__'
-
-class MutationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SynthMutations
-        fields = '__all__'
-
 class TRNASerializer(serializers.ModelSerializer):
     class Meta:
         model = T_RNA
@@ -37,6 +29,15 @@ class ReferenceSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
+class MutationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SynthMutations
+        fields = '__all__'
+
+class OrganismSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organism
+        fields = '__all__'
 
 # Need to serialize Flexizyme and Synthetase, plus sythetase FKs for Synthetase View
 class FlexizymeSerializer(serializers.ModelSerializer):
@@ -49,10 +50,10 @@ class ParentSynthSerializer(serializers.ModelSerializer):
         model = ParentSynth
         fields = '__all__'
 
-class SynthetaseSerializer(serializers.ModelSerializer):
+class SynthetaseSerializer(WritableNestedModelSerializer):
     organisms = OrganismSerializer(many = True)
     mutations = MutationSerializer(many = True)
-    parent_synthetase = ParentSynthSerializer(many = False)
+    parent_synthetase = ParentSynthSerializer()
 
     class Meta:
         model = Synthetase
@@ -60,6 +61,7 @@ class SynthetaseSerializer(serializers.ModelSerializer):
         depth = 2
 
     def create(self, validated_data):
+
         organisms = validated_data.pop('organisms')
         mutations = validated_data.pop('mutations')
         parent = validated_data.pop('parent_synthetase')
@@ -68,24 +70,23 @@ class SynthetaseSerializer(serializers.ModelSerializer):
         try: 
             new_parent, _ = ParentSynth.objects.get_or_create(parent_name=parent['parent_name'], parent_pbd_id=parent['parent_pbd_id'])
         except:
-            ParentSynth.objects.create(**parent)
-            new_parent = ParentSynth.objects.filter(parent_name=parent['parent_name']).first()
+            new_parent = ParentSynth.objects.filter(parent_name=parent['parent_name'], parent_pbd_id=parent['parent_pbd_id']).first()
         new_synth = Synthetase.objects.create(**validated_data, parent_synthetase=new_parent) 
         new_synth.save()
         # Adding organisms and mutations to Synthetase object:
         for organism in organisms:
             try:
-                new_org = Organism.objects.get(organism_name=organism['organism_name'])
+                new_org = Organism.objects.filter(organism_name=organism['organism_name']).first()
+                if not new_org:
+                    new_org = Organism.objects.create(**organism)
             except:
-                Organism.objects.create(**organism)
                 new_org = Organism.objects.get(organism_name=organism['organism_name'])
             new_synth.organisms.add(new_org)
         for mutation in mutations:
             try:
-                new_mut = SynthMutations.objects.get(mutation_name=mutation['mutation_name'])
+                new_mut, _ = SynthMutations.objects.get_or_create(mutation_name=mutation['mutation_name'])
             except:
-                SynthMutations.objects.create(**mutation)
-                new_mut = SynthMutations.objects.get(mutation_name=mutation['mutation_name'])
+                new_mut = SynthMutations.objects.filter(mutation_name=mutation['mutation_name']).first()
             new_synth.mutations.add(new_mut)
         return new_synth
 
@@ -100,7 +101,7 @@ class SynthetaseSerializer(serializers.ModelSerializer):
         Synthetase.objects.filter(id=instance.id).update(**validated_data)
         instance.organisms.clear()
         instance.mutations.clear()
-        
+
         if parent:
             updated_parent, created = ParentSynth.objects.update_or_create(**parent)
             instance.parent_synthetase = updated_parent
@@ -240,14 +241,19 @@ class ReactionSerializer(serializers.ModelSerializer):
 
         if synthetase:
             try:
-                new_synth = Synthetase.objects.filter(synth_common_name=synthetase['synth_common_name']).first()
-            except:
-                new_synth = SynthetaseSerializer(data=synthetase)
-                if new_synth.is_valid():
-                    new_synth.save()
-                print(new_synth)
                 new_synth = Synthetase.objects.get(synth_common_name=synthetase['synth_common_name'])
-                print(new_synth)
+            except:
+                new_synth = Synthetase.objects.filter(synth_common_name=synthetase['synth_common_name']).first()
+            print("1a", synthetase)
+            print("1b", new_synth)
+            # If the synthetase doesn't yet exist, we need to make it.
+            if not new_synth:
+                new_synth_serializer = SynthetaseSerializer(data=synthetase)
+                if new_synth_serializer.is_valid():
+                    new_synth_serializer.save()
+                print("3a", new_synth_serializer)
+                new_synth = Synthetase.objects.filter(synth_common_name=synthetase['synth_common_name']).first()
+                print("3b", new_synth)
         else:
             new_synth = synthetase
 

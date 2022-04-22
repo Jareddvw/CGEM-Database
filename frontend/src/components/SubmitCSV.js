@@ -78,7 +78,8 @@ const SubmitCSV = () => {
                 newEntry["assay"] = null
                 newEntry["synthetase"] = {
                     "synth_common_name": entry["Synthetase common name"],
-                    "parent_synthetase": {"flex_name": entry["Flexizyme name"], "parent_pbd_id:": null},
+                    // need to change later, parent pbd id should have some way to be input
+                    "parent_synthetase": {"parent_name": entry["Parent synthetase"], "parent_pbd_id": ""},
                     "accession_id": entry["Accession ID"],
                     "pbd_id": entry["Crystal structure PDB code"],
                     "organisms": entry["Organism"].split("; ").map((organism) => {
