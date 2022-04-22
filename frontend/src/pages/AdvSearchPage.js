@@ -40,8 +40,8 @@ const AdvSearchPage = () => {
             <Row className='mt-3'> Parent synthetase (if synthetase) 
                 <div style={{width:300}}>
                     <Form.Control
-                        onChange={(e)=>setOrdering(ordering + "&synthetase__parent_synthetase=" + e.target.value)} 
-                        onSubmit={(e)=>setOrdering(ordering + "&synthetase__parent_synthetase=" + e.target.value)} 
+                        onChange={(e)=>setOrdering(ordering + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
+                        onSubmit={(e)=>setOrdering(ordering + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
                         type="text" placeholder="Synthetase" >
                     </Form.Control>
                 </div>

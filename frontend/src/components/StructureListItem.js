@@ -36,7 +36,7 @@ const StructureListItem = ({ id, smiles, width, height, name,
                     <Card.Header>
                         <strong>{name}</strong>
                     <br></br>
-                    {flexizyme ? flexizyme + ". acylation yield: " + (acylation_yield || 'not measured')
+                    {flexizyme ? flexizyme + ". acylation yield: " + ((acylation_yield !== null) ? (acylation_yield) : "not measured")
                         : synthetase || 'chemical acylation'} 
                     <br></br>
     
@@ -55,7 +55,7 @@ const StructureListItem = ({ id, smiles, width, height, name,
                         <Card.Header>
                             <strong>{name}</strong>
                         <br></br>
-                        {flexizyme ? flexizyme + ". acylation yield: " + ('not measured' || acylation_yield)
+                        {flexizyme ? flexizyme + ". acylation yield: " + ((acylation_yield !== null) ? (acylation_yield) : "not measured")
                             : synthetase || 'chemical acylation'} 
                         <br></br>
 

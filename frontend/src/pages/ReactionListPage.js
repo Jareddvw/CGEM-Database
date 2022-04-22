@@ -37,7 +37,7 @@ const ReactionListPage = () => {
                         <option value="id">Database ID (default)</option>
                         <option value="internal_percent">Internal incorporation %</option>
                         <option value="n_term_percent">N-terminal incorporation %</option>
-                        <option value="assay__acylation_yield">Microhelix assay yield</option>
+                        <option value="assay__acylation_yield">Microhelix assay acylation yield</option>
                     </select>
                 </div>
                 <Col>

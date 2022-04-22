@@ -50,9 +50,9 @@ class ReactionTableView(generics.ListAPIView):
         'monomer__monomer_name',
         'monomer__monomer_smiles',
         'monomer__monomer_LG',
-        # 'references__DOI',
-        # 'references__title',
-        # 'references__journal',
+        'references__DOI',
+        'references__title',
+        'references__journal',
         'rib_readout'
     ]
     ordering_fields = [
@@ -163,8 +163,8 @@ class ReactionViewSingle(viewsets.ModelViewSet):
         'monomer__monomer_name',
         'monomer__monomer_smiles',
         'monomer__monomer_LG',
-        # 'references__DOI',
-        # 'references__title',
+        'references__DOI',
+        'references__title',
     ]
 
 

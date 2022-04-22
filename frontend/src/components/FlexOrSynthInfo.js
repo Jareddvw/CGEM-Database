@@ -8,7 +8,7 @@ const FlexOrSynthInfo = ({synthetase, flexizyme}) => {
                 <Card.Body>
                     <Card.Title>Synthetase</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">common name: {synthetase.synth_common_name} </Card.Subtitle>
-                    <Card.Subtitle className="mb-2 text-muted">parent synthetase: {synthetase.parent_synthetase || "no parent recorded"} </Card.Subtitle>
+                    <Card.Subtitle className="mb-2 text-muted">parent synthetase: {synthetase.parent_synthetase?.parent_name || "no parent recorded"} </Card.Subtitle>
                     <Card.Text>
                         some synthetase stuff
                     </Card.Text>

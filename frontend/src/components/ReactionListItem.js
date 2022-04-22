@@ -13,7 +13,7 @@ const ReactionListItem = ({ reaction }) => {
         <td> {reaction.synthetase} </td>
         <td> {reaction.n_term_percent || reaction.n_term_incorporation || 'not recorded'} </td>
         <td> {reaction.internal_percent || reaction.internal_incorporation || 'not recorded'} </td>
-        <td> {reaction.acylation_yield || ( (reaction.flexizyme != null) ? "not measured" : "" )} </td>
+        <td> {(reaction.acylation_yield !== null) ? (reaction.acylation_yield) : ( (reaction.flexizyme != null) ? "not measured" : "" )} </td>
     </tr>
   );
 }

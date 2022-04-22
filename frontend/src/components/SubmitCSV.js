@@ -33,15 +33,15 @@ const SubmitCSV = () => {
         
         let displayedData = result.map((reaction) => {
             return {
-            "flexizyme": ((reaction["flexizyme"] != null) ? reaction["flexizyme"]["flex_name"] : null),
-            "synthetase": ((reaction["synthetase"] != null) ? reaction["synthetase"]["synth_common_name"] : null),
-            "monomer": (reaction["monomer"]["monomer_smiles"] || reaction["monomer"]["monomer_name"]),
-            "monomer_smiles": reaction["monomer"]["monomer_smiles"],
-            "n_term_incorporation": "Y",
-            "n_term_percent": null,
-            "internal_incorporation": "",
-            "internal_percent": null,
-            "acylation_yield": 0.88
+                "flexizyme": ((reaction["flexizyme"] != null) ? reaction["flexizyme"]["flex_name"] : null),
+                "synthetase": ((reaction["synthetase"] != null) ? reaction["synthetase"]["synth_common_name"] : null),
+                "monomer": (reaction["monomer"]["monomer_smiles"] || reaction["monomer"]["monomer_name"]),
+                "monomer_smiles": reaction["monomer"]["monomer_smiles"],
+                "n_term_incorporation": reaction["n_term_incorporation"],
+                "n_term_percent": reaction["n_term_percent"],
+                "internal_incorporation": reaction["internal_incorporation"],
+                "internal_percent": reaction["internal_percent"],
+                "acylation_yield": reaction.assay?.acylation_yield || null
             }
         })
         setDisplayedData(displayedData)
@@ -57,6 +57,7 @@ const SubmitCSV = () => {
             })
             .catch((error) => {
                 console.error(error);
+                //go to some error page
             })
         }
     }
@@ -168,7 +169,7 @@ const SubmitCSV = () => {
                 </button>
             </div>
             {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)}
-            {postData.length !== 0 ? JSON.stringify(postData) : <></>}
+            {postData.length !== 0 ? JSON.stringify(postData) + "2: " + JSON.stringify(displayedData) : <></>}
         </>
     )
 }

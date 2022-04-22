@@ -18,7 +18,7 @@ const ReactionList = ({ reactions }) => {
                             <th>Synthetase</th>
                             <th>N-terminal incorporation</th>
                             <th>Internal incorporation</th>
-                            <th>Acylation yield</th>
+                            <th>Acylation yield (flexizymes)</th>
                         </tr>
                     </thead>
                     <tbody>

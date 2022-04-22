@@ -5,9 +5,7 @@ const ReferenceItem = ({ reference, number }) => {
   return (
     <>  
         <Container>
-            {number}. {reference.title}. 
-            <br></br>
-            DOI: {" " + reference.DOI}
+            {number}. {reference.DOI}. 
         </Container>
     </>
   )

@@ -12,7 +12,8 @@ const StructureList = ({ reactions, nolink }) => {
                     <Col key={reaction.id}>
 
                       <StructureListItem id = {reaction?.id} name = {reaction.monomer} flexizyme = {reaction?.flexizyme}
-                        synthetase = {reaction?.synthetase} smiles={reaction?.monomer_smiles} width="350" height="250" nolink={nolink} />
+                        synthetase = {reaction?.synthetase} acylation_yield={reaction?.acylation_yield}
+                        smiles={reaction?.monomer_smiles} width="350" height="250" nolink={nolink} />
                         
                     </Col>
                 )}
