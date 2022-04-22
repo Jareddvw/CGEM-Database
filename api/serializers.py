@@ -44,9 +44,15 @@ class FlexizymeSerializer(serializers.ModelSerializer):
         model = Flexizyme
         fields = '__all__'
 
+class ParentSynthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ParentSynth
+        fields = '__all__'
+
 class SynthetaseSerializer(serializers.ModelSerializer):
     organisms = OrganismSerializer(many = True)
     mutations = MutationSerializer(many = True)
+    parent_synthetase = ParentSynthSerializer(many = False)
 
     class Meta:
         model = Synthetase
@@ -56,8 +62,17 @@ class SynthetaseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         organisms = validated_data.pop('organisms')
         mutations = validated_data.pop('mutations')
+        parent = validated_data.pop('parent_synthetase')
 
-        new_synth = Synthetase.objects.create(**validated_data) 
+        # Adding parent synthetase to Synthetase object:
+        try: 
+            new_parent, _ = ParentSynth.objects.get_or_create(parent_name=parent['parent_name'], parent_pbd_id=parent['parent_pbd_id'])
+        except:
+            ParentSynth.objects.create(**parent)
+            new_parent = ParentSynth.objects.filter(parent_name=parent['parent_name']).first()
+        new_synth = Synthetase.objects.create(**validated_data, parent_synthetase=new_parent) 
+        new_synth.save()
+        # Adding organisms and mutations to Synthetase object:
         for organism in organisms:
             try:
                 new_org = Organism.objects.get(organism_name=organism['organism_name'])
@@ -79,10 +94,17 @@ class SynthetaseSerializer(serializers.ModelSerializer):
         # organisms and mutations are ManyToMany relationships
         organisms = validated_data.pop('organisms')
         mutations = validated_data.pop('mutations')
+        # parent synthetase and synthetase have FK relationship
+        parent = validated_data.pop('parent_synthetase')
 
         Synthetase.objects.filter(id=instance.id).update(**validated_data)
         instance.organisms.clear()
         instance.mutations.clear()
+        
+        if parent:
+            updated_parent, created = ParentSynth.objects.update_or_create(**parent)
+            instance.parent_synthetase = updated_parent
+            instance.save()
         if organisms:
             for organism in organisms:
                 try:

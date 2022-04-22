@@ -78,7 +78,7 @@ const SubmitCSV = () => {
                 newEntry["assay"] = null
                 newEntry["synthetase"] = {
                     "synth_common_name": entry["Synthetase common name"],
-                    "parent_synthetase": entry["Parent synthetase"],
+                    "parent_synthetase": {"flex_name": entry["Flexizyme name"], "parent_pbd_id:": null},
                     "accession_id": entry["Accession ID"],
                     "pbd_id": entry["Crystal structure PDB code"],
                     "organisms": entry["Organism"].split("; ").map((organism) => {
@@ -167,7 +167,7 @@ const SubmitCSV = () => {
                 </button>
             </div>
             {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)}
-            {postData.length != 0 ? JSON.stringify(postData) : <></>}
+            {postData.length !== 0 ? JSON.stringify(postData) : <></>}
         </>
     )
 }

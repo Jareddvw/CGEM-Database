@@ -44,15 +44,30 @@ class SynthMutations(models.Model):
     def __str__(self):
         return self.mutation_name
 
+class ParentSynth(models.Model):
+    parent_name = models.CharField(max_length=50, null=False, blank=False)
+    # potentially will only have pbd structure codes for parent synthetase, not for synthetase mutant
+    parent_pbd_id = models.CharField(max_length=10, blank=True)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['parent_name', 'parent_pbd_id'], name='unique parent')
+        ]
+
 class Synthetase(models.Model):
     synth_common_name = models.CharField(max_length=100)
-    parent_synthetase = models.CharField(max_length=50, null=False, blank=False)
+    parent_synthetase = models.ForeignKey(ParentSynth, on_delete=models.CASCADE, null=False)
     accession_id = models.CharField(max_length=50, blank=True)
     pbd_id = models.CharField(max_length=10, blank=True)
     # not sure if synthetase should be allowed to have no associated organism but rn it is allowed
     organisms = models.ManyToManyField(Organism, related_name="synthetases", blank=True)
     # WT synthetase e.g. will have no mutations
     mutations = models.ManyToManyField(SynthMutations, related_name="synthetases", blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['synth_common_name', 'accession_id'], name='unique synthetase')
+        ]
+
     def __str__(self):
         return self.synth_common_name
 
