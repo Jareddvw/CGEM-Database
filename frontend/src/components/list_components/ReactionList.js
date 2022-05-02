@@ -1,6 +1,6 @@
 import React from 'react'
 
-import ReactionListItem from '../components/ReactionListItem'
+import ReactionListItem from './ReactionListItem'
 import Table from 'react-bootstrap/Table'
 
 

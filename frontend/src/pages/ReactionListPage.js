@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { Container, Row, Col, Form } from 'react-bootstrap'
-import ReactionOrStructureList from '../components/ReactionOrStructureList'
+import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 
 // Page for list of all reactions in database (different from search results page)
 

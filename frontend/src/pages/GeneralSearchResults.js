@@ -1,7 +1,7 @@
 import { useMatch } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Row } from 'react-bootstrap'
-import ReactionOrStructureList from '../components/ReactionOrStructureList'
+import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 
 const GeneralSearch = () => {
 

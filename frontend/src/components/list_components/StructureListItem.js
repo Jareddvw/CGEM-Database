@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { Card, Popover, Overlay, OverlayTrigger } from 'react-bootstrap'
 import SmilesDrawer from 'smiles-drawer'
-import Canvas from './Canvas'
+import Canvas from '../Canvas'
 import { Link } from 'react-router-dom'
 
 const StructureListItem = ({ id, smiles, width, height, name, 
@@ -29,21 +29,25 @@ const StructureListItem = ({ id, smiles, width, height, name,
     
     let returnStatement = (<></>)
 
+    const InnerCard = (
+        <>
+            <Card.Header>
+                <strong>{name}</strong>
+                <br></br>
+                {flexizyme ? flexizyme + ". acylation yield: " + ((acylation_yield !== null) ? (acylation_yield) : "not measured")
+                    : synthetase || 'chemical acylation'} 
+                <br></br>
+            </Card.Header>
+            <Card.Body>
+                <Canvas draw={drawTree} width={width} height={height} />
+            </Card.Body> 
+        </>);
+
     if (nolink) {
         returnStatement = (
             <>
                 <Card className="m-1 hoverCard mb-3" style={{width: 400, height:350}}>
-                    <Card.Header>
-                        <strong>{name}</strong>
-                    <br></br>
-                    {flexizyme ? flexizyme + ". acylation yield: " + ((acylation_yield !== null) ? (acylation_yield) : "not measured")
-                        : synthetase || 'chemical acylation'} 
-                    <br></br>
-    
-                    </Card.Header>
-                    <Card.Body>
-                        <Canvas draw={drawTree} width={width} height={height} />
-                    </Card.Body>
+                    {InnerCard}
                 </Card>
             </>
         )
@@ -52,17 +56,7 @@ const StructureListItem = ({ id, smiles, width, height, name,
             <>
                 <Card className="m-1 hoverCard mb-3" style={{width: 400, height:350}}>
                     <Link to={`/reaction/${id}`} className="Link" style={{textDecoration: 'none', color:'black'}}> 
-                        <Card.Header>
-                            <strong>{name}</strong>
-                        <br></br>
-                        {flexizyme ? flexizyme + ". acylation yield: " + ((acylation_yield !== null) ? (acylation_yield) : "not measured")
-                            : synthetase || 'chemical acylation'} 
-                        <br></br>
-
-                        </Card.Header>
-                        <Card.Body>
-                            <Canvas draw={drawTree} width={width} height={height} />
-                        </Card.Body>
+                        {InnerCard}
                     </Link>
                 </Card>
             </>

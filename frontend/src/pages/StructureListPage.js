@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import MonomerDrawing from '../components/MonomerDrawing'
 import { Container, Row, Form } from 'react-bootstrap'
-import StructureList from '../components/StructureList'
+import StructureList from '../components/list_components/StructureList'
 
 const StructureListPage = () => {
 

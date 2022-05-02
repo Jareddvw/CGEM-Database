@@ -1,7 +1,8 @@
 import React from 'react'
 import { useRef, useState } from 'react';
 import { parse } from 'papaparse';
-import StructureList from './StructureList';
+import StructureList from './list_components/StructureList';
+import ReactionList from './list_components/ReactionList';
 import { createBrowserHistory } from 'history'
 
 const SubmitCSV = () => {
@@ -168,7 +169,8 @@ const SubmitCSV = () => {
                     Submit
                 </button>
             </div>
-            {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)}
+            {/* {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)} */}
+            {displayedData !== [] ? (<ReactionList reactions={(displayedData)} />) : (<></>)}
             {postData.length !== 0 ? JSON.stringify(postData) + "2: " + JSON.stringify(displayedData) : <></>}
         </>
     )

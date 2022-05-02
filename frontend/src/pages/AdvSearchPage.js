@@ -1,7 +1,7 @@
 import { Container, Row, Col, Button, Form } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
-import ReactionList from '../components/ReactionList'
-import StructureList from '../components/StructureList'
+import ReactionList from '../components/list_components/ReactionList'
+import StructureList from '../components/list_components/StructureList'
 
 const AdvSearchPage = () => {
 
