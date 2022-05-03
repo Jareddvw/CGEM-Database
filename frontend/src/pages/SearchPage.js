@@ -20,7 +20,6 @@ const SearchPage = () => {
   return (
       <>
         <Container>
-            <h1>{searchTerm}</h1>
             <Row className = 'mt-5 mb-3'><h4 style={{textDecoration: 'none' }} className='text-center'>Find a Reaction</h4></Row>
             <Row></Row>
             <Row className='align-items-center'>

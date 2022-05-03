@@ -171,7 +171,7 @@ const SubmitCSV = () => {
             </div>
             {/* {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)} */}
             {displayedData !== [] ? (<ReactionList reactions={(displayedData)} />) : (<></>)}
-            {postData.length !== 0 ? JSON.stringify(postData) + "2: " + JSON.stringify(displayedData) : <></>}
+            {/* {postData.length !== 0 ? JSON.stringify(postData) + "2: " + JSON.stringify(displayedData) : <></>} */}
         </>
     )
 }
