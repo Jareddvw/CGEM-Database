@@ -18,7 +18,7 @@ const Header = () => {
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/contribute">Contribute</NavDropdown.Item>
                 </NavDropdown>
-                <Nav.Link href="#signin">Sign in</Nav.Link>
+                <Nav.Link href="/sign-in">Sign in</Nav.Link>
             </Nav>
             </Navbar.Collapse>
         </Container>

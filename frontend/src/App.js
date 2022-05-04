@@ -11,6 +11,8 @@ import SearchPage from './pages/SearchPage';
 import GeneralSearch from './pages/GeneralSearchResults';
 import AdvSearchPage from './pages/AdvSearchPage';
 import ContributePage from './pages/ContributePage';
+import LoginPage from './pages/LoginPage';
+import NewUserPage from './pages/NewUserPage';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
       <br></br>
         <Routes>
           <Route path="/" exact element={<SearchPage />} />
+          <Route path="/sign-in" exact element={<LoginPage />} />
+          <Route path="/create-account" exact element={<NewUserPage />} />
           <Route path="/all-reactions" element={<ReactionListPage />} />
           <Route path="/structures" exact element={<StructureListPage />} />
           <Route path="/reaction/:id" element={<ReactionPage />} />

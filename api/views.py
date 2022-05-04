@@ -15,6 +15,25 @@ from rest_framework.pagination import LimitOffsetPagination
 from base.models import *
 from .serializers import *
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+###### Overriding JWT Serializer + View to return more info about user ########
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['username'] = user.username
+        token['email'] = user.email
+        # ...
+
+        return token
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
 
 ###### Views for reactions in table format e.g. as search results or "browse all" page #######
 class ReactionTableViewPagination(LimitOffsetPagination):
@@ -31,7 +50,7 @@ class ReactionTableView(generics.ListAPIView):
         'assay__acylation_yield',
         'flexizyme__flex_name',
         'synthetase__synth_common_name',
-        'synthetase__parent_synthetase',
+        'synthetase__parent_synthetase__parent_name',
         'synthetase__organisms__organism_name',
         'monomer__monomer_name',
         'monomer__monomer_smiles',
@@ -46,7 +65,7 @@ class ReactionTableView(generics.ListAPIView):
         'flexizyme__flex_name',
         'synthetase__synth_common_name',
         'synthetase__organisms__organism_name',
-        'synthetase__parent_synthetase',
+        'synthetase__parent_synthetase__parent_name',
         'monomer__monomer_name',
         'monomer__monomer_smiles',
         'monomer__monomer_LG',
