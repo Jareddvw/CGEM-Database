@@ -23,9 +23,13 @@ const Header = () => {
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/contribute">Contribute</NavDropdown.Item>
                 </NavDropdown>
-                { (user !== null) ?
-                  <Nav.Link onClick={logoutUser}> Sign out</Nav.Link> :
-                  <Nav.Link href="/sign-in">Sign in</Nav.Link>
+                { (user === null) ?
+                  <Nav.Link href="/sign-in">Sign in</Nav.Link> :
+                  <NavDropdown title="Account" id="basic-nav-dropdown">
+                    <NavDropdown.Item href="/my-reactions">Your reactions</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item onClick={logoutUser}> Sign out</NavDropdown.Item>
+                  </NavDropdown>
                 }
             </Nav>
             </Navbar.Collapse>

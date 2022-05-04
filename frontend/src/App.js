@@ -16,6 +16,7 @@ import NewUserPage from './pages/NewUserPage';
 
 import PrivateRoute from './utils/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
+import MyReactionsPage from './pages/MyReactionsPage';
 
 function App() {
   return (
@@ -36,6 +37,11 @@ function App() {
               <Route exact path='/contribute' element={
                 <PrivateRoute>
                   <ContributePage />
+                </PrivateRoute>
+              }/>
+              <Route exact path='/my-reactions' element={
+                <PrivateRoute>
+                  <MyReactionsPage />
                 </PrivateRoute>
               }/>
 

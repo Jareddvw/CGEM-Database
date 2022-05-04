@@ -138,7 +138,7 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reaction
-        # either flex or synth will be blank
+        # either flex or synth will be blank 
         fields = [
             'id',
             'flexizyme',
@@ -336,6 +336,7 @@ class ReactionSerializer(serializers.ModelSerializer):
         return instance
 
 
+# Serialize only reactions by a specific author! 
 
 
 

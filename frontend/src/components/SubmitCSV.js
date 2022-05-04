@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useRef, useState } from 'react';
 import { parse } from 'papaparse';
 import StructureList from './list_components/StructureList';
 import ReactionList from './list_components/ReactionList';
 import { createBrowserHistory } from 'history'
+import AuthContext from '../context/AuthContext';
 
 const SubmitCSV = () => {
     const [fileName, setFileName] = useState(null);
@@ -11,6 +12,7 @@ const SubmitCSV = () => {
     const [postData, setPostData] = useState([])
     const inputRef = useRef(null);
     let history = createBrowserHistory()
+    let {authTokens} = useContext(AuthContext)
 
     const handleUpload = () => {
         inputRef.current?.click();
@@ -53,7 +55,10 @@ const SubmitCSV = () => {
         for (const reaction of postData) {
             fetch('/api/single/', {
                 method: 'post',
-                headers: {'Content-Type':'application/json'},
+                headers: {
+                    'Content-Type':'application/json',
+                    'Authorization':'Bearer ' + String(authTokens.access)
+                },
                 body: JSON.stringify(reaction)
             })
             .catch((error) => {

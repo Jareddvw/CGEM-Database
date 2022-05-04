@@ -4,12 +4,13 @@ from rest_framework import serializers
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticated
 
 
 from base.models import *
@@ -23,12 +24,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
         # Add custom claims
         token['username'] = user.username
         token['email'] = user.email
         # ...
-
         return token
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -142,6 +141,11 @@ class AssayView(viewsets.ModelViewSet):
 
 class ReactionViewSingle(viewsets.ModelViewSet):
     serializer_class = ReactionSerializer
+
+    # overriding perform_create so user gets added to model on create.
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
     def get_queryset(self):
         reaction = Reaction.objects.all()
         return reaction
@@ -186,6 +190,13 @@ class ReactionViewSingle(viewsets.ModelViewSet):
         'references__title',
     ]
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getMyReactions(request):
+    user = request.user
+    reactions = user.reaction_set.all()
+    serializer = ReactionSerializer(reactions, many=True)
+    return Response(serializer.data)
 
 
 """

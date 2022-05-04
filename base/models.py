@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -120,6 +121,8 @@ class Reaction(models.Model):
     # assay field will be set to null if the associated MicrohelixAssay is deleted.
     # Potential problem: can build up lots of assays that won't be deleted because no way to delete them.
     assay = models.OneToOneField(MicrohelixAssay, blank=True, null=True, on_delete=models.SET_NULL, related_name="reaction")
+
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return 'Reaction %d: %s' % (self.pk, self.monomer.__str__())
