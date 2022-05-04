@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.1.3",
     "fs": "^0.0.1-security",
+    "jwt-decode": "^3.1.2",
     "papaparse": "^5.3.2",
     "path": "^0.12.7",
     "react": "^17.0.2",

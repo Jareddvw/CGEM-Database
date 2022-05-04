@@ -14,28 +14,38 @@ import ContributePage from './pages/ContributePage';
 import LoginPage from './pages/LoginPage';
 import NewUserPage from './pages/NewUserPage';
 
+import PrivateRoute from './utils/PrivateRoute';
+import { AuthProvider } from './context/AuthContext';
+
 function App() {
   return (
-    <Router>
     <div className="App">
-      <Header />
-      <br></br>
-        <Routes>
-          <Route path="/" exact element={<SearchPage />} />
-          <Route path="/sign-in" exact element={<LoginPage />} />
-          <Route path="/create-account" exact element={<NewUserPage />} />
-          <Route path="/all-reactions" element={<ReactionListPage />} />
-          <Route path="/structures" exact element={<StructureListPage />} />
-          <Route path="/reaction/:id" element={<ReactionPage />} />
-          <Route path="/search/:searchTerm" element={<GeneralSearch />} />
-          <Route path="/advanced" exact element={<AdvSearchPage />} />
-          <Route path="/contribute" exact element={<ContributePage />} />
-        </Routes>
-      
-      <br></br>
-      <Footer />
+      <Router>
+        <AuthProvider>
+          <Header />
+          <br></br>
+            <Routes>
+              <Route path="/" exact element={<SearchPage />} />
+              <Route path="/sign-in" exact element={<LoginPage />} />
+              <Route path="/create-account" exact element={<NewUserPage />} />
+              <Route path="/all-reactions" exact element={<ReactionListPage />} />
+              <Route path="/structures" exact element={<StructureListPage />} />
+              <Route path="/reaction/:id" exact element={<ReactionPage />} />
+              <Route path="/search/:searchTerm" exact element={<GeneralSearch />} />
+              <Route path="/advanced" exact element={<AdvSearchPage />} />
+              <Route exact path='/contribute' element={
+                <PrivateRoute>
+                  <ContributePage />
+                </PrivateRoute>
+              }/>
+
+            </Routes>
+          
+          <br></br>
+          <Footer />
+        </AuthProvider>
+      </Router>
     </div>
-    </Router>
   );
 }
 

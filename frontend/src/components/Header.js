@@ -1,7 +1,12 @@
-import React from 'react'
+import { useContext } from 'react'
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap'
+import AuthContext from '../context/AuthContext';
 
 const Header = () => {
+
+
+  let { user, logoutUser } = useContext(AuthContext)
+    
   return (
     <>
     <Navbar className="nav" variant="dark" expand="lg" fixed="top">
@@ -18,7 +23,10 @@ const Header = () => {
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/contribute">Contribute</NavDropdown.Item>
                 </NavDropdown>
-                <Nav.Link href="/sign-in">Sign in</Nav.Link>
+                { (user !== null) ?
+                  <Nav.Link onClick={logoutUser}> Sign out</Nav.Link> :
+                  <Nav.Link href="/sign-in">Sign in</Nav.Link>
+                }
             </Nav>
             </Navbar.Collapse>
         </Container>
