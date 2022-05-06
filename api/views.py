@@ -11,6 +11,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import F
 
 
 from base.models import *
@@ -39,11 +40,28 @@ class ReactionTableViewPagination(LimitOffsetPagination):
     default_limit = 50
     max_limit = 100
 
+class NullsAlwaysLastOrderingFilter(OrderingFilter):
+    def filter_queryset(self, request, queryset, view):
+        ordering = self.get_ordering(request, queryset, view)
+
+        if ordering:
+            f_ordering = []
+            for o in ordering:
+                if not o:
+                    continue
+                if o[0] == '-':
+                    f_ordering.append(F(o[1:]).desc(nulls_last=True))
+                else:
+                    f_ordering.append(F(o).asc(nulls_last=True))
+            return queryset.order_by(*f_ordering)
+        return queryset
+
+
 class ReactionTableView(generics.ListAPIView):
 
     queryset = Reaction.objects.all()
     serializer_class = ReactionTableContentsSerializer
-    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    filter_backends = (DjangoFilterBackend, SearchFilter, NullsAlwaysLastOrderingFilter)
     filter_fields = [
         'id',
         'assay__acylation_yield',
@@ -195,7 +213,7 @@ class ReactionViewSingle(viewsets.ModelViewSet):
 def getMyReactions(request):
     user = request.user
     reactions = user.reaction_set.all()
-    serializer = ReactionSerializer(reactions, many=True)
+    serializer = ReactionTableContentsSerializer(reactions, many=True)
     return Response(serializer.data)
 
 

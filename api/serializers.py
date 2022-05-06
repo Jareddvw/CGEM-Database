@@ -183,7 +183,7 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
             y = reaction.assay.acylation_yield
             return y
         else:
-            return ''
+            return None
 
 
 # for individual reaction page — gives all attributes of the given reaction

@@ -11,7 +11,7 @@ const MyReactionsPage = () => {
     let [ordering, setOrdering] = useState('')
     let [cardView, setCardView] = useState("false")
 
-    let {authTokens, logoutUser} = useContext(AuthContext)
+    let {authTokens, logoutUser, user} = useContext(AuthContext)
 
     useEffect(() => {
         getReactions()
@@ -35,34 +35,17 @@ const MyReactionsPage = () => {
 
         console.log(data)
         if (response.status === 200) {
-            setReactions(reformatReactions(data))
+            setReactions(data)
         } else if (response.statusText === 'Unauthorized') {
             logoutUser()
         }
     }
 
-    let reformatReactions = (reactions) => {
-        let result = reactions.map((reaction) => {
-            return {
-                "flexizyme": ((reaction["flexizyme"] != null) ? reaction["flexizyme"]["flex_name"] : null),
-                "synthetase": ((reaction["synthetase"] != null) ? reaction["synthetase"]["synth_common_name"] : null),
-                "monomer": (reaction["monomer"]["monomer_smiles"] || reaction["monomer"]["monomer_name"]),
-                "monomer_smiles": reaction["monomer"]["monomer_smiles"],
-                "n_term_incorporation": reaction["n_term_incorporation"],
-                "n_term_percent": reaction["n_term_percent"],
-                "internal_incorporation": reaction["internal_incorporation"],
-                "internal_percent": reaction["internal_percent"],
-                "acylation_yield": reaction.assay?.acylation_yield || null
-            }
-        })
-        return result
-    }
-
   return (
     <>
         <Container className='mb-5'>
-            <h4 className='mt-3 mb-3'> Your reactions </h4>
-            <Row className='mt-3'> This is a table containing all the reactions you have added the database. </Row>
+            <h4 className='mt-3 mb-3'> Your reactions: {user.username} </h4>
+            <Row className='mt-3'> These are all of the reactions you have added. </Row>
             <Row className='mt-3'> Order results by: 
                 <div style={{width:300}}>
                     <select 
@@ -71,7 +54,7 @@ const MyReactionsPage = () => {
                         <option value="id">Database ID (default)</option>
                         <option value="internal_percent">Internal incorporation %</option>
                         <option value="n_term_percent">N-terminal incorporation %</option>
-                        <option value="assay__acylation_yield">Microhelix assay acylation yield</option>
+                        <option value="-assay__acylation_yield">Microhelix assay acylation yield</option>
                     </select>
                 </div>
                 <Col>
