@@ -5,11 +5,11 @@ const References = ({ references }) => {
     if (references) {
         return (
             <>
-                <Container className="mb-5">
-                    <h6 className='mt-3 mb-3'> References: </h6>
-                    {references.map((reference, index) => <ReferenceItem key={reference.id} 
-                        number={index + 1} reference={reference} />)}
-                </Container>
+                <h6 clfassName='mt-3 mb-3'> <strong>References: </strong></h6>
+                <p></p>
+                {references.map((reference, index) => <ReferenceItem key={reference.id} 
+                    number={index + 1} reference={reference} />)}
+                <p></p>
             </>
         )
     }

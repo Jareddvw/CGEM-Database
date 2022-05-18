@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useMatch } from 'react-router-dom'
-import { Container, Table, Row } from 'react-bootstrap'
+import { Container, Table, Row, Card } from 'react-bootstrap'
 import MonomerDrawing from '../components/MonomerDrawing'
 import FlexOrSynthInfo from '../components/FlexOrSynthInfo'
 import RibosomeInfo from '../components/RibosomeInfo'
@@ -53,12 +53,14 @@ const ReactionPage = () => {
             </tbody>
         </Table>
         <br></br>
-        <Row>
-            <div style={{width: 400}}>
-                <h6> Monomer Structure: </h6>
-                <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} width="350" height="250" />
-            </div>
-            <FlexOrSynthInfo synthetase={reaction?.synthetase} flexizyme={reaction?.flexizyme} />
+        <Row className="figureRow">
+            <Card className = "reactionPageCard" style={{width: 400}}>
+                <Card.Header> <strong>Monomer</strong></Card.Header>
+                <Card.Body>
+                    <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} width="350" height="250" />
+                </Card.Body>
+            </Card>
+            <FlexOrSynthInfo synthetase={reaction?.synthetase} flexizyme={reaction?.flexizyme} readout={reaction?.rib_readout} />
             <TRNA_info tRNA={reaction?.tRNA} />
         </Row>
         <br />
@@ -73,7 +75,7 @@ const ReactionPage = () => {
     </Container>
   );
    } else {
-       return <div> Waiting for reaction information to load... </div>
+       return <div> <strong> Waiting for reaction information to load... </strong> </div>
    }
 }
 

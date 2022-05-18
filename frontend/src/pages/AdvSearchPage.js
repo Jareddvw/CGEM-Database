@@ -5,15 +5,19 @@ import StructureList from '../components/list_components/StructureList'
 
 const AdvSearchPage = () => {
 
-  let [queries, setQueries] = useState({})
+  let [queries, setQueries] = useState("")
   let [ordering, setOrdering] = useState("?ordering=id")
   let [reactions, setReactions] = useState([])
 
 
   let getReactions = async () => {
-    let response = await fetch('/api/' + ordering)
+    let response = await fetch('/api/' + ordering + queries)
     let data = await response.json()
     setReactions(data.results)
+    let length = await data.results?.length
+    if (length === 0) {
+        setReactions("blank")
+    }
   }
 
   return (
@@ -32,7 +36,7 @@ const AdvSearchPage = () => {
                         <option value="id">Database ID (default)</option>
                         <option value="internal_percent">Internal incorporation %</option>
                         <option value="n_term_percent">N-terminal incorporation %</option>
-                        <option value="assay__acylation_yield">Microhelix assay yield</option>
+                        <option value="-assay__acylation_yield">Microhelix assay yield</option>
                     </select>
                 </div>
             </Row>
@@ -40,18 +44,40 @@ const AdvSearchPage = () => {
             <Row className='mt-3'> Parent synthetase (if synthetase) 
                 <div style={{width:300}}>
                     <Form.Control
-                        onChange={(e)=>setOrdering(ordering + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
-                        onSubmit={(e)=>setOrdering(ordering + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
+                        onChange={(e)=>setQueries(queries + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
+                        onSubmit={(e)=>setQueries(queries + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
                         type="text" placeholder="Synthetase" >
                     </Form.Control>
                 </div>
             </Row>
+            <Row className='mt-3'> Flexizyme name (if flexizyme) 
+                <div style={{width:300}}>
+                    <Form.Control
+                        onChange={(e)=>setQueries(queries + "&flexizyme__flex_name=" + e.target.value)} 
+                        onSubmit={(e)=>setQueries(queries + "&flexizyme__flex_name=" + e.target.value)} 
+                        type="text" placeholder="Flexizyme" >
+                    </Form.Control>
+                </div>
+            </Row>
+            <Row className='mt-3'> Monomer name
+                <div style={{width:300}}>
+                    <Form.Control
+                        onChange={(e)=>setQueries(queries + "&monomer__monomer_name=" + e.target.value)} 
+                        onSubmit={(e)=>setQueries(queries + "&monomer__monomer_name=" + e.target.value)} 
+                        type="text" placeholder="Monomer" >
+                    </Form.Control>
+                </div>
+            </Row>
+            
 
             </Row>
-
-            <Button className="mb-3" onClick={getReactions}> Submit </Button>
+            <Row>
+                <Button className="mb-3 mt-3 w-25" onClick={getReactions}> Search </Button>
+            </Row>
         </Container>
-        {(reactions.length != 0) ? <StructureList reactions={reactions} /> : <></>}
+        {(reactions.length !== 0) ? 
+            ((reactions === "blank") ? <h6 className="text-center">No reactions with those parameters found.</h6> : <StructureList reactions={reactions} />) : 
+            <></>}
     </>
   )
 }

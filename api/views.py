@@ -20,6 +20,45 @@ from .serializers import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+defaultSearchFields = [
+    'id',
+    'flexizyme__flex_name',
+    'synthetase__synth_common_name',
+    'synthetase__organisms__organism_name',
+    'synthetase__parent_synthetase__parent_name',
+    'monomer__monomer_name',
+    'monomer__monomer_smiles',
+    'monomer__monomer_LG',
+    'references__DOI',
+    'references__title',
+    'references__journal',
+    'rib_readout',
+    'assay__assay_notes'
+]
+defaultFilteringFields = [
+    'id',
+    'assay__acylation_yield',
+    'flexizyme__flex_name',
+    'synthetase__synth_common_name',
+    'synthetase__parent_synthetase__parent_name',
+    'synthetase__organisms__organism_name',
+    'monomer__monomer_name',
+    'monomer__monomer_smiles',
+    'monomer__monomer_LG',
+    'date_added',
+    'n_term_incorporation',
+    'internal_incorporation',
+    'rib_readout'
+]
+defaultOrderingFields = [
+    'id',
+    'internal_incorporation',
+    'internal_percent',
+    'assay__acylation_yield',
+    'n_term_percent',
+    'n_term_incorporation'
+]
+
 ###### Overriding JWT Serializer + View to return more info about user ########
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -62,43 +101,9 @@ class ReactionTableView(generics.ListAPIView):
     queryset = Reaction.objects.all()
     serializer_class = ReactionTableContentsSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter, NullsAlwaysLastOrderingFilter)
-    filter_fields = [
-        'id',
-        'assay__acylation_yield',
-        'flexizyme__flex_name',
-        'synthetase__synth_common_name',
-        'synthetase__parent_synthetase__parent_name',
-        'synthetase__organisms__organism_name',
-        'monomer__monomer_name',
-        'monomer__monomer_smiles',
-        'monomer__monomer_LG',
-        'date_added',
-        'n_term_incorporation',
-        'internal_incorporation',
-        'rib_readout'
-    ]
-    search_fields = [
-        'id',
-        'flexizyme__flex_name',
-        'synthetase__synth_common_name',
-        'synthetase__organisms__organism_name',
-        'synthetase__parent_synthetase__parent_name',
-        'monomer__monomer_name',
-        'monomer__monomer_smiles',
-        'monomer__monomer_LG',
-        'references__DOI',
-        'references__title',
-        'references__journal',
-        'rib_readout'
-    ]
-    ordering_fields = [
-        'id',
-        'internal_incorporation',
-        'internal_percent',
-        'assay__acylation_yield',
-        'n_term_percent',
-        'n_term_incorporation'
-    ]
+    filter_fields = defaultFilteringFields
+    search_fields = defaultSearchFields
+    ordering_fields = defaultOrderingFields
 
     pagination_class = ReactionTableViewPagination
 
@@ -182,31 +187,10 @@ class ReactionViewSingle(viewsets.ModelViewSet):
     def delete(self, request, id=None):
         return self.destroy(request, id)
 
-    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
-    filter_fields = [
-        'id',
-        'assay__acylation_yield',
-        'flexizyme__flex_name',
-        'synthetase__synth_common_name',
-        'synthetase__parent_synthetase',
-        'synthetase__organisms__organism_name',
-        'monomer__monomer_name',
-        'monomer__monomer_smiles',
-        'monomer__monomer_LG',
-        'date_added',
-    ]
-    search_fields = [
-        'id',
-        'flexizyme__flex_name',
-        'synthetase__synth_common_name',
-        'synthetase__organisms__organism_name',
-        'synthetase__parent_synthetase__name',
-        'monomer__monomer_name',
-        'monomer__monomer_smiles',
-        'monomer__monomer_LG',
-        'references__DOI',
-        'references__title',
-    ]
+    filter_backends = (DjangoFilterBackend, SearchFilter, NullsAlwaysLastOrderingFilter)
+    filter_fields = defaultFilteringFields
+    search_fields = defaultSearchFields
+    ordering_fields = defaultOrderingFields
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])

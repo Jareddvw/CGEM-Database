@@ -7,11 +7,11 @@ const TRNA_info = ( {tRNA} ) => {
     } else {
         return (
             <>
-            <Card style={{ width: '18rem' }}>
+            <Card style={{ width: '18rem' }} className="mx-3">
+                <Card.Header><strong>{tRNA.tRNA_name}</strong></Card.Header>
                 <Card.Body>
-                    <Card.Title>{tRNA.tRNA_name}</Card.Title>
                     <Card.Text>
-                        {tRNA.tRNA_seq}
+                        {tRNA.tRNA_seq || "No sequence recorded."}
                     </Card.Text>
                 </Card.Body>
             </Card>

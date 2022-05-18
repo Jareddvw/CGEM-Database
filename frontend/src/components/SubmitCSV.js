@@ -149,7 +149,7 @@ const SubmitCSV = () => {
     return (
         <>
             <div className="m-3">
-                <label className="mx-3">Choose file:</label>
+                <label className="mx-3">Choose file to upload:</label>
                 <input
                     ref={inputRef}
                     onChange={handleFileDetails}
@@ -175,7 +175,7 @@ const SubmitCSV = () => {
                 </button>
             </div>
             {/* {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)} */}
-            {displayedData !== [] ? (<ReactionList reactions={(displayedData)} />) : (<></>)}
+            {displayedData.length !== 0 ? (<ReactionList reactions={(displayedData)} />) : (<></>)}
             {/* {postData.length !== 0 ? JSON.stringify(postData) + "2: " + JSON.stringify(displayedData) : <></>} */}
         </>
     )

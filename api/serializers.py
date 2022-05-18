@@ -189,6 +189,8 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
 # for individual reaction page — gives all attributes of the given reaction
 class ReactionSerializer(serializers.ModelSerializer):
 
+    user = serializers.SerializerMethodField('get_username')
+
     assay = AssaySerializer(allow_null=True)
     flexizyme = FlexizymeSerializer(allow_null=True)
     synthetase = SynthetaseSerializer(allow_null=True)
@@ -200,6 +202,13 @@ class ReactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reaction
         fields = '__all__'
+
+    def get_username(self, reaction):
+        if reaction.user:
+            name = reaction.user.__str__()
+            return name
+        else:
+            return None
 
     def create(self, validated_data):
         # Assay is a OneToOneField
@@ -337,8 +346,6 @@ class ReactionSerializer(serializers.ModelSerializer):
 
 
 # Serialize only reactions by a specific author! 
-
-
 
 
     # for PUT and PATCH methods, should rely on ids. IE if you send a put or patch request you

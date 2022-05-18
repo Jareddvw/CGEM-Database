@@ -7,13 +7,20 @@ const MicrohelixAssay = ({ reaction }) => {
         return (
             <>
             <div>
-                Microhelix Assay yield: {reaction.assay.acylation_yield}
+                <p>
+                    <span style={{fontWeight: 'bold'}}>Microhelix Assay yield: </span> 
+                    {reaction.assay?.acylation_yield}
+                </p>
+                
             </div>
             <div>
-                Conditions: {reaction.assay.conditions}
+                <p><span style={{fontWeight: 'bold'}}>Conditions: </span> {reaction.assay?.conditions}</p>
             </div>
             <div>
-                Assay notes: {reaction.assay.assay_notes}
+                <p>
+                    <span style={{fontWeight: 'bold'}}>Assay notes: </span> 
+                    {reaction.assay?.assay_notes}
+                </p>
             </div>
             </>
         )
