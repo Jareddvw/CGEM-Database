@@ -49,7 +49,8 @@ defaultFilteringFields = [
     'date_added',
     'n_term_incorporation',
     'internal_incorporation',
-    'rib_readout'
+    'rib_readout',
+    'references__DOI'
 ]
 defaultOrderingFields = [
     'id',

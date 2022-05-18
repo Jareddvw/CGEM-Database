@@ -1,17 +1,20 @@
-import { Container, Row, Col, Button, Form } from 'react-bootstrap'
+import { Container, Row, Col, Button, Form, Stack } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 import ReactionList from '../components/list_components/ReactionList'
 import StructureList from '../components/list_components/StructureList'
+import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 
 const AdvSearchPage = () => {
 
   let [queries, setQueries] = useState("")
+  let [search, setSearch] = useState("")
   let [ordering, setOrdering] = useState("?ordering=id")
   let [reactions, setReactions] = useState([])
+  let [cardView, setCardView] = useState("false")
 
 
   let getReactions = async () => {
-    let response = await fetch('/api/' + ordering + queries)
+    let response = await fetch('/api/' + ordering + queries + search)
     let data = await response.json()
     setReactions(data.results)
     let length = await data.results?.length
@@ -20,65 +23,133 @@ const AdvSearchPage = () => {
     }
   }
 
+  let horizontalLine = () => 
+      (<hr className='mt-3' style={{color:'black', backgroundColor:'black'}}></hr>)
+
+  const handleEnterKeyPressed = (event) => {
+    if (event.key === 'Enter') {
+        getReactions()
+    }
+  }
+  
+
   return (
     <>
-        <Container>
+        <Container onKeyPress={handleEnterKeyPressed}>
             <Row as="h4" className='mt-4 mb-3'>Advanced Reaction Search</Row>
             <Row className='mt-3'> This will return all reactions that meet the selected criteria 
-            (every additional filter will be joined with an AND statement). 
-            Empty fields will be ignored so you don’t have to fill in every box (default ordering is by Database ID). </Row>
+            (every additional filter will be joined with an AND statement). For search filters, 
+            only results which EXACTLY match the input will be included. General search terms do not need to be exact.
+            Empty fields will be ignored so you don’t need to fill in every box. </Row>
             <Row></Row>
-            <Row className='mt-3'> Order results by: 
+            
+            <Row className='mt-3'>            
+            <Col className='mt-3'> Parent synthetase (if synthetase) 
+                <div style={{width:300}}>
+                    <Form.Control
+                        onChange={(e)=>setQueries(queries + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
+                        onSubmit={(e)=>setQueries(queries + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
+                        type="text" placeholder="" >
+                    </Form.Control>
+                </div>
+            </Col>
+            <Col className='mt-3'> Flexizyme name (if flexizyme) 
+                <div style={{width:300}}>
+                    <Form.Control
+                        onChange={(e)=>setQueries(queries + "&flexizyme__flex_name=" + e.target.value)} 
+                        onSubmit={(e)=>setQueries(queries + "&flexizyme__flex_name=" + e.target.value)} 
+                        type="text" placeholder="" >
+                    </Form.Control>
+                </div>
+            </Col>
+            <Col className='mt-3'> Monomer name
+                <div style={{width:300}}>
+                    <Form.Control
+                        onChange={(e)=>setQueries(queries + "&monomer__monomer_name=" + e.target.value)} 
+                        onSubmit={(e)=>setQueries(queries + "&monomer__monomer_name=" + e.target.value)} 
+                        type="text" placeholder="" >
+                    </Form.Control>
+                </div>
+            </Col>
+            <Col className='mt-3'> Monomer LG
+                <div style={{width:300}}>
+                    <Form.Control
+                        onChange={(e)=>setQueries(queries + "&monomer__monomer_LG=" + e.target.value)} 
+                        onSubmit={(e)=>setQueries(queries + "&monomer__monomer_LG=" + e.target.value)} 
+                        type="text" placeholder="" >
+                    </Form.Control>
+                </div>
+            </Col>
+            <Col className='mt-3'> Organism (for synthetases)
+                <div style={{width:300}}>
+                    <Form.Control
+                        onChange={(e)=>setQueries(queries + "&synthetase__organisms__organism_name=" + e.target.value)} 
+                        onSubmit={(e)=>setQueries(queries + "&synthetase__organisms__organism_name=" + e.target.value)} 
+                        type="text" placeholder="" >
+                    </Form.Control>
+                </div>
+            </Col>
+            <Col className='mt-3'> Reference DOI 
+                <div style={{width:300}}>
+                    <Form.Control
+                        onChange={(e)=>setQueries(queries + "&references__DOI=" + e.target.value)} 
+                        onSubmit={(e)=>setQueries(queries + "&references__DOI=" + e.target.value)} 
+                        type="text" placeholder="" >
+                    </Form.Control>
+                </div>
+            </Col>
+            </Row>
+
+            <hr className='mt-4 mb-2' style={{color:'black', backgroundColor:'black'}}></hr>
+
+            <Row>
+            <Col className='mt-3'> Other search terms:
+                <div style={{width:625}}>
+                    <Form.Control
+                        onChange={(e)=>setSearch("&search=" + e.target.value)} 
+                        onSubmit={(e)=>setSearch("&search=" + e.target.value)} 
+                        type="text" placeholder="" >
+                    </Form.Control>
+                </div>
+            </Col>
+            <Col className='mt-3'> Order results by: 
                 <div style={{width:300}}>
                     <select 
                         onChange={(e)=>setOrdering("?ordering=" + e.target.value)} 
                         onSubmit={(e)=>setOrdering("?ordering=" + e.target.value)} className="form-select">
                         <option value="id">Database ID (default)</option>
-                        <option value="internal_percent">Internal incorporation %</option>
-                        <option value="n_term_percent">N-terminal incorporation %</option>
+                        <option value="-internal_percent">Internal incorporation %</option>
+                        <option value="-n_term_percent">N-terminal incorporation %</option>
                         <option value="-assay__acylation_yield">Microhelix assay yield</option>
                     </select>
                 </div>
-            </Row>
-            <Row> 
-            <Row className='mt-3'> Parent synthetase (if synthetase) 
+            </Col>
+            <Col className='mt-3'> Display:
                 <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>setQueries(queries + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
-                        onSubmit={(e)=>setQueries(queries + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
-                        type="text" placeholder="Synthetase" >
-                    </Form.Control>
+                    <select
+                        onChange={(e)=>setCardView(e.target.value)} 
+                        onSubmit={(e)=>setCardView(e.target.value)} className="form-select">
+                        <option value="false">List View</option>
+                        <option value="true">Card View</option>
+                    </select>
                 </div>
+                </Col>
             </Row>
-            <Row className='mt-3'> Flexizyme name (if flexizyme) 
-                <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>setQueries(queries + "&flexizyme__flex_name=" + e.target.value)} 
-                        onSubmit={(e)=>setQueries(queries + "&flexizyme__flex_name=" + e.target.value)} 
-                        type="text" placeholder="Flexizyme" >
-                    </Form.Control>
-                </div>
-            </Row>
-            <Row className='mt-3'> Monomer name
-                <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>setQueries(queries + "&monomer__monomer_name=" + e.target.value)} 
-                        onSubmit={(e)=>setQueries(queries + "&monomer__monomer_name=" + e.target.value)} 
-                        type="text" placeholder="Monomer" >
-                    </Form.Control>
-                </div>
-            </Row>
-            
 
-            </Row>
             <Row>
-                <button className="btn btn-outline-primary mb-3 mt-3" onClick={getReactions}> Search </button>
+                <Col>
+                    <button className="btn btn-outline-primary mb-3 mt-4 w-25" 
+                            onClick={getReactions} 
+                            onSubmit={getReactions}> 
+                        Search 
+                    </button>
+                </Col>
             </Row>
         </Container>
         {(reactions.length !== 0) ? 
             ((reactions === "blank") ? 
                 <h6 className="text-center">No reactions with those parameters found.</h6> : 
-                <Container><Row className="mt-3">{<ReactionList reactions={reactions} />}</Row></Container>
+                <Container><Row className="mt-3">{<ReactionOrStructureList reactions={reactions} cardView={cardView}/>}</Row></Container>
                 ) : 
             <></>}
     </>
