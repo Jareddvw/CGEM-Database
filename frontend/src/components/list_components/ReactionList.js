@@ -2,6 +2,7 @@ import React from 'react'
 
 import ReactionListItem from './ReactionListItem'
 import Table from 'react-bootstrap/Table'
+import { Container } from 'react-bootstrap'
 
 
 const ReactionList = ({ reactions }) => {

@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext';
+import cgem_logo from '../img/cgem_logo.png';
 
 const Header = () => {
 
@@ -9,9 +10,17 @@ const Header = () => {
     
   return (
     <>
-    <Navbar className="nav" variant="dark" expand="lg" fixed="top">
+    <Navbar className="nav header" variant="light" expand="lg" fixed="top">
         <Container>
-            <Navbar.Brand href="/">CGEMDB</Navbar.Brand>
+            <Navbar.Brand href="/">
+              <img
+                alt=""
+                height="50"
+                width="auto"
+                src={cgem_logo}
+                className="d-inline-block align-top headerImage"
+              />{' '}
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse className="justify-content-end">
             <Nav className="justify-content-end">

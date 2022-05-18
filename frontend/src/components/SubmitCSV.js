@@ -148,7 +148,7 @@ const SubmitCSV = () => {
     
     return (
         <>
-            <div className="m-3">
+            <div className="m-3 mb-4">
                 <label className="mx-3">Choose file to upload:</label>
                 <input
                     ref={inputRef}

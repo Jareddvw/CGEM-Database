@@ -23,7 +23,7 @@ const AdvSearchPage = () => {
   return (
     <>
         <Container>
-            <h4 className='mt-3 mb-3'>Advanced Reaction Search</h4>
+            <Row as="h4" className='mt-4 mb-3'>Advanced Reaction Search</Row>
             <Row className='mt-3'> This will return all reactions that meet the selected criteria 
             (every additional filter will be joined with an AND statement). 
             Empty fields will be ignored so you don’t have to fill in every box (default ordering is by Database ID). </Row>
@@ -72,11 +72,14 @@ const AdvSearchPage = () => {
 
             </Row>
             <Row>
-                <Button className="mb-3 mt-3 w-25" onClick={getReactions}> Search </Button>
+                <button className="btn btn-outline-primary mb-3 mt-3" onClick={getReactions}> Search </button>
             </Row>
         </Container>
         {(reactions.length !== 0) ? 
-            ((reactions === "blank") ? <h6 className="text-center">No reactions with those parameters found.</h6> : <StructureList reactions={reactions} />) : 
+            ((reactions === "blank") ? 
+                <h6 className="text-center">No reactions with those parameters found.</h6> : 
+                <Container><Row className="mt-3">{<ReactionList reactions={reactions} />}</Row></Container>
+                ) : 
             <></>}
     </>
   )

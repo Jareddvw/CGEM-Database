@@ -26,8 +26,8 @@ const ReactionListPage = () => {
 
   return (
     <>
-        <Container className='mb-5'>
-            <h4 className='mt-3 mb-3'> Reactions Table </h4>
+        <Container className='mb-4 mt-4'>
+            <Row as="h4" className='mt-3 mb-3'> Reactions Table </Row>
             <Row className='mt-3'> This is a table containing all reactions in the database. </Row>
             <Row className='mt-3'> Order results by: 
                 <div style={{width:300}}>
@@ -51,8 +51,9 @@ const ReactionListPage = () => {
                     </div>
                 </Col>
             </Row>
+            <Row className='mt-4'><ReactionOrStructureList reactions={reactions} cardView={cardView} /></Row>
         </Container>
-        <ReactionOrStructureList reactions={reactions} cardView={cardView} />
+        
     </>
   );
 }

@@ -43,8 +43,8 @@ const MyReactionsPage = () => {
 
   return (
     <>
-        <Container className='mb-5'>
-            <h4 className='mt-3 mb-3'> Your reactions: {user.username} </h4>
+        <Container className='mb-4 mt-5'>
+            <Row className='mt-3' as="h4"> Your reactions: {user.username} </Row>
             <Row className='mt-3'> These are all of the reactions you have added. </Row>
             <Row className='mt-3'> Order results by: 
                 <div style={{width:300}}>
@@ -68,8 +68,9 @@ const MyReactionsPage = () => {
                     </div>
                 </Col>
             </Row>
+            <Row className='mt-4'>{reactions === [] ? <></> : <ReactionOrStructureList reactions={reactions} cardView={cardView} /> } </Row>
         </Container>
-        {reactions === [] ? <></> : <ReactionOrStructureList reactions={reactions} cardView={cardView} /> }
+        
     </>
   );
 }

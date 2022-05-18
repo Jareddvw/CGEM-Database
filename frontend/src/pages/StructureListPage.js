@@ -25,7 +25,7 @@ const StructureListPage = () => {
     return (
         <>
             <Container>
-                <Row className='mt-3'> Monomer SMILES: 
+                <Row className='mt-5 mb-3'> Monomer SMILES: 
                     <div style={{width:700}}>
                         <Form.Control
                             onChange={(e)=>setSMILES(e.target.value)} 

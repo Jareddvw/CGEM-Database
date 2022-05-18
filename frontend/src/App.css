@@ -26,6 +26,10 @@
     justify-content: left;
 }
 
+/* .headerImage {
+    height:100%;
+} */
+
 .reactionPageCard {
     overflow: hidden;
     width: 400px;
@@ -35,5 +39,14 @@
 }
 
 .nav {
-    background-color: #1f3455;
+    background-color: #f6f6f6;
+}
+
+.reaction-list {
+    margin-left:-1em;
+    margin-right:-1em;
+}
+
+.structure-list {
+    margin-left:-3em;
 }

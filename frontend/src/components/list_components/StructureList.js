@@ -6,7 +6,7 @@ const StructureList = ({ reactions, nolink }) => {
 
   return (
     <>
-        <Container>
+        <Container className="structure-list">
             <Row className="g-0" lg={3} md={2} sm={1}>
                 {reactions.map((reaction) => 
                     <Col key={reaction.id}>

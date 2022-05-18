@@ -33,7 +33,7 @@ const GeneralSearch = () => {
     if (searchTerm) {
         return (
             <>
-                <Row className = 'mb-3 mt-3'><h4 className='text-center'>Search Results for "{searchTerm}": </h4></Row>
+                <Row className = 'mb-4 mt-4'><h4 className='text-center'>Search Results for "{searchTerm}": </h4></Row>
                 <ReactionOrStructureList reactions={reactions} />
             </>
           );
