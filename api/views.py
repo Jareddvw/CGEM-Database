@@ -1,4 +1,5 @@
 # from django.shortcuts import render
+from asyncore import read
 from functools import partial
 from rest_framework import serializers
 from rest_framework import viewsets
@@ -192,14 +193,18 @@ class ReactionViewSingle(viewsets.ModelViewSet):
     search_fields = defaultSearchFields
     ordering_fields = defaultOrderingFields
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def getMyReactions(request):
-    user = request.user
-    reactions = user.reaction_set.all()
-    serializer = ReactionTableContentsSerializer(reactions, many=True)
-    return Response(serializer.data)
 
+class UserReactionsView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ReactionTableContentsSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter, NullsAlwaysLastOrderingFilter)
+    filter_fields = defaultFilteringFields
+    search_fields = defaultSearchFields
+    ordering_fields = defaultOrderingFields
+
+    def get_queryset(self):
+        return Reaction.objects.filter(user=self.request.user)
+    
 
 """
 functions needed:

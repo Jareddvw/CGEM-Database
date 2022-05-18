@@ -21,7 +21,7 @@ const MyReactionsPage = () => {
     }, [cardView])
 
     let getReactions = async () => {
-        let response = await fetch('/api/myreactions',
+        let response = await fetch('/api/myreactions/?ordering=' + ordering,
         {
             headers: {
                 'Content-Type':'application/json',
@@ -43,7 +43,7 @@ const MyReactionsPage = () => {
 
   return (
     <>
-        <Container className='mb-4 mt-5'>
+        <Container className='mb-4 mt-4'>
             <Row className='mt-3' as="h4"> Your reactions: {user.username} </Row>
             <Row className='mt-3'> These are all of the reactions you have added. </Row>
             <Row className='mt-3'> Order results by: 
@@ -52,8 +52,8 @@ const MyReactionsPage = () => {
                         onChange={(e)=>setOrdering(e.target.value)} 
                         onSubmit={(e)=>setOrdering(e.target.value)} className="form-select">
                         <option value="id">Database ID (default)</option>
-                        <option value="internal_percent">Internal incorporation %</option>
-                        <option value="n_term_percent">N-terminal incorporation %</option>
+                        <option value="-internal_percent">Internal incorporation %</option>
+                        <option value="-n_term_percent">N-terminal incorporation %</option>
                         <option value="-assay__acylation_yield">Microhelix assay acylation yield</option>
                     </select>
                 </div>

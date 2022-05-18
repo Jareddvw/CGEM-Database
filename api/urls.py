@@ -22,7 +22,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('myreactions/', views.getMyReactions)
+    path('myreactions/', views.UserReactionsView.as_view(), name="my_reactions")
 ]
 
 

@@ -36,7 +36,9 @@ const StructureListPage = () => {
                 </Row>
                 {SMILES !== '' ? 
                     (<Row className='align-items-center'>
-                        <MonomerDrawing smiles={SMILES} width='400' height='300' />
+                        <MonomerDrawing smiles={SMILES} 
+                                        width={Math.min(400 + SMILES.length * 20, 1200)} 
+                                        height={300} />
                     </Row>) : <Row className='mb-3' ></Row>}
                 {reactions != null ? <StructureList reactions={reactions} /> : <> Waiting for data to load... </>}
             </Container>
