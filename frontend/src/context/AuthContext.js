@@ -65,12 +65,20 @@ export const AuthProvider = ({ children }) => {
             },
             body: JSON.stringify({'refresh':authTokens?.refresh})
         })
+        if (response.status === 500) {
+            console.log("Error connecting to server (server may not be running).") 
+            if (loading) {
+                setLoading(false)
+            }
+            return;
+        }
+
         let data = await response.json()
 
         if (response.status === 200) {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
-            localStorage.setItem('authTokens', JSON.stringify(data))
+            localStorage.setItem('authTokens', JSON.stringify(data)) 
         } else if (response.status !== 400) {
             logoutUser()
         }
