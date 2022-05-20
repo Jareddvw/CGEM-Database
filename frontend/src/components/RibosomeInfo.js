@@ -30,6 +30,10 @@ const RibosomeInfo = ({ reaction }) => {
                 <span style={{fontWeight: 'bold'}}>Ribosomal incorporation notes: </span> 
                 {reaction.rib_incorporation_notes || "None recorded."}
             </p>
+            <p>
+                <span style={{fontWeight: 'bold'}}>Readout: </span> 
+                {reaction.rib_readout || "None recorded."}
+            </p>
         </div>
       </>
     

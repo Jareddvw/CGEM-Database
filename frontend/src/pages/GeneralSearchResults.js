@@ -1,6 +1,6 @@
 import { useMatch } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { Row } from 'react-bootstrap'
+import { Container, Row } from 'react-bootstrap'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 
 const GeneralSearch = () => {
@@ -14,6 +14,7 @@ const GeneralSearch = () => {
     let searchTerm = match.params.id
 
     let [reactions, setReactions] = useState([])
+    let [cardView, setCardView] = useState("false")
 
     useEffect(() => {
         getReactions()
@@ -24,18 +25,24 @@ const GeneralSearch = () => {
             if (searchTerm.charAt(searchTerm.length - 1) === '?'){
                 searchTerm.slice(0, -1)
             }
-            let response = await fetch(`/api/single/?search=${searchTerm}`)
+            let response = await fetch(`/api/?search=${searchTerm}`)
             let data = await response.json()
-            setReactions(data) 
+            setReactions(data.results) 
         }
     }
     
     if (searchTerm) {
         return (
-            <>
+            <Container>
                 <Row className = 'mb-4 mt-4'><h4 className='text-center'>Search Results for "{searchTerm}": </h4></Row>
-                <ReactionOrStructureList reactions={reactions} />
-            </>
+                <Row className = 'mb-4 mt-4' style = {{display:"flex", justifyContent:"center"}}>
+                    <button className='btn btn-outline-secondary text-center' style={{width: '25rem'}} 
+                            onClick={() => {if (cardView === "true") {setCardView("false")} else {setCardView("true")}}} >
+                        {(cardView === "true") ? "Card" : "List"}
+                    </button>
+                </Row>
+                <ReactionOrStructureList cardView={cardView} reactions={reactions} verbose={false} />
+            </Container>
           );
     } else {
         return (

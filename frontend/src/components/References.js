@@ -5,7 +5,7 @@ const References = ({ references }) => {
     if (references) {
         return (
             <>
-                <h6 className='mt-3 mb-3'> <strong>References: </strong></h6>
+                <h6 className='mt-3 mb-3'> <strong> References: </strong> </h6>
                 <p></p>
                 {references.map((reference, index) => <ReferenceItem key={reference.id} 
                     number={index + 1} reference={reference} />)}

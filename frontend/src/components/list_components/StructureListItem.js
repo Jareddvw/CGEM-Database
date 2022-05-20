@@ -18,14 +18,14 @@ const StructureListItem = ({ id, smiles, width, height, name,
         }
     }
 
-    const popover = (
-        <Popover id="popover-basic">
-          <Popover.Header as="h3">{name}</Popover.Header>
-          <Popover.Body>
-            <strong>{flexizyme || synthetase || 'chemical acylation'}</strong>
-          </Popover.Body>
-        </Popover>
-      ); 
+    // const popover = (
+    //     <Popover id="popover-basic">
+    //       <Popover.Header as="h3">{name}</Popover.Header>
+    //       <Popover.Body>
+    //         <strong>{flexizyme || synthetase || 'chemical acylation'}</strong>
+    //       </Popover.Body>
+    //     </Popover>
+    //   ); 
     
     let returnStatement = (<></>)
 
@@ -42,6 +42,7 @@ const StructureListItem = ({ id, smiles, width, height, name,
                 <Canvas draw={drawTree} width={width} height={height} />
             </Card.Body> 
         </>);
+
 
     if (nolink) {
         returnStatement = (

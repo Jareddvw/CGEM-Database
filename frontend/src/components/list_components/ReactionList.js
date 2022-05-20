@@ -6,7 +6,7 @@ import { Container } from 'react-bootstrap'
 import ReactionLI2 from './ReactionLI2'
 
 
-const ReactionList = ({ reactions }) => {
+const ReactionList = ({ reactions, verbose }) => {
     
   return (
     <>
@@ -24,9 +24,13 @@ const ReactionList = ({ reactions }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {(reactions) ? reactions.map((reaction) => (
-                            <ReactionLI2 key = {reaction.id} reaction = {reaction} /> 
-                        )) : <></>}
+                        {(reactions) ? 
+                            ((verbose) ?
+                            (reactions.map((reaction) => (
+                                <ReactionLI2 key = {reaction.id} reaction = {reaction}/>))) :
+                            (reactions.map((reaction) => (
+                                <ReactionListItem key = {reaction.id} reaction = {reaction}/>)))) : 
+                            <></>}
                     </tbody>
                 </Table>
             </div>

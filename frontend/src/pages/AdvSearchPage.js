@@ -161,7 +161,10 @@ const AdvSearchPage = () => {
                     <h6 className="text-center">Server error (server may not be running).</h6> :
                     <Container>
                         <Row className="mt-3">
-                            {<ReactionOrStructureList reactions={reactions} cardView={cardView}/>}
+                            {<ReactionOrStructureList 
+                                reactions={reactions} 
+                                cardView={cardView} 
+                                verbose={true}/>}
                         </Row>
                         <Row>
                             {<VerboseCSV reactions={reactions} 

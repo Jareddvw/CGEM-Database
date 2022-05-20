@@ -19,9 +19,9 @@ const ReactionListPage = () => {
     }, [cardView])
 
     let getReactions = async () => {
-        let response = await fetch('/api/single/?ordering=' + ordering)
+        let response = await fetch('/api/?ordering=' + ordering)
         let data = await response.json()
-        setReactions(data)
+        setReactions(data.results)
     }
 
   return (
@@ -51,7 +51,12 @@ const ReactionListPage = () => {
                     </div>
                 </Col>
             </Row>
-            <Row className='mt-4'><ReactionOrStructureList reactions={reactions} cardView={cardView} /></Row>
+            <Row className='mt-4'>
+                <ReactionOrStructureList 
+                    reactions={reactions} 
+                    cardView={cardView} 
+                    verbose={false} />
+            </Row>
         </Container>
         
     </>
