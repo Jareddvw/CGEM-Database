@@ -19,27 +19,49 @@ const ReactionPage = () => {
     const id = match.params.id
 
     let [reaction, setReaction] = useState({})
-    let [height, setHeight] = useState(200)
+    let [height, setHeight] = useState(150)
+    let [loading, setLoading] = useState(true)
+    let [serverError, setServerError] = useState(false)
 
     useEffect(() => {
         getReaction()
     }, [])
 
     useEffect(() => {
-        const h = document.getElementById('figRow').clientHeight;
-        setHeight(h)
-    }, [])
+        if (reaction && Object.keys(reaction).length > 1) {
+            setLoading(false)
+        }
+    }, [reaction])
+
+    useEffect(() => {
+        if (document.getElementById('figRow')) {
+            const h = document.getElementById('figRow').clientHeight;
+            setHeight(h - 50)
+        }
+    }, [loading])
 
     let getReaction = async () => {
         let response = await fetch(`/api/single/${id}`)
         let data = await response.json()
-        setReaction(data)
+        if (response.status === 500) {
+            console.log("Error connecting to server to fetch reaction" +
+                        "info (server may not be running).") 
+            setServerError(true)
+        } else if (response.status === 404) {
+            console.log("reaction not found.")
+        } else {
+            setReaction(data)
+        }
     }
 
-    if (reaction) {
+    if (!loading) {
    return (
     <Container className = "mb-3">
-        <Row className="mt-4 mb-4"> <h5 style={{color: "maroon"}}> Reaction CGEM ID: {reaction?.id} </h5></Row>
+        <Row className="mt-4 mb-4"> 
+            <h5 style={{color: "maroon"}}> 
+                Reaction CGEM ID: {reaction?.id} 
+            </h5>
+        </Row>
         <Table responsive='sm' striped bordered>
             <thead>
                 <tr>
@@ -79,7 +101,12 @@ const ReactionPage = () => {
     </Container>
   );
    } else {
-       return <div> <strong> Waiting for reaction information to load... </strong> </div>
+       return <div className = "mt-5 text-center"> 
+            <strong> 
+                {(!serverError) ? "Wrong page! No data here..." :
+                                "Waiting for reaction information to load..."}
+            </strong> 
+        </div>
    }
 }
 
