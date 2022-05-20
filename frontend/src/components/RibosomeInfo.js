@@ -9,7 +9,7 @@ const RibosomeInfo = ({ reaction }) => {
 
   return (
       <>
-        <Table size='sm' responsive='md' striped>
+        <Table size='sm' responsive='md' striped bordered>
             <thead>
                 <tr>
                     <th>Ribosome name</th>

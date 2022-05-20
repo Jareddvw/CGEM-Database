@@ -50,3 +50,7 @@
 .structure-list {
     margin-left:-3em;
 }
+
+.hoverable:hover {
+    cursor: pointer;
+}

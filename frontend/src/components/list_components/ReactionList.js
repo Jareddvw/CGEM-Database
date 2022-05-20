@@ -11,7 +11,7 @@ const ReactionList = ({ reactions }) => {
     <>
         <div className="text-center">
             <div className = 'reaction-list'>
-                <Table striped bordered hover size="sm" responsive="sm">
+                <Table striped bordered hover size="lg" responsive="md">
                     <thead>
                         <tr>
                             <th>Name or SMILES</th>

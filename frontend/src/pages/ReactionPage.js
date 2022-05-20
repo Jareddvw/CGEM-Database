@@ -19,9 +19,15 @@ const ReactionPage = () => {
     const id = match.params.id
 
     let [reaction, setReaction] = useState({})
+    let [height, setHeight] = useState(200)
 
     useEffect(() => {
         getReaction()
+    }, [])
+
+    useEffect(() => {
+        const h = document.getElementById('figRow').clientHeight;
+        setHeight(h)
     }, [])
 
     let getReaction = async () => {
@@ -32,11 +38,9 @@ const ReactionPage = () => {
 
     if (reaction) {
    return (
-    <Container>
-        <br></br>
-        <h5 style={{color: "maroon"}}> Reaction CGEM ID: {reaction?.id} </h5>
-        <br></br>
-        <Table responsive='sm' striped>
+    <Container className = "mb-3">
+        <Row className="mt-4 mb-4"> <h5 style={{color: "maroon"}}> Reaction CGEM ID: {reaction?.id} </h5></Row>
+        <Table responsive='sm' striped bordered>
             <thead>
                 <tr>
                     <th>Monomer Name</th>
@@ -53,11 +57,11 @@ const ReactionPage = () => {
             </tbody>
         </Table>
         <br></br>
-        <Row className="figureRow">
-            <Card className = "reactionPageCard" style={{width: 400}}>
-                <Card.Header> <strong>Monomer</strong></Card.Header>
+        <Row id="figRow" className="figureRow">
+            <Card className = "reactionPageCard" id = "rxnCard" style={{width: 400, height: '100%'}}>
+                <Card.Header> <strong>Monomer Structure</strong></Card.Header>
                 <Card.Body>
-                    <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} width="350" height="250" />
+                    <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} width="350" height={height} />
                 </Card.Body>
             </Card>
             <FlexOrSynthInfo synthetase={reaction?.synthetase} flexizyme={reaction?.flexizyme} readout={reaction?.rib_readout} />

@@ -43,6 +43,7 @@ defaultFilteringFields = [
     'synthetase__synth_common_name',
     'synthetase__parent_synthetase__parent_name',
     'synthetase__organisms__organism_name',
+    'synthetase__mutations__mutation_name',
     'monomer__monomer_name',
     'monomer__monomer_smiles',
     'monomer__monomer_LG',

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import ReactionList from '../components/list_components/ReactionList'
 import StructureList from '../components/list_components/StructureList'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
+import DownloadCSV from '../components/DownloadCSV'
 
 const AdvSearchPage = () => {
 
@@ -15,16 +16,18 @@ const AdvSearchPage = () => {
 
   let getReactions = async () => {
     let response = await fetch('/api/' + ordering + queries + search)
+    if (response.status === 500) {
+        setReactions("serverError")
+        return;
+    }
     let data = await response.json()
+
     setReactions(data.results)
-    let length = await data.results?.length
+    let length = await data?.results?.length
     if (length === 0) {
         setReactions("blank")
     }
   }
-
-  let horizontalLine = () => 
-      (<hr className='mt-3' style={{color:'black', backgroundColor:'black'}}></hr>)
 
   const handleEnterKeyPressed = (event) => {
     if (event.key === 'Enter') {
@@ -39,7 +42,10 @@ const AdvSearchPage = () => {
             <Row as="h4" className='mt-4 mb-3'>Advanced Reaction Search</Row>
             <Row className='mt-3'> This will return all reactions that meet the selected criteria 
             (every additional filter will be joined with an AND statement). For search filters, 
-            only results which EXACTLY match the input will be included. General search terms do not need to be exact.
+            only results which EXACTLY match the input will be included. 
+            <p></p>Input to "Other search terms" does not need to be exact. 
+            You can also use this field to search for mutations (e.g "Y271G L274M C313V") 
+            or for multiple additional organisms.
             Empty fields will be ignored so you don’t need to fill in every box. </Row>
             <Row></Row>
             
@@ -80,7 +86,7 @@ const AdvSearchPage = () => {
                     </Form.Control>
                 </div>
             </Col>
-            <Col className='mt-3'> Organism (for synthetases)
+            <Col className='mt-3'> Organisms (for synthetases)
                 <div style={{width:300}}>
                     <Form.Control
                         onChange={(e)=>setQueries(queries + "&synthetase__organisms__organism_name=" + e.target.value)} 
@@ -149,7 +155,14 @@ const AdvSearchPage = () => {
         {(reactions.length !== 0) ? 
             ((reactions === "blank") ? 
                 <h6 className="text-center">No reactions with those parameters found.</h6> : 
-                <Container><Row className="mt-3">{<ReactionOrStructureList reactions={reactions} cardView={cardView}/>}</Row></Container>
+                (reactions === "serverError") ?
+                    <h6 className="text-center">Server error (server may not be running).</h6> :
+                    <Container>
+                        <Row className="mt-3">
+                            {<ReactionOrStructureList reactions={reactions} cardView={cardView}/>}
+                        </Row>
+                        <Row><DownloadCSV /></Row>
+                    </Container>
                 ) : 
             <></>}
     </>
