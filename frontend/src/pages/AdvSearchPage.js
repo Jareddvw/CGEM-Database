@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import ReactionList from '../components/list_components/ReactionList'
 import StructureList from '../components/list_components/StructureList'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
-import DownloadCSV from '../components/DownloadCSV'
+import DownloadCSV from '../components/csv_components/DownloadCSV'
 
 const AdvSearchPage = () => {
 

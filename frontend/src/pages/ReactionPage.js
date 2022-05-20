@@ -42,14 +42,14 @@ const ReactionPage = () => {
 
     let getReaction = async () => {
         let response = await fetch(`/api/single/${id}`)
-        let data = await response.json()
         if (response.status === 500) {
             console.log("Error connecting to server to fetch reaction" +
                         "info (server may not be running).") 
             setServerError(true)
-        } else if (response.status === 404) {
+        } else if (response.status >= 404) {
             console.log("reaction not found.")
         } else {
+            let data = await response.json()
             setReaction(data)
         }
     }
@@ -103,7 +103,7 @@ const ReactionPage = () => {
    } else {
        return <div className = "mt-5 text-center"> 
             <strong> 
-                {(!serverError) ? "Wrong page! No data here..." :
+                {(!serverError) ? "Wrong page! Nothing to see here..." :
                                 "Waiting for reaction information to load..."}
             </strong> 
         </div>

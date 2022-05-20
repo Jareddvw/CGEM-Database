@@ -20,11 +20,10 @@ const SearchPage = () => {
   return (
       <>
         <Container>
-            <Row className = 'mt-5 mb-3'><h4 style={{textDecoration: 'none' }} className='text-center'>Find a Reaction</h4></Row>
-            <Row></Row>
-            <Row className='align-items-center'>
+            <Row className = 'mt-5 mb-3'><h5 style={{textDecoration: 'none' }} className='mt-5 text-center'>Find a Reaction</h5></Row>
+            <Row className='align-items-center mx-auto' style={{width:'65vw'}}>
                 <Form className = 'mt-2'>
-                        <Form.Control size="lg" type="text" placeholder="Search by Monomer, Flexizyme, Synthetase, tRNA, SMILES..." 
+                        <Form.Control size="md" type="text" placeholder="Search by Monomer, Flexizyme, Synthetase, tRNA, SMILES..." 
                             onChange={event => {setSearchTerm(event.target.value)}} onSubmit={(e) => e.preventDefault()} 
                             onKeyPress={handleEnterKeyPressed} />  
                 </Form>
