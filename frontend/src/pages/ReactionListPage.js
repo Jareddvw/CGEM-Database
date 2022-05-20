@@ -19,9 +19,9 @@ const ReactionListPage = () => {
     }, [cardView])
 
     let getReactions = async () => {
-        let response = await fetch('/api/?ordering=' + ordering)
+        let response = await fetch('/api/single/?ordering=' + ordering)
         let data = await response.json()
-        setReactions(data.results)
+        setReactions(data)
     }
 
   return (

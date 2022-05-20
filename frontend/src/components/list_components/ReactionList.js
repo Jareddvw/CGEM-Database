@@ -3,6 +3,7 @@ import React from 'react'
 import ReactionListItem from './ReactionListItem'
 import Table from 'react-bootstrap/Table'
 import { Container } from 'react-bootstrap'
+import ReactionLI2 from './ReactionLI2'
 
 
 const ReactionList = ({ reactions }) => {
@@ -23,9 +24,10 @@ const ReactionList = ({ reactions }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {reactions.map((reaction) => (
-                            <ReactionListItem key = {reaction.id} reaction = {reaction} />
-                        ))}
+                        {(reactions) ? reactions.map((reaction) => (
+                            <ReactionLI2 key = {reaction.id} reaction = {reaction} />
+                        )) : <></>
+                        }
                     </tbody>
                 </Table>
             </div>

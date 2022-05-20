@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import ReactionList from '../components/list_components/ReactionList'
 import StructureList from '../components/list_components/StructureList'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
-import DownloadCSV from '../components/csv_components/DownloadCSV'
+import VerboseCSV from '../components/csv_components/VerboseCSV'
 
 const AdvSearchPage = () => {
 
@@ -15,15 +15,15 @@ const AdvSearchPage = () => {
 
 
   let getReactions = async () => {
-    let response = await fetch('/api/' + ordering + queries + search)
+    let response = await fetch('/api/single/' + ordering + queries + search)
     if (response.status === 500) {
         setReactions("serverError")
         return;
     }
     let data = await response.json()
 
-    setReactions(data.results)
-    let length = await data?.results?.length
+    setReactions(data)
+    let length = await data.length
     if (length === 0) {
         setReactions("blank")
     }
@@ -161,7 +161,9 @@ const AdvSearchPage = () => {
                         <Row className="mt-3">
                             {<ReactionOrStructureList reactions={reactions} cardView={cardView}/>}
                         </Row>
-                        <Row><DownloadCSV /></Row>
+                        <Row>
+                            {<VerboseCSV reactions={reactions} />}
+                        </Row>
                     </Container>
                 ) : 
             <></>}
