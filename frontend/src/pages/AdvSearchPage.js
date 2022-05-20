@@ -14,6 +14,8 @@ const AdvSearchPage = () => {
   let [cardView, setCardView] = useState("false")
 
 
+  // for /api/single, use setReactions(data)
+  // for /api/, use setReactions(data.results)
   let getReactions = async () => {
     let response = await fetch('/api/single/' + ordering + queries + search)
     if (response.status === 500) {
@@ -162,7 +164,8 @@ const AdvSearchPage = () => {
                             {<ReactionOrStructureList reactions={reactions} cardView={cardView}/>}
                         </Row>
                         <Row>
-                            {<VerboseCSV reactions={reactions} />}
+                            {<VerboseCSV reactions={reactions} 
+                            name="cgemdb_adv_search_results" />}
                         </Row>
                     </Container>
                 ) : 

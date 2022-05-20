@@ -24,9 +24,9 @@ const GeneralSearch = () => {
             if (searchTerm.charAt(searchTerm.length - 1) === '?'){
                 searchTerm.slice(0, -1)
             }
-            let response = await fetch(`/api/?search=${searchTerm}`)
+            let response = await fetch(`/api/single/?search=${searchTerm}`)
             let data = await response.json()
-            setReactions(data.results) 
+            setReactions(data) 
         }
     }
     

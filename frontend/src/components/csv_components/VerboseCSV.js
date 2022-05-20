@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSVLink } from "react-csv"
 
-const VerboseCSV = ( reactions ) => {
+const VerboseCSV = ( {reactions, name} ) => {
 
     const headers = [
       {label: "DOI", key: "DOI"},
@@ -35,7 +35,6 @@ const VerboseCSV = ( reactions ) => {
     ]
 
     let data = []
-    reactions = reactions.reactions
     console.log(reactions)
 
     // keep getting error that "_reaction$synthetase$.map is not a function"
@@ -61,17 +60,19 @@ const VerboseCSV = ( reactions ) => {
     }
 
   return (
-    <> 
+    <>
+      <div className="mt-3 mb-3">
         <CSVLink
             headers={headers}
             data={data}
-            filename="sleepytime.csv"
+            filename={`${name}.csv`}
             target="_blank"
         >
           <button className="btn btn-outline-secondary">
             Download these results (CSV file)
           </button>
         </CSVLink>
+      </div>
     </>
   )
 }

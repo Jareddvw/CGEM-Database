@@ -17,9 +17,9 @@ const StructureListPage = () => {
     }, [SMILES])
 
     let getReactions = async () => {
-        let response = await fetch('/api/')
+        let response = await fetch('/api/single/')
         let data = await response.json()
-        setReactions(data.results) 
+        setReactions(data) 
     }
 
     return (
