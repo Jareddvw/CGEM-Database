@@ -25,9 +25,8 @@ const ReactionList = ({ reactions }) => {
                     </thead>
                     <tbody>
                         {(reactions) ? reactions.map((reaction) => (
-                            <ReactionLI2 key = {reaction.id} reaction = {reaction} />
-                        )) : <></>
-                        }
+                            <ReactionLI2 key = {reaction.id} reaction = {reaction} /> 
+                        )) : <></>}
                     </tbody>
                 </Table>
             </div>

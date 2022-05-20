@@ -5,17 +5,17 @@ const VerboseCSV = ( reactions ) => {
 
     const headers = [
       {label: "DOI", key: "DOI"},
-      {label: "Flexizyme name", key: "flexizyme?.flex_name"},
-      {label: "Flexizyme sequence", key:"flexizyme?.flex_seq"},
-      {label: "Assay conditions", key: "assay?.conditions"},
-      {label: "Assay acylation yield", key: "assay?.acylation_yield"},
-      {label: "Acylation assay notes", key: "assay?.assay_notes"},
-      {label: "Synthetase common name", key: "synthetase?.synth_common_name"},
-      {label: "Parent synthetase", key: "synthetase?.parent_synthetase?.parent_name"},
-      {label: "Accession ID", key: "synthetase?.accession_id"},
-      {label: "Organism", key: "synthetase?.organisms"},
-      {label: "Mutations", key: "synthetase?.mutations"},
-      {label: "Crystal structure PDB code", key: "synthetase?.pbd_id"},
+      {label: "Flexizyme name", key: "flexizyme.flex_name"},
+      {label: "Flexizyme sequence", key:"flexizyme.flex_sequence"},
+      {label: "Assay conditions", key: "assay.conditions"},
+      {label: "Assay acylation yield", key: "assay.acylation_yield"},
+      {label: "Acylation assay notes", key: "assay.assay_notes"},
+      {label: "Synthetase common name", key: "synthetase.synth_common_name"},
+      {label: "Parent synthetase", key: "synthetase.parent_synthetase.parent_name"},
+      {label: "Accession ID", key: "synthetase.accession_id"},
+      {label: "Organism", key: "synthetase.orgs"},
+      {label: "Mutations", key: "synthetase.muts"},
+      {label: "Crystal structure PDB code", key: "synthetase.pbd_id"},
       {label: "Monomer name", key: "monomer.monomer_name"},
       {label: "Monomer SMILES", key: "monomer.monomer_smiles"},
       {label: "Monomer leaving group", key: "monomer.monomer_LG"},
@@ -38,22 +38,25 @@ const VerboseCSV = ( reactions ) => {
     reactions = reactions.reactions
     console.log(reactions)
 
+    // keep getting error that "_reaction$synthetase$.map is not a function"
     for (const reaction of reactions) {
-      let muts = ""
-      reaction.synthetase?.mutations?.map((mut) => {
-        muts = muts + "; " + mut.mutation_name
-      })
-      if (reaction.synthetase) {
-        reaction.synthetase["mutations"] = muts
+      if (!reaction.synthetase) {
+        data.push(reaction)
+        continue
       }
 
-      let orgs = ""
-      reaction.synthetase?.organisms?.map((org) => {
-        orgs = orgs + "; " + org.organism_name
-      })
-      if (reaction.synthetase) {
-        reaction.synthetase["organisms"] = orgs
+      let muts = ""
+      for (const mut of reaction.synthetase.mutations) {
+        muts += mut.mutation_name + "; "
       }
+      reaction.synthetase["muts"] = muts
+
+      let orgs = ""
+      for (const org of reaction.synthetase.organisms) {
+        orgs += org.organism_name + "; "
+      }
+      reaction.synthetase["orgs"] = orgs
+
       data.push(reaction)
     }
 
