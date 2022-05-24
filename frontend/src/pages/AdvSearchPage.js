@@ -44,9 +44,9 @@ const AdvSearchPage = () => {
             <Row as="h4" className='mt-4 mb-3'>Advanced Reaction Search</Row>
             <Row className='mt-3'> This will return all reactions that meet the selected criteria 
             (every additional filter will be joined with an AND statement). For search filters, 
-            only results which EXACTLY match the input will be included. 
+            only results which EXACTLY match the input will be included (they are case sensitive). 
             <p></p>Input to "Other search terms" does not need to be exact. 
-            You can also use this field to search for mutations (e.g "Y271G L274M C313V") 
+            You can also use this field to search for multiple mutations (e.g "Y271G L274M C313V") 
             or for multiple additional organisms.
             Empty fields will be ignored so you don’t need to fill in every box. </Row>
             <Row></Row>

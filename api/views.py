@@ -36,23 +36,25 @@ defaultSearchFields = [
     'rib_readout',
     'assay__assay_notes'
 ]
-defaultFilteringFields = [
-    'id',
-    'assay__acylation_yield',
-    'flexizyme__flex_name',
-    'synthetase__synth_common_name',
-    'synthetase__parent_synthetase__parent_name',
-    'synthetase__organisms__organism_name',
-    'synthetase__mutations__mutation_name',
-    'monomer__monomer_name',
-    'monomer__monomer_smiles',
-    'monomer__monomer_LG',
-    'date_added',
-    'n_term_incorporation',
-    'internal_incorporation',
-    'rib_readout',
-    'references__DOI'
-]
+defaultFilteringFields = {
+    'id': ['gte', 'lte', 'exact'],
+    'assay__acylation_yield': ['exact', 'gte', 'lte'],
+    'flexizyme': ['isnull'],
+    'flexizyme__flex_name': ['exact'],
+    'synthetase': ['isnull'],
+    'synthetase__synth_common_name': ['exact'],
+    'synthetase__parent_synthetase__parent_name': ['exact'],
+    'synthetase__organisms__organism_name': ['exact'],
+    'synthetase__mutations__mutation_name': ['exact'],
+    'monomer__monomer_name': ['exact'],
+    'monomer__monomer_smiles': ['exact', 'substruct'],
+    'monomer__monomer_LG': ['exact'],
+    'date_added': ['exact'],
+    'n_term_percent': ['exact', 'gte', 'lte'],
+    'internal_percent': ['exact', 'gte', 'lte'],
+    'rib_readout': ['exact', 'icontains'],
+    'references__DOI': ['exact']
+}
 defaultOrderingFields = [
     'id',
     'internal_incorporation',

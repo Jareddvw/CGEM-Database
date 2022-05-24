@@ -8,7 +8,7 @@ const ReactionLI2 = ({ reaction }) => {
   return (
     <tr className="text-center">
         <td> 
-            <Link to={`/reaction/${reaction.id}`} className="Link" style={{textDecoration: 'none', color: 'maroon'}}> 
+            <Link to={`/reaction/${reaction.id}`} className="Link" style={{textDecoration: 'none', color: 'maroon'}} target="_blank"> 
             {reaction.monomer.monomer_name || reaction.monomer.monomer_smiles} 
             </Link>
         </td>

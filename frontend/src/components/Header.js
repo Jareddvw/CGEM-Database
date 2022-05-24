@@ -27,7 +27,7 @@ const Header = () => {
                 <Nav.Link href="#about">About</Nav.Link>
                 <NavDropdown title="Actions" id="basic-nav-dropdown">
                     <NavDropdown.Item href="/advanced">Advanced Search</NavDropdown.Item>
-                    <NavDropdown.Item href="/structures">Structure Search</NavDropdown.Item>
+                    <NavDropdown.Item href="/structures">Substructure Search</NavDropdown.Item>
                     <NavDropdown.Item href="/all-reactions">Browse All Reactions</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/contribute">Contribute</NavDropdown.Item>

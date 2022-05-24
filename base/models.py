@@ -1,7 +1,27 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
+
+from django.db.models import Lookup
+from django.db.models import Field
+
+import rdkit
+from rdkit import Chem
+
+
+# Custom lookup fields for substructure or similarity searching.
+@Field.register_lookup
+class ContainsSubstruct(Lookup):
+    lookup_name = 'substruct'
+
+    def as_sql(self, compiler, connection):
+        lhs, lhs_params = self.process_lhs(compiler, connection)
+        rhs, rhs_params = self.process_rhs(compiler, connection)
+        params = lhs_params + rhs_params
+        return 'mol_from_smiles(%s) @> mol_from_smiles(%s)' % (lhs, rhs), params
+
+
+########### MODELS ############
 
 class T_RNA(models.Model):
     tRNA_name = models.CharField(max_length=250)
@@ -12,7 +32,7 @@ class T_RNA(models.Model):
 
 class Monomer(models.Model):
     monomer_name = models.CharField(max_length=250, blank=True, default='')
-    #SMILES is only thing required for all monomers.
+    # SMILES is only thing required for all monomers.
     monomer_smiles = models.TextField(default='')
     monomer_LG = models.CharField(max_length=100, blank=True, default='')
 

@@ -14,6 +14,9 @@ from pathlib import Path
 from secret_key import DJANGO_CGEMDB_SECRETKEY
 from datetime import timedelta
 
+# import rdkit
+# from rdkit import *
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -45,7 +48,8 @@ INSTALLED_APPS = [
     'django_filters',
     'api',
     'base',
-    'corsheaders'
+    'corsheaders',
+    # 'django_rdkit'
 ]
 
 MIDDLEWARE = [
@@ -91,13 +95,22 @@ WSGI_APPLICATION = 'cgemdb.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'cgemdb',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'key3rxns',
+    #     'HOST': 'localhost',
+    #     'PORT': '5431'
+    # }
+
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cgemdb',
         'USER': 'postgres',
         'PASSWORD': 'key3rxns',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'HOST':'localhost',
+        'PORT':'5432'
     }
 }
 
