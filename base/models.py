@@ -1,25 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 from django.db.models import Lookup
 from django.db.models import Field
 
-import rdkit
+from django_rdkit import models as m
 from rdkit import Chem
 
 
-# Custom lookup fields for substructure or similarity searching.
-@Field.register_lookup
-class ContainsSubstruct(Lookup):
+class HSS(Lookup):
     lookup_name = 'substruct'
 
     def as_sql(self, compiler, connection):
         lhs, lhs_params = self.process_lhs(compiler, connection)
         rhs, rhs_params = self.process_rhs(compiler, connection)
         params = lhs_params + rhs_params
-        return 'mol_from_smiles(%s) @> mol_from_smiles(%s)' % (lhs, rhs), params
+        return '%s::mol @> %s::mol' % (lhs, rhs), params
 
+Field.register_lookup(HSS)
 
 ########### MODELS ############
 
@@ -35,6 +33,8 @@ class Monomer(models.Model):
     # SMILES is only thing required for all monomers.
     monomer_smiles = models.TextField(default='')
     monomer_LG = models.CharField(max_length=100, blank=True, default='')
+
+    # molecule = m.MolField()
 
     def __str__(self):
         #returns monomer_smiles if name is blank

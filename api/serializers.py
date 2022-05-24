@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from base.models import *
-
+from rdkit import Chem
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 #serializers for database models in base.models
@@ -230,6 +230,7 @@ class ReactionSerializer(serializers.ModelSerializer):
         try:
             new_monomer = Monomer.objects.get(monomer_smiles=monomer['monomer_smiles'])
         except:
+            # monomer['molecule'] = monomer['monomer_smiles']
             new_monomer = Monomer.objects.create(**monomer)
 
         try:
@@ -346,7 +347,6 @@ class ReactionSerializer(serializers.ModelSerializer):
 
 
 # Serialize only reactions by a specific author! 
-
 
     # for PUT and PATCH methods, should rely on ids. IE if you send a put or patch request you
     # should also send the ID of the thing you want to change, but for post requests you don't need it.

@@ -10,16 +10,33 @@ from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import FilterSet, NumberFilter, BooleanFilter, CharFilter
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import F
-
 
 from base.models import *
 from .serializers import *
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+from django_rdkit.models import *
+
+
+class ReactionFilter(FilterSet):
+
+    id = NumberFilter()
+    id__gte = NumberFilter(field_name='id', lookup_expr='gte')
+    id__lte = NumberFilter(field_name='id', lookup_expr='lte')
+    assay__gte = NumberFilter(field_name='assay__acylation_yield', lookup_expr='gte')
+    assay__lte = NumberFilter(field_name='assay__acylation_yield', lookup_expr='lte')
+    smiles__substruct = CharFilter(field_name='monomer__monomer_smiles', lookup_expr='substruct')
+    
+    class Meta:
+        model = Reaction
+        fields = ['id', 'assay__acylation_yield']
+
 
 defaultSearchFields = [
     'id',
@@ -47,7 +64,7 @@ defaultFilteringFields = {
     'synthetase__organisms__organism_name': ['exact'],
     'synthetase__mutations__mutation_name': ['exact'],
     'monomer__monomer_name': ['exact'],
-    'monomer__monomer_smiles': ['exact', 'substruct'],
+    # 'monomer__monomer_smiles': ['hassubstruct'],
     'monomer__monomer_LG': ['exact'],
     'date_added': ['exact'],
     'n_term_percent': ['exact', 'gte', 'lte'],
@@ -102,11 +119,10 @@ class NullsAlwaysLastOrderingFilter(OrderingFilter):
 
 
 class ReactionTableView(generics.ListAPIView):
-
     queryset = Reaction.objects.all()
     serializer_class = ReactionTableContentsSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter, NullsAlwaysLastOrderingFilter)
-    filter_fields = defaultFilteringFields
+    filter_class = ReactionFilter
     search_fields = defaultSearchFields
     ordering_fields = defaultOrderingFields
 
@@ -202,13 +218,13 @@ class UserReactionsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ReactionTableContentsSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter, NullsAlwaysLastOrderingFilter)
-    filter_fields = defaultFilteringFields
+    filter_class = defaultFilteringFields
     search_fields = defaultSearchFields
     ordering_fields = defaultOrderingFields
 
     def get_queryset(self):
         return Reaction.objects.filter(user=self.request.user)
-    
+
 
 """
 functions needed:

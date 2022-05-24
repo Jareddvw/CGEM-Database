@@ -17,10 +17,16 @@ const StructureListPage = () => {
     }, [SMILES])
 
     let getReactions = async () => {
-        let response = await fetch('/api/')
+        let response = await fetch(`/api/?smiles__substruct=${SMILES}`)
         let data = await response.json()
-        setReactions(data.results) 
+        setReactions(data.results)
     }
+
+    const handleEnterKeyPressed = (event) => {
+        if (event.key === 'Enter') {
+            getReactions()
+        }
+      }
 
     return (
         <>
@@ -29,7 +35,8 @@ const StructureListPage = () => {
                     <div style={{width:700}}>
                         <Form.Control
                             onChange={(e)=>setSMILES(e.target.value)} 
-                            onSubmit={(e)=>setSMILES(e.target.value)} 
+                            onSubmit={()=>getReactions()} 
+                            onKeyPress={handleEnterKeyPressed}
                             type="text" placeholder="SMILES" >
                         </Form.Control>
                     </div>
