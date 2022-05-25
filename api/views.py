@@ -64,7 +64,7 @@ defaultFilteringFields = {
     'synthetase__organisms__organism_name': ['exact'],
     'synthetase__mutations__mutation_name': ['exact'],
     'monomer__monomer_name': ['exact'],
-    # 'monomer__monomer_smiles': ['hassubstruct'],
+    'monomer__monomer_smiles': ['exact', 'substruct'],
     'monomer__monomer_LG': ['exact'],
     'date_added': ['exact'],
     'n_term_percent': ['exact', 'gte', 'lte'],
@@ -122,7 +122,7 @@ class ReactionTableView(generics.ListAPIView):
     queryset = Reaction.objects.all()
     serializer_class = ReactionTableContentsSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter, NullsAlwaysLastOrderingFilter)
-    filter_class = ReactionFilter
+    filter_fields = defaultFilteringFields
     search_fields = defaultSearchFields
     ordering_fields = defaultOrderingFields
 
@@ -218,7 +218,7 @@ class UserReactionsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ReactionTableContentsSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter, NullsAlwaysLastOrderingFilter)
-    filter_class = defaultFilteringFields
+    filter_fields = defaultFilteringFields
     search_fields = defaultSearchFields
     ordering_fields = defaultOrderingFields
 

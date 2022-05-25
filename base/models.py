@@ -1,21 +1,34 @@
+from lib2to3.pgen2.parse import ParseError
 from django.db import models
 from django.contrib.auth.models import User
 
 from django.db.models import Lookup
 from django.db.models import Field
+from psycopg2 import DataError
 
 from django_rdkit import models as m
 from rdkit import Chem
 
+from rest_framework.exceptions import APIException
+
+class InvalidSmiles(APIException):
+    status_code = 406
+    default_detail = 'Invalid SMILES provided.'
+    default_code = 'invalid_smiles'
 
 class HSS(Lookup):
     lookup_name = 'substruct'
-
     def as_sql(self, compiler, connection):
         lhs, lhs_params = self.process_lhs(compiler, connection)
         rhs, rhs_params = self.process_rhs(compiler, connection)
         params = lhs_params + rhs_params
-        return '%s::mol @> %s::mol' % (lhs, rhs), params
+        try:
+            x = Chem.MolFromSmiles(lhs)
+            return '%s::mol @> %s::mol' % (lhs, rhs), params
+        except DataError as de:
+            raise InvalidSmiles()
+        except:
+            raise InvalidSmiles()
 
 Field.register_lookup(HSS)
 
@@ -33,8 +46,6 @@ class Monomer(models.Model):
     # SMILES is only thing required for all monomers.
     monomer_smiles = models.TextField(default='')
     monomer_LG = models.CharField(max_length=100, blank=True, default='')
-
-    # molecule = m.MolField()
 
     def __str__(self):
         #returns monomer_smiles if name is blank

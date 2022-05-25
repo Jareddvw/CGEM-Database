@@ -21,7 +21,7 @@ const ReactionPage = () => {
     let [reaction, setReaction] = useState({})
     let [height, setHeight] = useState(150)
     let [loading, setLoading] = useState(true)
-    let [serverError, setServerError] = useState(false)
+    let [status, setStatus] = useState(0)
 
     useEffect(() => {
         getReaction()
@@ -45,9 +45,10 @@ const ReactionPage = () => {
         if (response.status === 500) {
             console.log("Error connecting to server to fetch reaction" +
                         "info (server may not be running).") 
-            setServerError(true)
+            setStatus(500)
         } else if (response.status >= 404) {
             console.log("reaction not found.")
+            setStatus(response.status)
         } else {
             let data = await response.json()
             setReaction(data)
@@ -103,8 +104,8 @@ const ReactionPage = () => {
    } else {
        return <div className = "mt-5 text-center"> 
             <strong> 
-                {(!serverError) ? "Wrong page! Nothing to see here..." :
-                                "Waiting for reaction information to load..."}
+                {(status >= 404) ? "Wrong page! Nothing to see here..." :
+                    "Waiting for reaction information to load..."}
             </strong> 
         </div>
    }
