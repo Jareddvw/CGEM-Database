@@ -51,7 +51,7 @@ const AdvSearchPage = () => {
             Empty fields will be ignored so you don’t need to fill in every box. </Row>
             <Row></Row>
             
-            <Row className='mt-3'>            
+            <Row className='mt-3'> 
             <Col className='mt-3'> Parent synthetase (if synthetase) 
                 <div style={{width:300}}>
                     <Form.Control

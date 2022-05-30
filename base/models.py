@@ -24,6 +24,7 @@ class HSS(Lookup):
         params = lhs_params + rhs_params
         try:
             x = Chem.MolFromSmiles(lhs)
+            print(x)
             return '%s::mol @> %s::mol' % (lhs, rhs), params
         except DataError as de:
             raise InvalidSmiles()

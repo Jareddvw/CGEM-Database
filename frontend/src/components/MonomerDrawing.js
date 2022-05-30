@@ -12,18 +12,25 @@ const MonomerDrawing = ({ smiles, width, height }) => {
         if (current !== null && smiles) {
             SmilesDrawer.parse(smiles, function (tree) {
                 smilesDrawer.draw(tree, current, 'light', false);
+                setError(null)
             }, function (err) {
-                console.log(err);
                 setError(1)
             })
         }
     }
 
+    let drawing = (
+        <Canvas draw={drawTree} width={width} height={height} />
+    )
+
     let returnStatement = (
         <>
             {error === null ?
                 <Canvas draw={drawTree} width={width} height={height} /> :
-                <div className = "text-center mb-3"> Please enter a valid SMILES. </div>}
+                <>
+                    <Canvas draw={drawTree} width={0} height={0} />
+                    <div className = "text-center mb-3"> Please enter a valid SMILES. </div>
+                </>}
         </>
       )
 

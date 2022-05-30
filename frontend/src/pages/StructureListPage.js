@@ -25,6 +25,7 @@ const StructureListPage = () => {
             queryString = queryString.split(')').join('%29')
         }
         let response = await fetch(`/api/?monomer__monomer_smiles__substruct=${queryString}`)
+                        .catch((err) => console.log(err))
         let data = await response.json()
         if (response.ok) {
             setReactions(data.results)
@@ -86,7 +87,7 @@ const StructureListPage = () => {
                 {SMILES !== '' ? 
                     (<Row style={{display:'flex', justifyContent:'center'}}>
                         <MonomerDrawing smiles={SMILES} 
-                                        width={Math.min(400 + SMILES.length * 20, 1200)} 
+                                        width={Math.min(300 + SMILES.length * 20, 1000)} 
                                         height={300} />
                     </Row>) : 
                     <Row className='mb-3' ></Row>}

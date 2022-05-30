@@ -25,11 +25,11 @@ const ReactionList = ({ reactions, verbose }) => {
                     </thead>
                     <tbody>
                         {(reactions) ? 
-                            ((verbose) ?
-                            (reactions.map((reaction) => (
-                                <ReactionLI2 key = {reaction.id} reaction = {reaction}/>))) :
-                            (reactions.map((reaction) => (
-                                <ReactionListItem key = {reaction.id} reaction = {reaction}/>)))) : 
+                            ((verbose === true) ?
+                                (reactions.map((reaction) => (
+                                    <ReactionLI2 key = {reaction.id} reaction = {reaction}/>))) :
+                                (reactions.map((reaction) => (
+                                    <ReactionListItem key = {reaction.id} reaction = {reaction}/>)))) : 
                             <></>}
                     </tbody>
                 </Table>

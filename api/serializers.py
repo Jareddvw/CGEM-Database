@@ -230,9 +230,7 @@ class ReactionSerializer(serializers.ModelSerializer):
         try:
             new_monomer = Monomer.objects.get(monomer_smiles=monomer['monomer_smiles'])
         except:
-            # monomer['molecule'] = monomer['monomer_smiles']
             new_monomer = Monomer.objects.create(**monomer)
-
         try:
             new_trna = T_RNA.objects.get(tRNA_name=tRNA['tRNA_name'])
         except:
