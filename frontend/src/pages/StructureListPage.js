@@ -26,18 +26,14 @@ const StructureListPage = () => {
         }
         let response = await fetch(`/api/?monomer__monomer_smiles__substruct=${queryString}`)
                         .catch((err) => console.log(err))
+        if (response.status === 500) {
+            setSMILES("serverError")
+            return;
+        } 
         let data = await response.json()
         if (response.ok) {
             setReactions(data.results)
-            setStatus(200)
-        } else {
-            setReactions([])
-            try {
-                setStatus(response.status)
-            } catch {
-                setStatus(500)
-            }
-        }
+        } 
     }
 
     const handleEnterKeyPressed = (event) => {
@@ -49,17 +45,11 @@ const StructureListPage = () => {
     const returnStatement = () => {
         if (reactions === []) {
             return (<> Waiting for data to load... </>)
-        } else if (status === 200) {
-            return (<StructureList reactions={reactions} verbose={false} />)
-        } else if (status === 406) {
-            setReactions([])
-            return <div className = "text-center mb-3"> Please enter a valid SMILES. </div>
-        } else if (status === 500) {
-            setReactions([])
+        } else if (SMILES === "serverError") {
             return <div className = "text-center mb-3">  An error occurred! Your SMILES may not be valid. </div>
         } else {
-            return <div className = "text-center mb-3">  An error occurred! Your SMILES may not be valid. </div>
-        }
+            return (<StructureList reactions={reactions} verbose={false} />)
+        } 
     }
 
     return (

@@ -7,7 +7,7 @@ import VerboseCSV from '../components/csv_components/VerboseCSV'
 
 const AdvSearchPage = () => {
 
-  let [queries, setQueries] = useState("")
+  let [queries, setQueries] = useState({})
   let [search, setSearch] = useState("")
   let [ordering, setOrdering] = useState("?ordering=id")
   let [reactions, setReactions] = useState([])
@@ -17,7 +17,10 @@ const AdvSearchPage = () => {
   // for /api/single, use setReactions(data)
   // for /api/, use setReactions(data.results)
   let getReactions = async () => {
-    let response = await fetch('/api/single/' + ordering + queries + search)
+    let response = await fetch('/api/single/' + ordering +
+                                Object.keys(queries).map((key) => 
+                                    key + "=" + queries[key] + "").join("") +
+                                search)
     if (response.status === 500) {
         setReactions("serverError")
         return;
@@ -50,13 +53,17 @@ const AdvSearchPage = () => {
             or for multiple additional organisms.
             Empty fields will be ignored so you don’t need to fill in every box. </Row>
             <Row></Row>
+            {Object.keys(queries).map((key) => 
+                                    key + "=" + queries[key] + "").join("")}
             
             <Row className='mt-3'> 
             <Col className='mt-3'> Parent synthetase (if synthetase) 
                 <div style={{width:300}}>
                     <Form.Control
-                        onChange={(e)=>setQueries(queries + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
-                        onSubmit={(e)=>setQueries(queries + "&synthetase__parent_synthetase__parent_name=" + e.target.value)} 
+                        onChange={(e)=>setQueries({
+                            ...queries,
+                            "&synthetase__parent_synthetase__parent_name": e.target.value
+                        })} 
                         type="text" placeholder="" >
                     </Form.Control>
                 </div>
@@ -64,8 +71,10 @@ const AdvSearchPage = () => {
             <Col className='mt-3'> Flexizyme name (if flexizyme) 
                 <div style={{width:300}}>
                     <Form.Control
-                        onChange={(e)=>setQueries(queries + "&flexizyme__flex_name=" + e.target.value)} 
-                        onSubmit={(e)=>setQueries(queries + "&flexizyme__flex_name=" + e.target.value)} 
+                        onChange={(e)=>setQueries({
+                            ...queries,
+                            "&flexizyme__flex_name": e.target.value
+                        })} 
                         type="text" placeholder="" >
                     </Form.Control>
                 </div>
@@ -73,8 +82,10 @@ const AdvSearchPage = () => {
             <Col className='mt-3'> Monomer name
                 <div style={{width:300}}>
                     <Form.Control
-                        onChange={(e)=>setQueries(queries + "&monomer__monomer_name=" + e.target.value)} 
-                        onSubmit={(e)=>setQueries(queries + "&monomer__monomer_name=" + e.target.value)} 
+                        onChange={(e)=>setQueries({
+                            ...queries,
+                            "&monomer__monomer_name": e.target.value
+                        })}  
                         type="text" placeholder="" >
                     </Form.Control>
                 </div>
@@ -82,8 +93,10 @@ const AdvSearchPage = () => {
             <Col className='mt-3'> Monomer LG
                 <div style={{width:300}}>
                     <Form.Control
-                        onChange={(e)=>setQueries(queries + "&monomer__monomer_LG=" + e.target.value)} 
-                        onSubmit={(e)=>setQueries(queries + "&monomer__monomer_LG=" + e.target.value)} 
+                        onChange={(e)=>setQueries({
+                            ...queries,
+                            "&monomer__monomer_LG": e.target.value
+                        })}  
                         type="text" placeholder="" >
                     </Form.Control>
                 </div>
@@ -91,8 +104,10 @@ const AdvSearchPage = () => {
             <Col className='mt-3'> Organisms (for synthetases)
                 <div style={{width:300}}>
                     <Form.Control
-                        onChange={(e)=>setQueries(queries + "&synthetase__organisms__organism_name=" + e.target.value)} 
-                        onSubmit={(e)=>setQueries(queries + "&synthetase__organisms__organism_name=" + e.target.value)} 
+                        onChange={(e)=>setQueries({
+                            ...queries,
+                            "&synthetase__organisms__organism_name": e.target.value
+                        })}   
                         type="text" placeholder="" >
                     </Form.Control>
                 </div>
@@ -100,8 +115,31 @@ const AdvSearchPage = () => {
             <Col className='mt-3'> Reference DOI 
                 <div style={{width:300}}>
                     <Form.Control
-                        onChange={(e)=>setQueries(queries + "&references__DOI=" + e.target.value)} 
-                        onSubmit={(e)=>setQueries(queries + "&references__DOI=" + e.target.value)} 
+                        onChange={(e)=>setQueries({
+                            ...queries,
+                            "&references__DOI": e.target.value
+                        })}   
+                        type="text" placeholder="" >
+                    </Form.Control>
+                </div>
+            </Col>
+            <Col className='mt-3'> Substructure SMILES
+                <div style={{width:300}}>
+                    <Form.Control
+                        onChange={(e)=>{
+                            let queryString = e.target.value
+                            if (queryString.length > 0) {
+                                queryString = queryString.toUpperCase()
+                                queryString = queryString.split('=').join('%3D')
+                                queryString = queryString.split('#').join('%23')
+                                queryString = queryString.split('(').join('%28')
+                                queryString = queryString.split(')').join('%29')
+                            }
+                            setQueries({
+                                ...queries,
+                                "&monomer__monomer_smiles__substruct": queryString
+                            }
+                        )}}
                         type="text" placeholder="" >
                     </Form.Control>
                 </div>

@@ -35,7 +35,7 @@ const VerboseCSV = ( {reactions, name} ) => {
     ]
 
     let data = []
-    console.log(reactions)
+    // console.log(reactions)
 
     // keep getting error that "_reaction$synthetase$.map is not a function"
     for (const reaction of reactions) {
