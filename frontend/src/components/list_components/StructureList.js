@@ -6,8 +6,8 @@ const StructureList = ({ reactions, nolink, verbose }) => {
 
   return (
     <>
-        <Container className="structure-list">
-            <Row className="g-0" lg={3} md={2} sm={1}>
+        <>
+            <Row className="g-0 structure-list" lg={3} md={2} sm={1}>
                 {reactions.map((reaction) => 
                     <Col key={reaction.id}>
 
@@ -32,7 +32,7 @@ const StructureList = ({ reactions, nolink, verbose }) => {
                     </Col>
                 )}
             </Row>
-        </Container>
+        </>
     </>
   )
 }

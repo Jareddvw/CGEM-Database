@@ -1,9 +1,7 @@
 import { useRef } from 'react'
 import { useState, useEffect } from 'react'
-import MonomerDrawing from '../components/MonomerDrawing'
-import { Container, Row, Form, Col } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import StructureList from '../components/list_components/StructureList'
-import Flex_template from '../components/csv_components/Flex_template'
 
 
 const DrawSubstructPage = () => {
@@ -11,37 +9,45 @@ const DrawSubstructPage = () => {
 
     var comp = useRef()
 
-    let composedMolSMILES = ""
-
     let [reactions, setReactions] = useState([])
-    const [SMILES, setSMILES] = useState('')
-    const [status, setStatus] = useState(200)
+    const [SMILES, setSMILES] = useState(null)
+    const [composer, setComposer] = useState(null)
 
     let queryString = ''
-    let composer;
 
     let makeComposer = () => {
-        composer = new Kekule.Editor.Composer(comp.current)
-        composer.setCommonToolButtons(['loadData', 'saveData', 'zoomIn', 'zoomOut', 'undo', 'redo', 'copy', 'cut', 'paste']);
-        composer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atomAndFormula', 'ring']);
+        let newComposer = new Kekule.Editor.Composer(comp.current)
+        newComposer.setCommonToolButtons(['loadData', 'saveData', 'zoomIn', 'zoomOut', 'reset', 'undo', 'redo', 'copy', 'cut', 'paste']);
+        newComposer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atomAndFormula', 'ring']);
+        setComposer(newComposer)
     }
 
     let generateSMILES = () => {
-        console.log(composer)
         var molecule = composer.getChemObj();
-        console.log("molecule: " + molecule)
         var smi = Kekule.IO.saveFormatData(molecule, 'smi')
-        console.log(smi)
+        if (smi.includes(".")) {
+            smi = "Error. More than one structure drawn."
+            setReactions([])
+        }
         setSMILES(smi)
     }
+
+    useEffect(() => {
+        if (SMILES !== null) {
+            getReactions()
+        }
+    }, [SMILES])
 
     useEffect(() => {
         makeComposer()
     }, [])
 
     let getReactions = async () => {
+        if (SMILES === "Error. More than one structure drawn.") {
+            return;
+        }
         if (SMILES.length > 0) {
-            queryString = SMILES.toUpperCase()
+            queryString = SMILES
             queryString = queryString.split('=').join('%3D')
             queryString = queryString.split('#').join('%23')
             queryString = queryString.split('(').join('%28')
@@ -56,12 +62,6 @@ const DrawSubstructPage = () => {
         let data = await response.json()
         if (response.ok) {
             setReactions(data.results)
-        } 
-    }
-
-    const handleEnterKeyPressed = (event) => {
-        if (event.key === 'Enter') {
-            getReactions()
         }
     }
 
@@ -72,38 +72,33 @@ const DrawSubstructPage = () => {
             return <div className = "text-center mb-3">  An error occurred! Your SMILES may not be valid. </div>
         } else {
             return (<StructureList reactions={reactions} verbose={false} />)
-        } 
+        }
     }
 
     return (
         <>
             <Container>
-                {SMILES}
                 <Row as="h4" className='mt-4 mb-3'>Substructure Search</Row>
-                <Row className='mt-3'> Enter a valid SMILES string below. This will return all monomers which
-                contain the given molecule as a substructure. 
-                Or, if you don't know the substructure's SMILES, draw it instead.</Row>
+                <Row className='mt-3'> Draw the substructure you want to search for below. 
+                Note: the SMILES substructure search we use does not currently work on structures with charged atoms. </Row>
 
                 <Row style={{width:'75vw'}} className="justify-content-center"> 
-                    <Col lg={true}
-                        id="composer" 
-                        className="mt-4" 
+                    <Col
+                        id="composer"
+                        className="mt-4"
                         ref = {comp}
                         >
                     </Col>
                 </Row> 
                 
-                <Row className='mt-3 mb-3' style={{display:'flex', alignItems:'center'}}> 
-                    <button className='btn btn-outline-success mb-3 mt-3 w-25' onClick={generateSMILES}>
-                        Generate SMILES
+                <Row className='mt-3 mb-3 align-items-center'> 
+                    <button 
+                        className='btn btn-outline-primary mb-3 mt-3 w-25 mx-3' 
+                        onClick={generateSMILES} >
+                        Generate SMILES and Search
                     </button>
-                    <div className="mb-3 mt-3 w-25">
-                        {SMILES}
-                    </div>
-                    <div className="btn btn-outline-primary mb-3 mt-3 w-25" 
-                            onClick={getReactions} 
-                            onSubmit={getReactions}> 
-                        Search 
+                    <div className="mb-3 mt-3 mx-3 w-25">
+                        {(SMILES !== "" && SMILES !== null) ? "Molecule SMILES: " + SMILES : ""}
                     </div>
                 </Row>
 

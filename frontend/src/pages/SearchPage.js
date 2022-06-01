@@ -31,8 +31,7 @@ const SearchPage = () => {
                             onChange={event => {setSearchTerm(event.target.value)}} onSubmit={(e) => e.preventDefault()} 
                             onKeyPress={handleEnterKeyPressed} />  
                 </Form>
-            </Row>  
-            <MonomerDrawing smiles={searchTerm} width='600' height='600'></MonomerDrawing>
+            </Row> 
         </Container>
       </>
   )

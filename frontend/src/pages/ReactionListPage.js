@@ -29,7 +29,7 @@ const ReactionListPage = () => {
         <Container className='mb-4 mt-4'>
             <Row as="h4" className='mt-3 mb-3'> Reactions Table </Row>
             <Row className='mt-3'> This is a table containing all reactions in the database. </Row>
-            <Row className='mt-3'> Order results by: 
+            <Row className='mt-3 align-items-center'> Order results by: 
                 <div style={{width:300}}>
                     <select 
                         onChange={(e)=>setOrdering(e.target.value)} 
