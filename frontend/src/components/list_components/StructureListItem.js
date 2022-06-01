@@ -56,7 +56,9 @@ const StructureListItem = ({ id, smiles, width, height, name,
         returnStatement = (
             <>
                 <Card className="m-1 hoverCard mb-3" style={{width: 400, height:350}}>
-                    <Link to={`/reaction/${id}`} className="Link" style={{textDecoration: 'none', color:'black'}}> 
+                    <Link to={`/reaction/${id}`} className="Link" 
+                            style={{textDecoration: 'none', color:'black'}}
+                            target="_blank"> 
                         {InnerCard}
                     </Link>
                 </Card>
