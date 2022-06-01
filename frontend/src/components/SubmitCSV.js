@@ -105,7 +105,7 @@ const SubmitCSV = () => {
                 newEntry["synthetase"] = null
             }
             newEntry["monomer"] = {
-                "monomer_smiles": entry["Monomer SMILES (required)"],
+                "monomer_smiles": entry["Monomer SMILES (required)"].split(".")[0],
                 "monomer_name": entry["Monomer name"],
                 "monomer_LG": entry["Monomer leaving group"]
             }
@@ -124,18 +124,30 @@ const SubmitCSV = () => {
             }})
             try {
                 newEntry["n_term_percent"] = parseFloat(entry["N-terminal incorporation"])
-                newEntry["n_term_incorporation"] = "Y"
+                newEntry["n_term_incorporation"] = 
+                    (newEntry["n_term_percent"] ? "Y" : 
+                    (entry["N-terminal incorporation"] === "Yes" || entry["N-terminal incorporation"] === "Y") ? "Y" :
+                    (entry["N-terminal incorporation"] === "No" || entry["N-terminal incorporation"] === "N") ? "N" : "");
             } catch {
                 newEntry["n_term_percent"] = null
-                newEntry["n_term_incorporation"] = entry["N-terminal incorporation"]
+                newEntry["n_term_incorporation"] = 
+                    (newEntry["n_term_percent"] ? "Y" : 
+                    (entry["N-terminal incorporation"] === "Yes" || entry["N-terminal incorporation"] === "Y") ? "Y" :
+                    (entry["N-terminal incorporation"] === "No" || entry["N-terminal incorporation"] === "N") ? "N" : "");
             }
 
             try {
                 newEntry["internal_percent"] = parseFloat(entry["Internal incorporation"])
-                newEntry["internal_incorporation"] = "Y"
+                newEntry["internal_incorporation"] =
+                    (newEntry["internal_percent"] ? "Y" : 
+                    (entry["Internal incorporation"] === "Yes" || entry["Internal incorporation"] === "Y") ? "Y" :
+                    (entry["Internal incorporation"] === "No" || entry["Internal incorporation"] === "N") ? "N" : "");
             } catch {
                 newEntry["internal_percent"] = null
-                newEntry["internal_incorporation"] = entry["N-terminal incorporation"]
+                newEntry["internal_incorporation"] = 
+                    (newEntry["internal_percent"] ? "Y" : 
+                    (entry["Internal incorporation"] === "Yes" || entry["Internal incorporation"] === "Y") ? "Y" :
+                    (entry["Internal incorporation"] === "No" || entry["Internal incorporation"] === "N") ? "N" : "");
             }
             newEntry["ribosome_name"] = entry["Ribosome name (required)"]
             newEntry["rib_readout"] = entry["Readout"]

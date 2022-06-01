@@ -17,8 +17,10 @@ const DrawSubstructPage = () => {
 
     let makeComposer = () => {
         let newComposer = new Kekule.Editor.Composer(comp.current)
-        newComposer.setCommonToolButtons(['loadData', 'saveData', 'zoomIn', 'zoomOut', 'reset', 'undo', 'redo', 'copy', 'cut', 'paste']);
-        newComposer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atomAndFormula', 'ring']);
+        newComposer.setCommonToolButtons(
+            ['loadData', 'saveData', 'zoomIn', 'zoomOut', 'reset', 'undo', 'redo', 'copy', 'cut', 'paste']
+        );
+        newComposer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atomAndFormula', 'ring', 'charge']);
         setComposer(newComposer)
     }
 
@@ -52,6 +54,7 @@ const DrawSubstructPage = () => {
             queryString = queryString.split('#').join('%23')
             queryString = queryString.split('(').join('%28')
             queryString = queryString.split(')').join('%29')
+            queryString = queryString.split('+').join('%2B')
         }
         let response = await fetch(`/api/?monomer__monomer_smiles__substruct=${queryString}`)
                         .catch((err) => console.log(err))
@@ -79,8 +82,7 @@ const DrawSubstructPage = () => {
         <>
             <Container>
                 <Row as="h4" className='mt-4 mb-3'>Substructure Search</Row>
-                <Row className='mt-3'> Draw the substructure you want to search for below. 
-                Note: the SMILES substructure search we use does not currently work on structures with charged atoms. </Row>
+                <Row className='mt-3'> Draw the substructure you want to search for below. </Row>
 
                 <Row style={{width:'75vw'}} className="justify-content-center"> 
                     <Col
