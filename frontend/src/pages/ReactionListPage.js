@@ -35,9 +35,9 @@ const ReactionListPage = () => {
                         onChange={(e)=>setOrdering(e.target.value)} 
                         onSubmit={(e)=>setOrdering(e.target.value)} className="form-select">
                         <option value="id">Database ID (default)</option>
-                        <option value="-internal_percent">Internal incorporation %</option>
-                        <option value="-n_term_percent">N-terminal incorporation %</option>
-                        <option value="-assay__acylation_yield">Microhelix assay acylation yield</option>
+                        <option value="-internal_percent&internal_incorporation=Y">Internal incorporation %</option>
+                        <option value="-n_term_percent&n_term_incorporation=Y">N-terminal incorporation %</option>
+                        <option value="-assay__acylation_yield&synthetase__isnull=true">Microhelix assay acylation yield</option>
                     </select>
                 </div>
                 <Col>

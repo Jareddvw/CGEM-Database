@@ -70,7 +70,9 @@ defaultFilteringFields = {
     'n_term_percent': ['exact', 'gte', 'lte'],
     'internal_percent': ['exact', 'gte', 'lte'],
     'rib_readout': ['exact', 'icontains'],
-    'references__DOI': ['exact']
+    'references__DOI': ['exact'],
+    'n_term_incorporation': ['exact'],
+    'internal_incorporation': ['exact']
 }
 defaultOrderingFields = [
     'id',
@@ -185,6 +187,7 @@ class AssayView(viewsets.ModelViewSet):
 
 class ReactionViewSingle(viewsets.ModelViewSet):
     serializer_class = ReactionSerializer
+    pagination_class = ReactionTableViewPagination
 
     # overriding perform_create so user gets added to model on create.
     def perform_create(self, serializer):

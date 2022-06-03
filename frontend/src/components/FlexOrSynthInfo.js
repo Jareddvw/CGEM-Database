@@ -7,19 +7,19 @@ const FlexOrSynthInfo = ({synthetase, flexizyme, readout}) => {
             <Card id="flexsynth" style={{ width: '18rem' }} className="mx-2.5">
                 <Card.Header> <strong>Synthetase</strong></Card.Header>
                 <Card.Body>
-                    <Card.Subtitle className="mb-2">common name: {synthetase.synth_common_name} </Card.Subtitle>
-                    <Card.Subtitle className="mb-2">parent synthetase: {synthetase.parent_synthetase?.parent_name || "no parent recorded"} </Card.Subtitle>
+                    <Card.Subtitle className="mb-2">Common name: {synthetase.synth_common_name} </Card.Subtitle>
+                    <Card.Subtitle className="mb-2">Parent synthetase: {synthetase.parent_synthetase?.parent_name || "no parent recorded"} </Card.Subtitle>
                     <Card.Text>
                         <br />
-                            <span style={{fontWeight: '500'}}>Organism(s): </span>
+                            <span style={{fontWeight: '600'}}>Organism(s): </span>
                              {synthetase.organisms.map((organism => organism.organism_name + "; "))}
                         <br />
                         <br />
-                            <span style={{fontWeight: '500'}}>Readout: </span>
+                            <span style={{fontWeight: '600'}}>Readout: </span>
                              {readout}
                         <br />
                         <br />
-                            <span style={{fontWeight: '500'}}>Mutations: </span>
+                            <span style={{fontWeight: '600'}}>Mutations: </span>
                             {synthetase.mutations.map((mutation => mutation.mutation_name + "; "))}
 
                     </Card.Text>
@@ -33,7 +33,10 @@ const FlexOrSynthInfo = ({synthetase, flexizyme, readout}) => {
                 <Card.Body>
                     <Card.Subtitle className="mb-2 text-muted">name: {flexizyme.flex_name} </Card.Subtitle>
                     <Card.Text>
-                        sequence: {flexizyme.flex_sequence || "No sequence recorded"}
+                        <br />
+                            <span style={{fontWeight: '600'}}>Sequence: </span>
+                            {flexizyme.flex_sequence || "No sequence recorded"}
+                        <br />
                     </Card.Text>
                 </Card.Body>
             </Card>

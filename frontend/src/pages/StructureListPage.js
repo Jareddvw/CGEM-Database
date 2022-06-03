@@ -86,7 +86,7 @@ const StructureListPage = () => {
                             type="text" placeholder="SMILES" >
                         </Form.Control>
                     </div>
-                    <div className="btn btn-outline-primary mb-3 mt-3 w-25" 
+                    <div className="btn btn-outline-primary mb-3 mt-3 w-25"
                             onClick={getReactions} 
                             onSubmit={getReactions}> 
                         Search 
