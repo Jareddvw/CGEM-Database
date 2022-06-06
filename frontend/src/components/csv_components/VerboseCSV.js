@@ -45,9 +45,10 @@ const VerboseCSV = ( {reactions, name} ) => {
       }
 
       let muts = ""
-      for (const mut of reaction.synthetase.mutations) {
-        muts += mut.mutation_name + "; "
-      }
+      if (reaction.synthetase.mutations) {
+        for (const mut of reaction?.synthetase?.mutations) {
+          muts += mut?.mutation_name + "; "
+      } }
       reaction.synthetase["muts"] = muts
 
       let orgs = ""

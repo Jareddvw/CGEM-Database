@@ -8,8 +8,6 @@ import { Link } from 'react-router-dom'
 
 const StructureListPage = () => {
 
-    var Kekule = require('kekule').Kekule;
-
     var comp = useRef()
 
     let composer;
@@ -18,17 +16,10 @@ const StructureListPage = () => {
     const [SMILES, setSMILES] = useState('')
     const [status, setStatus] = useState(200)
 
-    const drawingPageLink = (<a href="/draw-structures">here</a>)
     let queryString = ''
 
     useEffect(() => {
     }, [SMILES, status])
-
-    let makeComposer = () => {
-        composer = new Kekule.Editor.Composer(comp.current)
-        composer.setCommonToolButtons(['loadData', 'saveData', 'zoomIn', 'zoomOut', 'undo', 'redo', 'copy', 'cut', 'paste']);
-        composer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atomAndFormula', 'ring']);
-    }
 
     let getReactions = async () => {
         if (SMILES.length > 0) {

@@ -4,24 +4,28 @@ import { useState, useEffect, } from 'react'
 import { Container, Row, Col, Form } from 'react-bootstrap'
 import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
+import ReactPaginate from 'react-paginate'
 
 const MyReactionsPage = () => {
 
     let [reactions, setReactions] = useState([])
     let [ordering, setOrdering] = useState('')
     let [cardView, setCardView] = useState(false)
+    let [resultCount, setResultCount] = useState(0)
+    let [pageCount, setPageCount] = useState(1)
+    let [limit, setLimit] = useState(6)
 
     let {authTokens, logoutUser, user} = useContext(AuthContext)
 
     useEffect(() => {
         getReactions()
-    }, [ordering])
+    }, [ordering, limit])
 
     useEffect(() => {
     }, [cardView])
 
     let getReactions = async () => {
-        let response = await fetch('/api/myreactions/?ordering=' + ordering,
+        let response = await fetch(`/api/myreactions/?limit=${limit}&ordering=${ordering}`,
         {
             headers: {
                 'Content-Type':'application/json',
@@ -36,9 +40,26 @@ const MyReactionsPage = () => {
         console.log(data)
         if (response.ok) {
             setReactions(data.results)
+            const totalCount = data.count
+            setPageCount(Math.ceil(totalCount / limit))
+            setResultCount(totalCount)
         } else if (response.statusText === 'Unauthorized') {
             logoutUser()
         }
+    }
+
+    const handlePageClick = async (data) => {
+        let currentPage = data.selected + 1;
+        let newReactionsFromServer = await getPaginatedReactions(currentPage);
+        setReactions(newReactionsFromServer)
+        window.scrollTo(0, document.body.scrollHeight)
+    }
+
+    const getPaginatedReactions = async (currentPage) => {
+        let offset = ( currentPage - 1 ) * limit
+        let response = await fetch(`/api/?limit=${limit}&offset=${offset}&ordering=${ordering}`)
+        let data = await response.json()
+        return data.results
     }
 
   return (
@@ -68,7 +89,41 @@ const MyReactionsPage = () => {
                     </div>
                 </Col>
             </Row>
+            <Row className='mt-3 align-items-center'> 
+                <div style={{width:300, padding:0}}>
+                    Number of results: {resultCount} 
+                </div>
+                    Show
+                    <Form.Select size='sm' style={{width:100, marginLeft:'0.5em', marginRight:'0.5em'}}
+                        onChange={(e)=>setLimit(e.target.value)}>
+                        <option value={6}>6</option>
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={pageCount * limit}>All</option>
+                    </Form.Select>
+                    entries per page
+            </Row>
             <Row className='mt-4'>{reactions === [] ? <></> : <ReactionOrStructureList reactions={reactions} cardView={cardView} /> } </Row>
+            <ReactPaginate
+                previousLabel={"previous"}
+                nextLabel={"next"}
+                breakLabel={"..."}
+                pageCount={pageCount}
+                marginPagesDisplayed={1}
+                pageRangeDisplayed={3}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination justify-content-end mt-3"}
+                pageClassName={"page-item"}
+                pageLinkClassName={"page-link"}
+                previousClassName={"page-item"}
+                previousLinkClassName={"page-link"}
+                nextClassName={"page-item"}
+                nextLinkClassName={"page-link"}
+                breakClassName={"page-item"}
+                breakLinkClassName={"page-link"}
+                activeClassName={"active"}
+            />
         </Container>
         
     </>

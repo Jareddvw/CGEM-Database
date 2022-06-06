@@ -54,3 +54,7 @@
 .hoverable:hover {
     cursor: pointer;
 }
+
+.test {
+    background-color: green;
+}

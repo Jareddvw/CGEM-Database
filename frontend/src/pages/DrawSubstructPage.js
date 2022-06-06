@@ -16,7 +16,7 @@ const DrawSubstructPage = () => {
     const [composer, setComposer] = useState(null)
     const [cardView, setCardView] = useState(true)
     let [pageCount, setPageCount] = useState(1)
-    let [limit, setLimit] = useState(5)
+    let [limit, setLimit] = useState(6)
 
     let queryString = ''
 
@@ -106,32 +106,37 @@ const DrawSubstructPage = () => {
         } else if (SMILES === "serverError") {
             return <div className = "text-center mb-3">  An error occurred! Your SMILES may not be valid. </div>
         } else {
-            return (
-                <>
-                {(cardView === true) ?
-                <StructureList reactions={reactions} verbose={false} /> :
-                <ReactionList reactions={reactions} verbose={false} />}
-                <ReactPaginate
-                    previousLabel={"previous"}
-                    nextLabel={"next"}
-                    breakLabel={"..."}
-                    pageCount={pageCount}
-                    marginPagesDisplayed={1}
-                    pageRangeDisplayed={3}
-                    onPageChange={handlePageClick}
-                    containerClassName={"pagination justify-content-end"}
-                    pageClassName={"page-item"}
-                    pageLinkClassName={"page-link"}
-                    previousClassName={"page-item"}
-                    previousLinkClassName={"page-link"}
-                    nextClassName={"page-item"}
-                    nextLinkClassName={"page-link"}
-                    breakClassName={"page-item"}
-                    breakLinkClassName={"page-link"}
-                    activeClassName={"active"}
-                />
-                </>
-            )
+            if (SMILES !== null) {
+                return (
+                    <>
+                    {(cardView === true) ?
+                    <StructureList reactions={reactions} verbose={false} /> :
+                    <ReactionList reactions={reactions} verbose={false} />}
+                    <ReactPaginate
+                        previousLabel={"previous"}
+                        nextLabel={"next"}
+                        breakLabel={"..."}
+                        pageCount={pageCount}
+                        marginPagesDisplayed={1}
+                        pageRangeDisplayed={3}
+                        onPageChange={handlePageClick}
+                        containerClassName={"pagination justify-content-end"}
+                        pageClassName={"page-item"}
+                        pageLinkClassName={"page-link"}
+                        previousClassName={"page-item"}
+                        previousLinkClassName={"page-link"}
+                        nextClassName={"page-item"}
+                        nextLinkClassName={"page-link"}
+                        breakClassName={"page-item"}
+                        breakLinkClassName={"page-link"}
+                        activeClassName={"active"}
+                    />
+                    </>
+                )
+            } else {
+                return (<></>)
+            }
+            
         }
     }
 
@@ -170,7 +175,7 @@ const DrawSubstructPage = () => {
                         Show
                         <Form.Select size='sm' style={{width:100, marginLeft:'1em', marginRight:'1em'}}
                             onChange={(e)=>setLimit(e.target.value)}>
-                            <option value={5}>5</option>
+                            <option value={6}>6</option>
                             <option value={10}>10</option>
                             <option value={25}>25</option>
                             <option value={50}>50</option>
