@@ -1,7 +1,9 @@
 import { useRef } from 'react'
 import { useState, useEffect } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Form } from 'react-bootstrap'
 import StructureList from '../components/list_components/StructureList'
+import ReactionList from '../components/list_components/ReactionList'
+import ReactPaginate from 'react-paginate'
 
 
 const DrawSubstructPage = () => {
@@ -12,6 +14,9 @@ const DrawSubstructPage = () => {
     let [reactions, setReactions] = useState([])
     const [SMILES, setSMILES] = useState(null)
     const [composer, setComposer] = useState(null)
+    const [cardView, setCardView] = useState(true)
+    let [pageCount, setPageCount] = useState(1)
+    let [limit, setLimit] = useState(5)
 
     let queryString = ''
 
@@ -38,7 +43,7 @@ const DrawSubstructPage = () => {
         if (SMILES !== null) {
             getReactions()
         }
-    }, [SMILES])
+    }, [SMILES, limit])
 
     useEffect(() => {
         makeComposer()
@@ -56,7 +61,7 @@ const DrawSubstructPage = () => {
             queryString = queryString.split(')').join('%29')
             queryString = queryString.split('+').join('%2B')
         }
-        let response = await fetch(`/api/?monomer__monomer_smiles__substruct=${queryString}`)
+        let response = await fetch(`/api/?limit=${limit}&monomer__monomer_smiles__substruct=${queryString}`)
                         .catch((err) => console.log(err))
         if (response.status === 500 || !response.ok) {
             setSMILES("serverError")
@@ -65,7 +70,34 @@ const DrawSubstructPage = () => {
         let data = await response.json()
         if (response.ok) {
             setReactions(data.results)
+            const totalCount = data.count
+            setPageCount(Math.ceil(totalCount / limit))
         }
+    }
+
+    const handlePageClick = async (data) => {
+        let currentPage = data.selected + 1;
+        let newReactionsFromServer = await getPaginatedReactions(currentPage);
+        setReactions(newReactionsFromServer)
+        window.scrollTo(0, document.body.scrollHeight)
+    }
+
+    const getPaginatedReactions = async (currentPage) => {
+        if (SMILES === "Error. More than one structure drawn.") {
+            return;
+        }
+        if (SMILES.length > 0) {
+            queryString = SMILES
+            queryString = queryString.split('=').join('%3D')
+            queryString = queryString.split('#').join('%23')
+            queryString = queryString.split('(').join('%28')
+            queryString = queryString.split(')').join('%29')
+            queryString = queryString.split('+').join('%2B')
+        }
+        let offset = ( currentPage - 1 ) * limit
+        let response = await fetch(`/api/?limit=${limit}&offset=${offset}&monomer__monomer_smiles__substruct=${queryString}`)
+        let data = await response.json()
+        return data.results
     }
 
     const returnStatement = () => {
@@ -74,7 +106,32 @@ const DrawSubstructPage = () => {
         } else if (SMILES === "serverError") {
             return <div className = "text-center mb-3">  An error occurred! Your SMILES may not be valid. </div>
         } else {
-            return (<StructureList reactions={reactions} verbose={false} />)
+            return (
+                <>
+                {(cardView === true) ?
+                <StructureList reactions={reactions} verbose={false} /> :
+                <ReactionList reactions={reactions} verbose={false} />}
+                <ReactPaginate
+                    previousLabel={"previous"}
+                    nextLabel={"next"}
+                    breakLabel={"..."}
+                    pageCount={pageCount}
+                    marginPagesDisplayed={1}
+                    pageRangeDisplayed={3}
+                    onPageChange={handlePageClick}
+                    containerClassName={"pagination justify-content-end"}
+                    pageClassName={"page-item"}
+                    pageLinkClassName={"page-link"}
+                    previousClassName={"page-item"}
+                    previousLinkClassName={"page-link"}
+                    nextClassName={"page-item"}
+                    nextLinkClassName={"page-link"}
+                    breakClassName={"page-item"}
+                    breakLinkClassName={"page-link"}
+                    activeClassName={"active"}
+                />
+                </>
+            )
         }
     }
 
@@ -93,15 +150,33 @@ const DrawSubstructPage = () => {
                     </Col>
                 </Row> 
                 
-                <Row className='mt-3 mb-3 align-items-center'> 
+                <Row className='mt-3 mb-3 align-items-center justify-content-center'> 
                     <button 
-                        className='btn btn-outline-primary mb-3 mt-3 w-25 mx-3' 
+                        className='btn btn-outline-primary mb-3 mt-3 w-25 mx-2' 
                         onClick={generateSMILES} >
                         Generate SMILES and Search
                     </button>
-                    <div className="mb-3 mt-3 mx-3 w-25">
+                    <div className="mb-3 mt-3 mx-2 w-25">
                         {(SMILES !== "" && SMILES !== null) ? "Molecule SMILES: " + SMILES : ""}
                     </div>
+                    <div className="mb-3 mt-3 mx-2 w-25">
+                        <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="View results as table"
+                            onClick={() => {setCardView(!cardView)}} >
+                        </Form.Check>
+                    </div>
+                        Show
+                        <Form.Select size='sm' style={{width:100, marginLeft:'1em', marginRight:'1em'}}
+                            onChange={(e)=>setLimit(e.target.value)}>
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={25}>25</option>
+                            <option value={50}>50</option>
+                            <option value={pageCount * limit}>All</option>
+                        </Form.Select>
+                        entries
                 </Row>
 
                 {returnStatement()}

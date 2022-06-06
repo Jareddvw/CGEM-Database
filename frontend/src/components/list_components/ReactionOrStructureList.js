@@ -14,7 +14,7 @@ const ReactionOrStructureList = ( {cardView, reactions, verbose } ) => {
 
     return (
         <>
-            {cardView === "false" ? <ReactionList reactions={reactions} verbose={verbose} /> :
+            {cardView === false ? <ReactionList reactions={reactions} verbose={verbose} /> :
                                     <StructureList reactions={reactions} verbose={verbose} />}
         </>
     )

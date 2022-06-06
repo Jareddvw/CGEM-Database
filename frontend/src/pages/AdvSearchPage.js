@@ -11,7 +11,7 @@ const AdvSearchPage = () => {
   let [search, setSearch] = useState("")
   let [ordering, setOrdering] = useState("?ordering=id")
   let [reactions, setReactions] = useState([])
-  let [cardView, setCardView] = useState("false")
+  let [cardView, setCardView] = useState(false)
 
 
   // for /api/single, use setReactions(data)
@@ -27,7 +27,7 @@ const AdvSearchPage = () => {
     }
     let data = await response.json()
 
-    setReactions(data)
+    setReactions(data.results)
     let length = await data.length
     if (length === 0) {
         setReactions("blank")
@@ -175,8 +175,8 @@ const AdvSearchPage = () => {
                     <select
                         onChange={(e)=>setCardView(e.target.value)} 
                         onSubmit={(e)=>setCardView(e.target.value)} className="form-select">
-                        <option value="false">List View</option>
-                        <option value="true">Card View</option>
+                        <option value={false}>List view</option>
+                        <option value={true}>Card (structure) view</option>
                     </select>
                 </div>
                 </Col>

@@ -1,6 +1,6 @@
 import { useMatch } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { Container, Row } from 'react-bootstrap'
+import { Container, Row, Form } from 'react-bootstrap'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 
 const GeneralSearch = () => {
@@ -14,7 +14,7 @@ const GeneralSearch = () => {
     let searchTerm = match.params.id
 
     let [reactions, setReactions] = useState([])
-    let [cardView, setCardView] = useState("false")
+    let [cardView, setCardView] = useState(false)
 
     useEffect(() => {
         getReactions()
@@ -34,12 +34,17 @@ const GeneralSearch = () => {
     if (searchTerm) {
         return (
             <Container>
-                <Row className = 'mb-4 mt-4'><h4 className='text-center'>Search Results for "{searchTerm}": </h4></Row>
-                <Row className = 'mb-4 mt-4' style = {{display:"flex", justifyContent:"center"}}>
-                    <button className='btn btn-outline-secondary text-center' style={{width: '25rem'}} 
-                            onClick={() => {if (cardView === "true") {setCardView("false")} else {setCardView("true")}}} >
-                        {(cardView === "true") ? "Card" : "List"}
-                    </button>
+                <Row className = 'mb-4 mt-5'><h4 className='text-center'>Search Results for "{searchTerm}": </h4></Row>
+                <Row className = 'mb-4 mt-4 w-25 justify-content-center'>
+                    <div className="text-center">
+                        <Form.Check
+                            inline
+                            type="switch"
+                            id="custom-switch"
+                            label="View structures"
+                            onClick={() => {setCardView(!cardView)}} >
+                        </Form.Check>
+                    </div>
                 </Row>
                 <ReactionOrStructureList cardView={cardView} reactions={reactions} verbose={false} />
             </Container>

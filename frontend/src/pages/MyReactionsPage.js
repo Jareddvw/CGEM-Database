@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 import { useState, useEffect, } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Form } from 'react-bootstrap'
 import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 
@@ -9,7 +9,7 @@ const MyReactionsPage = () => {
 
     let [reactions, setReactions] = useState([])
     let [ordering, setOrdering] = useState('')
-    let [cardView, setCardView] = useState("false")
+    let [cardView, setCardView] = useState(false)
 
     let {authTokens, logoutUser, user} = useContext(AuthContext)
 
@@ -34,8 +34,8 @@ const MyReactionsPage = () => {
         let data = await response.json()
 
         console.log(data)
-        if (response.status === 200) {
-            setReactions(data)
+        if (response.ok) {
+            setReactions(data.results)
         } else if (response.statusText === 'Unauthorized') {
             logoutUser()
         }
@@ -52,19 +52,19 @@ const MyReactionsPage = () => {
                         onChange={(e)=>setOrdering(e.target.value)} 
                         onSubmit={(e)=>setOrdering(e.target.value)} className="form-select">
                         <option value="id">Database ID (default)</option>
-                        <option value="-internal_percent">Internal incorporation %</option>
-                        <option value="-n_term_percent">N-terminal incorporation %</option>
-                        <option value="-assay__acylation_yield">Microhelix assay acylation yield</option>
+                        <option value="-internal_percent&internal_incorporation=Y">Internal incorporation %</option>
+                        <option value="-n_term_percent&n_term_incorporation=Y">N-terminal incorporation %</option>
+                        <option value="-assay__acylation_yield&synthetase__isnull=true">Microhelix assay acylation yield</option>
                     </select>
                 </div>
                 <Col>
                     <div>
-                        <select style={{width:300}}
-                            onChange={(e)=>setCardView(e.target.value)} 
-                            onSubmit={(e)=>setCardView(e.target.value)} className="form-select">
-                            <option value="false">List View</option>
-                            <option value="true">Card View</option>
-                        </select>
+                        <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="View structures"
+                            onClick={() => {setCardView(!cardView)}} >
+                        </Form.Check>
                     </div>
                 </Col>
             </Row>
