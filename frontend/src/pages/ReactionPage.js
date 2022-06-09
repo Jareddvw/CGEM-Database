@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useMatch } from 'react-router-dom'
 import { Container, Table, Row, Card } from 'react-bootstrap'
 import MonomerDrawing from '../components/MonomerDrawing'
@@ -7,6 +7,9 @@ import RibosomeInfo from '../components/RibosomeInfo'
 import MicrohelixAssay from '../components/MicrohelixAssay'
 import TRNA_info from '../components/TRNA_info'
 import References from '../components/References'
+import EditModal from '../components/EditModal'
+import DeleteModal from '../components/DeleteModal'
+import AuthContext from '../context/AuthContext'
 
 const ReactionPage = () => {
     
@@ -22,6 +25,11 @@ const ReactionPage = () => {
     let [height, setHeight] = useState(150)
     let [loading, setLoading] = useState(true)
     let [status, setStatus] = useState(0)
+    let [showUnauthorizedModal, setShowUnauthorizedModal] = useState(false)
+    let [showDeleteModal, setShowDeleteModal] = useState(false)
+    let [showEditModal, setShowEditModal] = useState(false)
+
+    let {authTokens, user} = useContext(AuthContext)
 
     useEffect(() => {
         getReaction()
@@ -58,11 +66,31 @@ const ReactionPage = () => {
     if (!loading) {
    return (
     <Container className = "mb-3">
-        <Row className="mt-4 mb-4"> 
-            <h5 style={{color: "maroon"}}> 
+        <Row className="mt-4 mb-4 align-items-center justify-content-between"> 
+            <h5 style={{color: "maroon", width:300}}> 
                 Reaction CGEM ID: {reaction?.id} 
             </h5>
+            <div style={{width:450, display:'flex', justifyContent:'between'}} >
+                <button 
+                    className="btn btn-outline-primary mx-1" 
+                    style={{width:200}} 
+                    onClick={() => setShowEditModal(true)} >
+                        Edit this reaction
+                </button>
+                <button 
+                    className="btn btn-outline-danger mx-1" 
+                    style={{width:200}} 
+                    onClick={() => setShowDeleteModal(true)} >
+                        Delete this reaction
+                </button>
+            </div>
         </Row>
+        <EditModal show={showEditModal} onHide={() => setShowEditModal(false)}/>
+        <DeleteModal 
+            show={showDeleteModal} 
+            onHide={() => setShowDeleteModal(false)}
+            reactionId = {id}
+            authTokens = {authTokens} />
         <Table responsive='sm' striped bordered>
             <thead>
                 <tr>

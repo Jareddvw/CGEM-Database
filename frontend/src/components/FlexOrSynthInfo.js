@@ -4,7 +4,7 @@ import { Card } from 'react-bootstrap'
 const FlexOrSynthInfo = ({synthetase, flexizyme, readout}) => {
     if (synthetase != null) {
         return (
-            <Card id="flexsynth" style={{ width: '18rem' }} className="mx-2.5">
+            <Card id="flexsynth" style={{ width: 400 }} className="mx-2.5">
                 <Card.Header> <strong>Synthetase</strong></Card.Header>
                 <Card.Body>
                     <Card.Subtitle className="mb-2">Common name: {synthetase.synth_common_name} </Card.Subtitle>

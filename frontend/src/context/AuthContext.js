@@ -75,10 +75,13 @@ export const AuthProvider = ({ children }) => {
 
         let data = await response.json()
 
-        if (response.status === 200) {
+        if (response.ok) {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem('authTokens', JSON.stringify(data)) 
+            if (loading) {
+                setLoading(false)
+            }
         } else if (response.status !== 400) {
             logoutUser()
         }
@@ -114,7 +117,7 @@ export const AuthProvider = ({ children }) => {
         let interval = setInterval(() => {
             if (authTokens) {
                 updateToken()
-            }
+            } 
         }, fourMin)
         return () => clearInterval(interval);
 
