@@ -82,8 +82,8 @@ const getPaginatedReactions = async (currentPage) => {
             or for multiple additional organisms.
             Empty fields will be ignored so you don’t need to fill in every box. </Row>
             <Row></Row>
-            {Object.keys(queries).map((key) => 
-                                    key + "=" + queries[key] + "").join("")}
+            {/* {Object.keys(queries).map((key) => 
+                                    key + "=" + queries[key] + "").join("")} */}
             
             <Row className='mt-3'> 
             <Col className='mt-3'> Parent synthetase (if synthetase) 
@@ -158,11 +158,11 @@ const getPaginatedReactions = async (currentPage) => {
                         onChange={(e)=>{
                             let queryString = e.target.value
                             if (queryString.length > 0) {
-                                queryString = queryString.toUpperCase()
                                 queryString = queryString.split('=').join('%3D')
                                 queryString = queryString.split('#').join('%23')
                                 queryString = queryString.split('(').join('%28')
                                 queryString = queryString.split(')').join('%29')
+                                queryString = queryString.split('+').join('%2B')
                             }
                             setQueries({
                                 ...queries,

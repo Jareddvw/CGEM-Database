@@ -103,6 +103,8 @@ const DrawSubstructPage = () => {
     const returnStatement = () => {
         if (reactions === []) {
             return (<> Waiting for data to load... </>)
+        } else if (SMILES === "Error. More than one structure drawn.") {
+            return;
         } else if (SMILES === "serverError") {
             return <div className = "text-center mb-3">  An error occurred! Your SMILES may not be valid. </div>
         } else {
@@ -136,7 +138,6 @@ const DrawSubstructPage = () => {
             } else {
                 return (<></>)
             }
-            
         }
     }
 

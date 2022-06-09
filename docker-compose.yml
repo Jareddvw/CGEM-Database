@@ -1,5 +1,9 @@
 version: '3.8'
 
+
+# after running "docker-compose up", add server in pgadmin 
+# using ip address 192.168.0.2 and username/password. 
+
 services:
 
   db:
@@ -10,7 +14,7 @@ services:
       POSTGRES_PASSWORD: key3rxns
       POSTGRES_DB: cgemdb
     volumes:
-      - /path/to/pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -30,6 +34,9 @@ services:
       app_net: 
         ipv4_address: 192.168.0.3
 
+volumes:
+  pgdata:
+
 networks:
   app_net: 
     ipam: 
@@ -37,3 +44,4 @@ networks:
       config:
         - subnet: "192.168.0.0/24"
           gateway: 192.168.0.1
+
