@@ -18,6 +18,7 @@ import PrivateRoute from './utils/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
 import MyReactionsPage from './pages/MyReactionsPage';
 import DrawSubstructPage from './pages/DrawSubstructPage';
+import AboutPage from './pages/AboutPage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <br></br>
             <Routes>
               <Route path="/" exact element={<SearchPage />} />
+              <Route path="/about" exact element={<AboutPage />} />
               <Route path="/sign-in" exact element={<LoginPage />} />
               <Route path="/create-account" exact element={<NewUserPage />} />
               <Route path="/all-reactions" exact element={<ReactionListPage />} />

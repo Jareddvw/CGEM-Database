@@ -24,7 +24,7 @@ const Header = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse className="justify-content-end">
             <Nav className="justify-content-end">
-                <Nav.Link href="#about">About</Nav.Link>
+                <Nav.Link href="/about">About</Nav.Link>
                 <NavDropdown title="Actions" id="basic-nav-dropdown">
                     <NavDropdown.Item href="/advanced">Advanced Search</NavDropdown.Item>
                     <NavDropdown.Item href="/smiles-structures">Substructure SMILES</NavDropdown.Item>
