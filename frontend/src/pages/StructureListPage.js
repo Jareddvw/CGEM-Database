@@ -1,25 +1,17 @@
-import React, { useLayoutEffect, useRef } from 'react'
 import { useState, useEffect } from 'react'
-import MonomerDrawing from '../components/MonomerDrawing'
-import { Container, Row, Form, Col } from 'react-bootstrap'
+import MonomerDrawing from '../components/rxn_page_components/MonomerDrawing'
+import { Container, Row, Form} from 'react-bootstrap'
 import StructureList from '../components/list_components/StructureList'
-import Flex_template from '../components/csv_components/Flex_template'
-import { Link } from 'react-router-dom'
 
 const StructureListPage = () => {
 
-    var comp = useRef()
-
-    let composer;
-
     let [reactions, setReactions] = useState([])
     const [SMILES, setSMILES] = useState('')
-    const [status, setStatus] = useState(200)
 
     let queryString = ''
 
     useEffect(() => {
-    }, [SMILES, status])
+    }, [SMILES])
 
     let getReactions = async () => {
         if (SMILES.length > 0) {

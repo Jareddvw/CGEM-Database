@@ -1,7 +1,6 @@
 import { Container, Row, Form } from 'react-bootstrap'
 import { useState } from 'react'
 import { createBrowserHistory } from 'history'
-import MonomerDrawing from '../components/MonomerDrawing'
 
 const SearchPage = () => {
     

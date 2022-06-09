@@ -1,6 +1,6 @@
 import { useMatch } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { Container, Row, Form, Col } from 'react-bootstrap'
+import { Container, Row, Form } from 'react-bootstrap'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 import ReactPaginate from 'react-paginate'
 
@@ -22,7 +22,7 @@ const GeneralSearch = () => {
 
     useEffect(() => {
         getReactions()
-    }, [limit])
+    }, [limit] )
 
     let getReactions = async () => {
         if (searchTerm) {

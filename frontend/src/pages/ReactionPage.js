@@ -1,14 +1,14 @@
 import { useState, useEffect, useContext } from 'react'
 import { useMatch } from 'react-router-dom'
 import { Container, Table, Row, Card } from 'react-bootstrap'
-import MonomerDrawing from '../components/MonomerDrawing'
-import FlexOrSynthInfo from '../components/FlexOrSynthInfo'
-import RibosomeInfo from '../components/RibosomeInfo'
-import MicrohelixAssay from '../components/MicrohelixAssay'
-import TRNA_info from '../components/TRNA_info'
-import References from '../components/References'
-import EditModal from '../components/EditModal'
-import DeleteModal from '../components/DeleteModal'
+import MonomerDrawing from '../components/rxn_page_components/MonomerDrawing'
+import FlexOrSynthInfo from '../components/rxn_page_components/FlexOrSynthInfo'
+import RibosomeInfo from '../components/rxn_page_components/RibosomeInfo'
+import MicrohelixAssay from '../components/rxn_page_components/MicrohelixAssay'
+import trna_info from '../components/rxn_page_components/trna_info'
+import References from '../components/rxn_page_components/References'
+import EditModal from '../components/rxn_page_components/modals/EditModal'
+import DeleteModal from '../components/rxn_page_components/modals/DeleteModal'
 import AuthContext from '../context/AuthContext'
 
 const ReactionPage = () => {
@@ -74,18 +74,35 @@ const ReactionPage = () => {
                 <button 
                     className="btn btn-outline-primary mx-1" 
                     style={{width:200}} 
-                    onClick={() => setShowEditModal(true)} >
+                    onClick={() => {
+                        if (user) {
+                            setShowEditModal(true)
+                        } else {
+                            setShowUnauthorizedModal(true)
+                        }
+                    }} >
                         Edit this reaction
                 </button>
                 <button 
                     className="btn btn-outline-danger mx-1" 
                     style={{width:200}} 
-                    onClick={() => setShowDeleteModal(true)} >
+                    onClick={() => {
+                        if (user) {
+                            setShowDeleteModal(true)
+                        } else {
+                            setShowUnauthorizedModal(true)
+                        }
+                    }} >
                         Delete this reaction
                 </button>
             </div>
         </Row>
-        <EditModal show={showEditModal} onHide={() => setShowEditModal(false)}/>
+        <EditModal 
+            show={showEditModal} 
+            onHide={() => setShowEditModal(false)}
+            reactionId = {id} 
+            authTokens = {authTokens}
+            initialReactionData = {reaction} />
         <DeleteModal 
             show={showDeleteModal} 
             onHide={() => setShowDeleteModal(false)}
@@ -116,7 +133,7 @@ const ReactionPage = () => {
                 </Card.Body>
             </Card>
             <FlexOrSynthInfo synthetase={reaction?.synthetase} flexizyme={reaction?.flexizyme} readout={reaction?.rib_readout} />
-            <TRNA_info tRNA={reaction?.tRNA} />
+            <trna_info tRNA={reaction?.tRNA} />
         </Row>
         <br />
             <MicrohelixAssay reaction={reaction} />

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
 
-const TRNA_info = ( {tRNA} ) => {
+const trna_info = ( {tRNA} ) => {
     if (tRNA == null) {
         return (<></>)
     } else {
@@ -20,4 +20,4 @@ const TRNA_info = ( {tRNA} ) => {
     }
 }
 
-export default TRNA_info
+export default trna_info

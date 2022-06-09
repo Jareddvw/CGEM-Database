@@ -1,6 +1,6 @@
 import React from 'react'
 import SmilesDrawer from 'smiles-drawer'
-import Canvas from './Canvas'
+import Canvas from '../Canvas'
 import { useState } from 'react'
 
 const MonomerDrawing = ({ smiles, width, height }) => {

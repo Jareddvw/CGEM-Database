@@ -28,7 +28,7 @@ const FlexOrSynthInfo = ({synthetase, flexizyme, readout}) => {
           )
     } else if (flexizyme != null) {
         return (
-            <Card id="flexsynth" style={{ width: '18rem' }} className="mx-3">
+            <Card id="flexsynth" style={{ width: 400 }} className="mx-3">
                 <Card.Header> <strong>Flexizyme</strong></Card.Header>
                 <Card.Body>
                     <Card.Subtitle className="mb-2 text-muted">name: {flexizyme.flex_name} </Card.Subtitle>
@@ -43,7 +43,7 @@ const FlexOrSynthInfo = ({synthetase, flexizyme, readout}) => {
         )
     } else {
         return (
-            <Card id="flexsynth" style={{ width: '18rem' }} className="mx-3">
+            <Card id="flexsynth" style={{ width: 400 }} className="mx-3">
                 <Card.Body>
                     <Card.Text>
                         Chemical acylation used (no flexizyme or synthetase).
