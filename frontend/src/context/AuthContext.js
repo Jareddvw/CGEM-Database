@@ -94,11 +94,10 @@ export const AuthProvider = ({ children }) => {
     }
 
     let logoutUser = () => {
+        console.log("logged out user.")
         setAuthTokens(null);
         setUser(null);
         localStorage.removeItem('authTokens')
-        history.push('/sign-in')
-        window.location.reload()
     }
 
     // can access username and email through user.username and user.email
@@ -115,7 +114,7 @@ export const AuthProvider = ({ children }) => {
             updateToken()
         }
 
-        let fourMin = 4 * 60 * 1000
+        let fourMin = 4 * 60 * 1000 * (Math.random() + 1)
         let interval = setInterval(() => {
             if (authTokens) {
                 updateToken()

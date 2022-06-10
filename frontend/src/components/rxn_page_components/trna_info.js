@@ -1,17 +1,17 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
 
-const trna_info = ( {tRNA} ) => {
-    if (tRNA == null) {
+const Trna_info = ( {trna} ) => {
+    if (trna == null) {
         return (<></>)
     } else {
         return (
             <>
             <Card id="trna" style={{ width: 400 }} className="mx-3">
-                <Card.Header><strong>{tRNA.tRNA_name}</strong></Card.Header>
+                <Card.Header><strong>{trna.tRNA_name}</strong></Card.Header>
                 <Card.Body>
                     <Card.Text>
-                        {tRNA.tRNA_seq || "No sequence recorded."}
+                        {trna.tRNA_seq || "No sequence recorded."}
                     </Card.Text>
                 </Card.Body>
             </Card>
@@ -20,4 +20,4 @@ const trna_info = ( {tRNA} ) => {
     }
 }
 
-export default trna_info
+export default Trna_info

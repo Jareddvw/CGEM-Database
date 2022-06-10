@@ -11,9 +11,9 @@ const LoginPage = () => {
   return (
       <>
         <Container>
-            <Card style={{width: '55vw'}} className="signInCard my-auto mx-auto mt-5">
+            <Card style={{width: 600}} className="signInCard my-auto mx-auto mt-5">
                 <h4 className='mt-5 mb-3 text-center'> Sign in </h4>
-                <Form onSubmit={loginUser}>
+                <Form onSubmit={loginUser} className='mx-3'>
                     <Form.Group className="mx-5 mb-3" controlId="formBasicEmail">
                         <Form.Label>Email</Form.Label>
                         <Form.Control type="email" placeholder="user123@domain.com" />

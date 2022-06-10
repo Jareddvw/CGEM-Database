@@ -25,7 +25,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                     username=self.validated_data['username'],
                     orcid_id=self.validated_data['orcid_id'],
                     institution=self.validated_data['institution']
-                    )
+                )
         password = self.validated_data['password']
         password2 = self.validated_data['password2']
         if password != password2:
@@ -33,3 +33,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
         account.set_password(password)
         account.save()
         return account
+
+
+class AccountDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['pk', 'username', 'email', 'institution', 'orcid_id', 'date_joined', 'first_name']

@@ -13,6 +13,7 @@ class AccountAdmin(UserAdmin):
         'date_joined',
         'is_admin',
         'is_staff',
+        'is_superuser'
     )
     search_fields = ('email', 'username', 'orcid_id', 'institution')
     readonly_fields = ('id', 'date_joined', 'last_login')

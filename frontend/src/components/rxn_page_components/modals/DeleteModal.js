@@ -6,8 +6,6 @@ const DeleteModal = ({ show, reactionId, onHide, authTokens }) => {
 
     const history = createBrowserHistory()
 
-    console.log(reactionId)
-
     const handleDelete = async () => {
         let response = await fetch(`/api/single/${reactionId}`, {
                 method: 'delete',

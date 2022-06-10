@@ -65,7 +65,7 @@ const MyReactionsPage = () => {
   return (
     <>
         <Container className='mb-4 mt-4'>
-            <Row className='mt-3' as="h4"> Your reactions: {user.username} </Row>
+            <Row className='mt-3' as="h4"> Your reactions: {user.username}</Row>
             <Row className='mt-3'> These are all of the reactions you have added. </Row>
             <Row className='mt-3 align-items-center'> Order results by: 
                 <div style={{width:300}}>

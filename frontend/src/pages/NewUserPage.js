@@ -44,47 +44,45 @@ const NewUserPage = () => {
                 <h4 className='mt-5 mb-3 text-center'> Create an Account </h4>
                 
                 <Form onSubmit={handleSubmit}>
-                    <Row className="justify-content-center align-items-center">
-                    <Form.Group as={Col} md="7" className="mx-5 mb-3" controlId="formBasicEmail">
-                        <Form.Label>Email*</Form.Label>
+                    <Form.Group className="mx-5 mb-3" controlId="formBasicEmail">
+                        <Form.Label>Email <span style={{color:'red', fontWeight:'bold'}}>*</span></Form.Label>
                         <Form.Control type="email" placeholder="name@address.com" required/>
                         <Form.Control.Feedback type="invalid">
                             Please provide a valid email.
                         </Form.Control.Feedback>
                     </Form.Group>
-                    <Form.Group as={Col} md="7" className="mx-5 mb-3" controlId="formBasicUsername">
-                        <Form.Label> Username* </Form.Label>
+                    <Form.Group className="mx-5 mb-3" controlId="formBasicUsername">
+                        <Form.Label> Username <span style={{color:'red', fontWeight:'bold'}}>*</span> </Form.Label>
                         <Form.Control type="username" placeholder="user123" required/>
                     </Form.Group>
-                    <Form.Group as={Col} md="7" className="mx-5 mb-3" controlId="institution">
+                    <Form.Group className="mx-5 mb-3" default="" controlId="institution">
                         <Form.Label>Institution</Form.Label>
-                        <Form.Control type="institution" placeholder="institution"/>
+                        <Form.Control type="institution" placeholder="institution (not required)"/>
                     </Form.Group>
-                    <Form.Group as={Col} md="7" className="mx-5 mb-3" controlId="orcid_id">
+                    <Form.Group className="mx-5 mb-3" default="" controlId="orcid_id">
                         <Form.Label>ORCID iD</Form.Label>
-                        <Form.Control type="orcid" placeholder="16-digit orcid id (not required)"/>
+                        <Form.Control type="orcid" placeholder="16-digit ORCID id (not required)"/>
                     </Form.Group>
-                    <Form.Group as={Col} md="7" className="px-10 mx-5 mt-3 mb-3" controlId="formBasicPassword">
-                        <Form.Label>Password*</Form.Label>
+                    <Form.Group className="px-10 mx-5 mt-3 mb-3" controlId="formBasicPassword">
+                        <Form.Label>Password <span style={{color:'red', fontWeight:'bold'}}>*</span></Form.Label>
                         <Form.Control type="password" placeholder="password" />
                     </Form.Group>
-                    <Form.Group as={Col} md="7" className="px-10 mx-5 mt-3 mb-3" controlId="formBasicPassword2">
-                        <Form.Label>Confirm Password*</Form.Label>
+                    <Form.Group className="px-10 mx-5 mt-3 mb-3" controlId="formBasicPassword2">
+                        <Form.Label>Confirm Password <span style={{color:'red', fontWeight:'bold'}}>*</span></Form.Label>
                         <Form.Control type="password" placeholder="password again" />
                     </Form.Group>
-                    <Form.Group as={Col} md="7" className="px-10 mx-5 mt-3 mb-3">
-                        <button style={{width:'50%'}} className="btn btn-outline-success mt-3 mb-3"
+                    <Form.Group className="px-10 mx-5 mt-3 mb-3">
+                        <button style={{width:'100px'}} className="btn btn-outline-success mt-3 mb-3"
                                 variant="primary" type="submit">
                             Submit
                         </button>
                     </Form.Group>
-                    <Form.Group as={Col} md="7" className="ml-5 mt-2 mb-5" >
+                    <Form.Group className="mx-5 mt-2 mb-5" >
                         <Form.Text muted>
                             Already have an account?
                             Sign in {signInLink}.
                         </Form.Text>
                     </Form.Group>
-                    </Row>
                 </Form>
 
                 

@@ -5,7 +5,7 @@ import MonomerDrawing from '../components/rxn_page_components/MonomerDrawing'
 import FlexOrSynthInfo from '../components/rxn_page_components/FlexOrSynthInfo'
 import RibosomeInfo from '../components/rxn_page_components/RibosomeInfo'
 import MicrohelixAssay from '../components/rxn_page_components/MicrohelixAssay'
-import trna_info from '../components/rxn_page_components/trna_info'
+import Trna_info from '../components/rxn_page_components/Trna_info'
 import References from '../components/rxn_page_components/References'
 import EditModal from '../components/rxn_page_components/modals/EditModal'
 import DeleteModal from '../components/rxn_page_components/modals/DeleteModal'
@@ -137,7 +137,7 @@ const ReactionPage = () => {
                 </Card.Body>
             </Card>
             <FlexOrSynthInfo synthetase={reaction?.synthetase} flexizyme={reaction?.flexizyme} readout={reaction?.rib_readout} />
-            <trna_info tRNA={reaction?.tRNA} />
+            <Trna_info trna={reaction?.tRNA} />
         </Row>
         <br />
             <MicrohelixAssay reaction={reaction} />
