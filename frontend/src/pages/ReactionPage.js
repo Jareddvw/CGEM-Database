@@ -9,6 +9,7 @@ import trna_info from '../components/rxn_page_components/trna_info'
 import References from '../components/rxn_page_components/References'
 import EditModal from '../components/rxn_page_components/modals/EditModal'
 import DeleteModal from '../components/rxn_page_components/modals/DeleteModal'
+import UnauthModal from '../components/rxn_page_components/modals/UnauthModal'
 import AuthContext from '../context/AuthContext'
 
 const ReactionPage = () => {
@@ -108,6 +109,9 @@ const ReactionPage = () => {
             onHide={() => setShowDeleteModal(false)}
             reactionId = {id}
             authTokens = {authTokens} />
+        <UnauthModal 
+            show={showUnauthorizedModal} 
+            onHide={() => setShowUnauthorizedModal(false)} />
         <Table responsive='sm' striped bordered>
             <thead>
                 <tr>

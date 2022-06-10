@@ -1,6 +1,6 @@
 from lib2to3.pgen2.parse import ParseError
 from django.db import models
-from django.contrib.auth.models import User
+from account.models import Account
 
 from django.db.models import Lookup
 from django.db.models import Field
@@ -154,7 +154,7 @@ class Reaction(models.Model):
     # Potential problem: can build up lots of assays that won't be deleted because no way to delete them.
     assay = models.OneToOneField(MicrohelixAssay, blank=True, null=True, on_delete=models.SET_NULL, related_name="reaction")
 
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return 'Reaction %d: %s' % (self.pk, self.monomer.__str__())

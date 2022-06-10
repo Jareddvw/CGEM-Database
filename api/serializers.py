@@ -4,6 +4,8 @@ from base.models import *
 from rdkit import Chem
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
+from rest_framework.exceptions import APIException
+
 #serializers for database models in base.models
 
 ################ Helper Serializers ################ 
@@ -230,7 +232,11 @@ class ReactionSerializer(serializers.ModelSerializer):
         try:
             new_monomer = Monomer.objects.get(monomer_smiles=monomer['monomer_smiles'])
         except:
-            new_monomer = Monomer.objects.create(**monomer)
+            x = Chem.MolFromSmiles(monomer['monomer_smiles'])
+            if x:
+                new_monomer = Monomer.objects.create(**monomer)
+            else:
+                raise APIException("invalid SMILES string provided.")
         try:
             new_trna = T_RNA.objects.get(tRNA_name=tRNA['tRNA_name'])
         except:

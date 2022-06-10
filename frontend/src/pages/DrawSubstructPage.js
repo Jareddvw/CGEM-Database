@@ -14,7 +14,7 @@ const DrawSubstructPage = () => {
     let [reactions, setReactions] = useState([])
     const [SMILES, setSMILES] = useState(null)
     const [composer, setComposer] = useState(null)
-    const [cardView, setCardView] = useState(true)
+    const [cardView, setCardView] = useState(false)
     let [pageCount, setPageCount] = useState(1)
     let [limit, setLimit] = useState(6)
 
@@ -27,6 +27,9 @@ const DrawSubstructPage = () => {
         );
         newComposer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atomAndFormula', 'ring', 'charge']);
         setComposer(newComposer)
+
+        // also want to set toggle to active for viewing structures first
+        document.getElementById("custom-switch").click()
     }
 
     let generateSMILES = () => {
@@ -169,7 +172,7 @@ const DrawSubstructPage = () => {
                         <Form.Check
                             type="switch"
                             id="custom-switch"
-                            label="View results as table"
+                            label="View structures"
                             onClick={() => {setCardView(!cardView)}} >
                         </Form.Check>
                     </div>

@@ -1,9 +1,26 @@
 import React, { useState } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import { Modal, Button, Form, InputGroup } from 'react-bootstrap'
 
 const EditModal = ( { show, onHide, reactionId, authTokens, initialReactionData } ) => {
 
     let [reactionData, setReactionData] = useState(initialReactionData)
+
+
+  const formContents = () => {
+    return (
+      <Form>
+        <Form.Control defaultValue={initialReactionData.flexizyme?.flex_name}></Form.Control>
+        <InputGroup>
+          <InputGroup.Text id="basic-addon1">flexizyme: </InputGroup.Text>
+          <Form.Control
+            placeholder={initialReactionData.flexizyme?.flex_name}
+            aria-label="Username"
+            aria-describedby="basic-addon1"
+          />
+        </InputGroup>
+      </Form>
+    )
+  }
 
   return (
     <Modal show={show}
@@ -17,6 +34,8 @@ const EditModal = ( { show, onHide, reactionId, authTokens, initialReactionData 
             </Modal.Title>
         </Modal.Header>
       <Modal.Body style={{overflowWrap:'break-word'}}>
+        
+        {formContents()}
         {JSON.stringify(initialReactionData)}
       </Modal.Body>
       <Modal.Footer>

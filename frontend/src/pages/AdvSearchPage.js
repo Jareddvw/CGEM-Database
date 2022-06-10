@@ -202,7 +202,7 @@ const getPaginatedReactions = async (currentPage) => {
             <Col className='mt-3'> Display:
                 <div style={{width:300}}>
                     <select
-                        onChange={(e)=>setCardView(e.target.value)} 
+                        onChange={(e)=>setCardView(!cardView)} 
                         onSubmit={(e)=>setCardView(e.target.value)} className="form-select">
                         <option value={false}> List view </option>
                         <option value={true}> Card (structure) view </option>

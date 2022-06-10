@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
     'api',
     'base',
+    'account',
     'corsheaders',
     'django_rdkit'
 ]
@@ -156,6 +157,8 @@ REST_FRAMEWORK = {
     )
 }
 
+# token authentication settings
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
@@ -187,6 +190,10 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+# Use custom account model instead of default User model. 
+
+AUTH_USER_MODEL = "account.Account" 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
