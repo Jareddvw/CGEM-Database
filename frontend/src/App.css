@@ -2,7 +2,7 @@
 
 /* overriding default react-bootstrap font */
 .App {
-    font-family: Arial, Helvetica, sans-serif !important;
+    font-family: Haettenschweiler, 'Arial Narrow Bold', sans-serif !important;
     letter-spacing: 0.5px !important;
 }
 

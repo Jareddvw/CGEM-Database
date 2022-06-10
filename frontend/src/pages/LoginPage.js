@@ -14,9 +14,9 @@ const LoginPage = () => {
             <Card style={{width: '55vw'}} className="signInCard my-auto mx-auto mt-5">
                 <h4 className='mt-5 mb-3 text-center'> Sign in </h4>
                 <Form onSubmit={loginUser}>
-                    <Form.Group className="mx-5 mb-3" controlId="formBasicUsername">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="username" placeholder="user123" />
+                    <Form.Group className="mx-5 mb-3" controlId="formBasicEmail">
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control type="email" placeholder="user123@domain.com" />
                     </Form.Group>
                     <Form.Group className="mx-5 mt-3 mb-4" controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
@@ -38,7 +38,6 @@ const LoginPage = () => {
             </Card>
         </Container>
       </>
-    
   )
 }
 

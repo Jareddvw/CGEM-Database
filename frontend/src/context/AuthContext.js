@@ -6,6 +6,8 @@ const AuthContext = createContext();
 
 export default AuthContext;
 
+// for some reason authTokens is getting set to NULL when it should not be.
+
 export const AuthProvider = ({ children }) => {
 
     let [loading, setLoading] = useState(true);
@@ -39,7 +41,7 @@ export const AuthProvider = ({ children }) => {
                 'Content-type':'application/JSON'
             },
             body: JSON.stringify({
-                'username': e.target.formBasicUsername.value, 
+                'email': e.target.formBasicEmail.value, 
                 'password': e.target.formBasicPassword.value
             })
         })
@@ -78,7 +80,7 @@ export const AuthProvider = ({ children }) => {
         if (response.ok) {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
-            localStorage.setItem('authTokens', JSON.stringify(data)) 
+            localStorage.setItem('authTokens', JSON.stringify(data))
             if (loading) {
                 setLoading(false)
             }

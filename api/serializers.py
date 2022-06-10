@@ -233,10 +233,10 @@ class ReactionSerializer(serializers.ModelSerializer):
             new_monomer = Monomer.objects.get(monomer_smiles=monomer['monomer_smiles'])
         except:
             x = Chem.MolFromSmiles(monomer['monomer_smiles'])
-            if x:
+            if x is not None:
                 new_monomer = Monomer.objects.create(**monomer)
             else:
-                raise APIException("invalid SMILES string provided.")
+                raise serializers.ValidationError("invalid SMILES string provided.")
         try:
             new_trna = T_RNA.objects.get(tRNA_name=tRNA['tRNA_name'])
         except:
