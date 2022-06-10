@@ -39,13 +39,16 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(verbose_name='email address', unique=True)
     username = models.CharField(max_length=150, blank=True)
-    orcid_id = models.CharField(max_length=150, blank=True)
+    orcid_id = models.CharField(verbose_name="ORCID iD", max_length=150, blank=True)
     institution = models.CharField(max_length=150, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
+    #included to prevent FieldError
+    first_name = models.CharField(max_length=30, null=True, blank=True)
+    last_name = models.CharField(max_length=30, null=True, blank=True)
 
     objects = CustomAccountManager()
 

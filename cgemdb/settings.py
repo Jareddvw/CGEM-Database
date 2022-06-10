@@ -192,8 +192,11 @@ SIMPLE_JWT = {
 }
 
 # Use custom account model instead of default User model. 
-
 AUTH_USER_MODEL = "account.Account" 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.AllowAllUsersModelBackend',
+    'account.backends.CaseInsensitiveModelBackend'
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
