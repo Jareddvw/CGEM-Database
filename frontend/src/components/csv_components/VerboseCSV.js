@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSVLink } from "react-csv"
 
-const VerboseCSV = ( {reactions, name} ) => {
+const VerboseCSV = ( { reactions, name } ) => {
 
     const headers = [
       {label: "DOI", key: "DOI"},

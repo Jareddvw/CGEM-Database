@@ -13,7 +13,7 @@ const AdvSearchPage = () => {
     let [ordering, setOrdering] = useState("&ordering=id")
     let [reactions, setReactions] = useState([])
     let [cardView, setCardView] = useState(false)
-    let [limit, setLimit] = useState(6)
+    let [limit, setLimit] = useState(12)
     let [resultCount, setResultCount] = useState(0)
     let [pageCount, setPageCount] = useState(1)
 
@@ -234,8 +234,8 @@ const getPaginatedReactions = async (currentPage) => {
                             Show
                             <Form.Select size='sm' style={{width:100, marginLeft:'0.5em', marginRight:'0.5em'}}
                                 onChange={(e)=>setLimit(e.target.value)}>
-                                <option value={6}>6</option>
-                                <option value={10}>10</option>
+                                {/* <option value={6}>6</option> */}
+                                <option value={12}>12</option>
                                 <option value={25}>25</option>
                                 <option value={50}>50</option>
                                 <option value={pageCount * limit}>All</option>

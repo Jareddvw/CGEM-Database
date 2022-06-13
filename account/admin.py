@@ -19,5 +19,6 @@ class AccountAdmin(UserAdmin):
     readonly_fields = ('id', 'date_joined', 'last_login')
 
     fieldsets = ()
+    list_filter = ()
 
 admin.site.register(Account, AccountAdmin)

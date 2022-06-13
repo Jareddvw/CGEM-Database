@@ -11,6 +11,7 @@ export default AuthContext;
 export const AuthProvider = ({ children }) => {
 
     let [loading, setLoading] = useState(true);
+    let [error, setError] = useState(false)
 
     let initialTokens = null;
     let initialUser = null;
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }) => {
                 'Content-type':'application/JSON'
             },
             body: JSON.stringify({
-                'email': e.target.formBasicEmail.value, 
+                'email': e.target.formBasicEmail.value,
                 'password': e.target.formBasicPassword.value
             })
         })
@@ -54,7 +55,7 @@ export const AuthProvider = ({ children }) => {
             history.push('/')
             window.location.reload()
         } else {
-            alert("something went wrong!")
+            setError(true)
         }
     }
 
@@ -105,7 +106,9 @@ export const AuthProvider = ({ children }) => {
         authTokens:authTokens,
         user: user,
         loginUser:loginUser,
-        logoutUser:logoutUser
+        logoutUser:logoutUser,
+        error: error,
+        setError: setError
     }
 
     useEffect(() => {

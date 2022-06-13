@@ -1,12 +1,15 @@
 import { Container, Form, Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import AuthContext from '../context/AuthContext';
+import AlertModal from '../components/rxn_page_components/AlertModal';
 
 const LoginPage = () => {
 
     const newAccountLink = (<Link to='/create-account'>here</Link>);
-    let {loginUser} = useContext(AuthContext)
+    let { loginUser, error, setError } = useContext(AuthContext)
+
+    let [showAlertModal, setShowAlertModal] = useState(false)
 
   return (
       <>
@@ -16,11 +19,11 @@ const LoginPage = () => {
                 <Form onSubmit={loginUser} className='mx-3'>
                     <Form.Group className="mx-5 mb-3" controlId="formBasicEmail">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" placeholder="user123@domain.com" />
+                        <Form.Control type="email" placeholder="user123@domain.com" required />
                     </Form.Group>
                     <Form.Group className="mx-5 mt-3 mb-4" controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="password" />
+                        <Form.Control type="password" placeholder="password" required />
                     </Form.Group>
                     <Form.Group className="mx-5 mt-3 mb-3" >
                         <button className="btn btn-outline-success"
@@ -36,6 +39,15 @@ const LoginPage = () => {
                     </Form.Group>
                 </Form>
             </Card>
+            <AlertModal 
+                headerText = "Login Error"
+                bodyText = "Something went wrong! Check that you are using the correct email and not a username to log in."
+                show={error === true ? true : false} 
+                onHide={() => {
+                    setShowAlertModal(false); 
+                    setError(false)
+                }}
+            />
         </Container>
       </>
   )

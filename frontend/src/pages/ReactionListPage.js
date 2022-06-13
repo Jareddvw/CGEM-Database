@@ -14,7 +14,7 @@ const ReactionListPage = () => {
     let [ordering, setOrdering] = useState('')
     let [cardView, setCardView] = useState(false)
     let [pageCount, setPageCount] = useState(1)
-    let [limit, setLimit] = useState(6)
+    let [limit, setLimit] = useState(12)
 
     let getReactions = async () => {
         let response = await fetch(`/api/?limit=${limit}&ordering=${ordering}`)
@@ -80,8 +80,8 @@ const ReactionListPage = () => {
                     Show
                     <Form.Select size='sm' style={{width:100, marginLeft:'0.5em', marginRight:'0.5em'}}
                         onChange={(e)=>setLimit(e.target.value)}>
-                        <option value={6}>6</option>
-                        <option value={10}>10</option>
+                        {/* <option value={6}>6</option> */}
+                        <option value={12}>12</option>
                         <option value={25}>25</option>
                         <option value={50}>50</option>
                         <option value={pageCount * limit}>All</option>

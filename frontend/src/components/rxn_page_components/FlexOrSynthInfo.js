@@ -31,7 +31,7 @@ const FlexOrSynthInfo = ({synthetase, flexizyme, readout}) => {
             <Card id="flexsynth" style={{ width: 400 }} className="mx-3">
                 <Card.Header> <strong>Flexizyme</strong></Card.Header>
                 <Card.Body>
-                    <Card.Subtitle className="mb-2 text-muted">name: {flexizyme.flex_name} </Card.Subtitle>
+                    <Card.Subtitle className="mb-2">name: {flexizyme.flex_name} </Card.Subtitle>
                     <Card.Text>
                         <br />
                             <span style={{fontWeight: '600'}}>Sequence: </span>

@@ -5,7 +5,6 @@ const EditModal = ( { show, onHide, reactionId, authTokens, initialReactionData 
 
     let [reactionData, setReactionData] = useState(initialReactionData)
 
-
   const formContents = () => {
     return (
       <Form>
@@ -13,7 +12,7 @@ const EditModal = ( { show, onHide, reactionId, authTokens, initialReactionData 
         <InputGroup>
           <InputGroup.Text id="basic-addon1">flexizyme: </InputGroup.Text>
           <Form.Control
-            placeholder={initialReactionData.flexizyme?.flex_name}
+            defaultValue={initialReactionData.flexizyme?.flex_name}
             aria-label="Username"
             aria-describedby="basic-addon1"
           />
