@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useRef, useState } from 'react';
 import { parse } from 'papaparse';
-import { Form } from 'react-bootstrap';
+import { Form, ProgressBar, Spinner } from 'react-bootstrap';
 import { createBrowserHistory } from 'history'
 import AuthContext from '../context/AuthContext';
 import AlertModal from './rxn_page_components/AlertModal';
@@ -20,6 +20,8 @@ const SubmitCSV = () => {
     let {authTokens} = useContext(AuthContext)
     // check if all POST requests are successful.
     let [postError, setPostError] = useState([false, 'message'])
+    let [postErrorHeader, setPostErrorHeader] = useState("")
+    let [postSuccess, setPostSuccess] = useState([false, 'message'])
     // check if data is formatted correctly when user submits a CSV. formatError[1] gives the error message.
     let [formatError, setFormatError] = useState([false, 'message'])
     let [cardView, setCardView] = useState(false)
@@ -28,6 +30,13 @@ const SubmitCSV = () => {
     const handleUpload = () => {
         inputRef.current?.click();
     }
+
+    const resetFileInput = () => {
+        // reset file input value
+        setDisplayedData([])
+        setPostData([])
+        inputRef.current.value = null;
+      };
 
     const handleFileDetails = () => {
         if (inputRef.current?.files) {
@@ -69,6 +78,7 @@ const SubmitCSV = () => {
     }
 
     const handleSubmit = async () => {
+        setLoading(true)
         let currentRow = 1
         for (const reaction of postData) {
             currentRow += 1
@@ -86,11 +96,15 @@ const SubmitCSV = () => {
             if (!response.ok) {
                 setPostError([true, `Error submitting data from row ${currentRow}. ` +
                             `Any rows prior to row ${currentRow} were submitted successfully. ` +
-                            `Please double-check your data including and following row ${currentRow}, and resubmit those rows. ` +
-                            `Error message: ${await response.text()}`])
+                            `Please double-check your data including and following row ${currentRow}, and resubmit those rows.`])
+                setPostErrorHeader(`Error message at row ${currentRow}: ${await response.text()}`)
+                setLoading(false)
                 return;
             }
         }
+        setLoading(false)
+        setPostSuccess([true, `Successfully submitted all reactions!`])
+        return;
     }
 
     const reformatData = (parsedData) => {
@@ -217,7 +231,7 @@ const SubmitCSV = () => {
     
     return (
         <>
-            <div className="m-3 mb-4">
+            <div className="m-3 mb-4 mt-3 align-items-center">
                 <label className="mx-3">Choose file to upload:</label>
                 <input
                     ref={inputRef}
@@ -235,10 +249,10 @@ const SubmitCSV = () => {
                 </button>
 
                 <button className={`btn btn-outline-${
-                    (fileName && inputRef.current.files[0].type === "text/csv") ? "primary" : "secondary" }`
+                    (fileName && inputRef.current?.files[0]?.type === "text/csv") ? "primary" : "secondary" }`
                 }
                     onClick={handleSubmit}
-                    disabled = {!(fileName && inputRef.current.files[0].type === "text/csv")}
+                    disabled = {!(fileName && inputRef.current?.files[0]?.type === "text/csv")}
                 >
                     Submit
                 </button>
@@ -251,21 +265,34 @@ const SubmitCSV = () => {
                     label="View structures"
                     onClick={() => {setCardView(!cardView)}} >
                 </Form.Check>
+                {loading === true ? <Spinner animation="grow" role="status" variant="success" /> : <></>}
             </div>
             <AlertModal 
                 headerText = "Error formatting data for submission."
                 bodyText = {formatError[1]}
                 show={formatError[0] === true ? true : false} 
                 onHide={() => {
+                    resetFileInput();
                     setFormatError([false, 'message'])
                 }} 
             />
             <AlertModal 
-                headerText = "Error submitting data."
+                headerText = {postErrorHeader}
                 bodyText = {postError[1]}
                 show={postError[0] === true ? true : false} 
                 onHide={() => {
+                    resetFileInput();
                     setPostError([false, 'message'])
+                }} 
+            />
+            <AlertModal 
+                headerText = "Submission successful."
+                bodyText = {postSuccess[1]}
+                show={postSuccess[0] === true ? true : false} 
+                onHide={() => {
+                    history.push("/my-reactions")
+                    window.location.reload()
+                    // setPostSuccess([false, 'message'])
                 }} 
             />
             {/* {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)} */}
