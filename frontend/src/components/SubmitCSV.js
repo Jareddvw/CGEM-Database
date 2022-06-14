@@ -1,18 +1,29 @@
 import React, { useContext } from 'react'
 import { useRef, useState } from 'react';
 import { parse } from 'papaparse';
-import StructureList from './list_components/StructureList';
-import ReactionList from './list_components/ReactionList';
+import { Form } from 'react-bootstrap';
 import { createBrowserHistory } from 'history'
 import AuthContext from '../context/AuthContext';
+import AlertModal from './rxn_page_components/AlertModal';
+import ReactionList from './list_components/ReactionList';
+import StructureList from './list_components/StructureList';
 
 const SubmitCSV = () => {
     const [fileName, setFileName] = useState(null);
+    // data to be passed to ReactionList to display certain contents to user. Reformatted data from postData.
     const [displayedData, setDisplayedData] = useState([])
+    // full data to actually be sent to server in a POST request. Consists of reformatted data from CSV.
     const [postData, setPostData] = useState([])
+    // destination for file upload
     const inputRef = useRef(null);
     let history = createBrowserHistory()
     let {authTokens} = useContext(AuthContext)
+    // check if all POST requests are successful.
+    let [postError, setPostError] = useState([false, 'message'])
+    // check if data is formatted correctly when user submits a CSV. formatError[1] gives the error message.
+    let [formatError, setFormatError] = useState([false, 'message'])
+    let [cardView, setCardView] = useState(false)
+    let [loading, setLoading] = useState(false)
 
     const handleUpload = () => {
         inputRef.current?.click();
@@ -25,15 +36,21 @@ const SubmitCSV = () => {
             let arr = Array.from(inputRef.current.files)
                 .filter((file) => file.type === "text/csv")
             
-            contents(arr[0])
+            getContents(arr[0])
         }
     }
 
-    const contents = async (file) => {
+    const getContents = async (file) => {
         const text = await file.text()
         const parsedText = parse(text, {header: true})
+
+        // get the list of full objects to be sent as a POST request.
         let result = reformatData(parsedText.data)
+        if (!result) {
+            return;
+        }
         
+        // get the list of objects in a format to be displayed as a table to the user.
         let displayedData = result.map((reaction) => {
             return {
                 "flexizyme": ((reaction["flexizyme"] != null) ? reaction["flexizyme"]["flex_name"] : null),
@@ -51,9 +68,11 @@ const SubmitCSV = () => {
         setPostData(result)
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        let currentRow = 1
         for (const reaction of postData) {
-            fetch('/api/single/', {
+            currentRow += 1
+            let response = await fetch('/api/single/', {
                 method: 'post',
                 headers: {
                     'Content-Type':'application/json',
@@ -63,21 +82,53 @@ const SubmitCSV = () => {
             })
             .catch((error) => {
                 console.error(error);
-                //go to some error page
             })
+            if (!response.ok) {
+                setPostError([true, `Error submitting data from row ${currentRow}. ` +
+                            `Any rows prior to row ${currentRow} were submitted successfully. ` +
+                            `Please double-check your data including and following row ${currentRow}, and resubmit those rows. ` +
+                            `Error message: ${await response.text()}`])
+                return;
+            }
         }
     }
 
     const reformatData = (parsedData) => {
         const result = []
         for (const entry of parsedData) {
+            try {
+            // checking that all required columns are present in the parsed data.
+            if (!("DOI (required)" in entry &&
+                "Monomer SMILES (required)" in entry && 
+                "tRNA name (required)" in entry &&
+                "tRNA sequence (required)" in entry && 
+                "Ribosome name (required)" in entry)) {
+                    setFormatError([true, 'CSV is missing a required column.'])
+                return;
+            }
+            if ("Flexizyme name" in entry && "Synthetase common name" in entry) {
+                setFormatError([true, 'Please submit separate files for synthetase and flexizyme reactions.'])
+                return;
+            }
+            if (entry["Monomer SMILES (required)"].includes(".")) {
+                setFormatError([true, "The monomer field should contain only 1 molecule per entry. " +
+                    "There should be no periods in the Monomer SMILES parameter."])
+                return;
+            }
+            if ((parseFloat(entry["Assay acylation yield"]) || 0) > 2 ||
+                (parseFloat(entry["N-terminal incorporation"]) || 0) > 2 ||
+                (parseFloat(entry["Internal incorporation"]) || 0) > 2) {
+                setFormatError([true, "Percentages should be expressed as decimal numbers between 0 and 1."])
+                return;
+            }
+
             let newEntry = {}
             if ("Flexizyme name" in entry) {
                 newEntry["synthetase"] = null
                 newEntry["flexizyme"] = {"flex_name": entry["Flexizyme name"]}
                 newEntry["assay"] = {
                     "conditions": entry["Assay conditions"],
-                    "acylation_yield": parseFloat(entry["Assay acylation yield"]),
+                    "acylation_yield": parseFloat(entry["Assay acylation yield"]) || null,
                     "assay_notes": entry["Acylation assay notes"]
                 }
             } else if ("Synthetase common name" in entry) {
@@ -154,7 +205,13 @@ const SubmitCSV = () => {
             newEntry["rib_incorporation_notes"] = entry["Ribosomal incorporation notes"]
             
             result.push(newEntry)
+            } catch (err) {
+                setFormatError([true, err.message]);
+                console.log(err)
+                return;
+            }
         }
+        // result will only be returned if all data was correctly parsed and reformatted to be posted.
         return result;
     }
     
@@ -185,9 +242,41 @@ const SubmitCSV = () => {
                 >
                     Submit
                 </button>
+                <Form.Check
+                    style={{width:200}}
+                    className='mx-4'
+                    inline
+                    type="switch"
+                    id="custom-switch"
+                    label="View structures"
+                    onClick={() => {setCardView(!cardView)}} >
+                </Form.Check>
             </div>
+            <AlertModal 
+                headerText = "Error formatting data for submission."
+                bodyText = {formatError[1]}
+                show={formatError[0] === true ? true : false} 
+                onHide={() => {
+                    setFormatError([false, 'message'])
+                }} 
+            />
+            <AlertModal 
+                headerText = "Error submitting data."
+                bodyText = {postError[1]}
+                show={postError[0] === true ? true : false} 
+                onHide={() => {
+                    setPostError([false, 'message'])
+                }} 
+            />
             {/* {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)} */}
-            {displayedData.length !== 0 ? (<ReactionList reactions={(displayedData)} />) : (<></>)}
+            {displayedData.length !== 0 ? 
+                (cardView === true) ?
+                    (<StructureList reactions={(displayedData)} 
+                                    verbose={false} nolink={true} />) :
+                    (<ReactionList
+                        reactions={(displayedData)} 
+                        verbose={false} />) : 
+                (<></>)}
             {/* {postData.length !== 0 ? JSON.stringify(postData) + "2: " + JSON.stringify(displayedData) : <></>} */}
         </>
     )
