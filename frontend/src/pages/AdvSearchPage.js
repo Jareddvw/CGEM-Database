@@ -5,6 +5,7 @@ import StructureList from '../components/list_components/StructureList'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 import VerboseCSV from '../components/csv_components/VerboseCSV'
 import ReactPaginate from 'react-paginate'
+import SearchFilter from '../components/SearchFilter'
 
 const AdvSearchPage = () => {
 
@@ -17,15 +18,24 @@ const AdvSearchPage = () => {
     let [resultCount, setResultCount] = useState(0)
     let [pageCount, setPageCount] = useState(1)
 
+    let [filterIndices, setFilterIndices] = useState([1])
+
   // for /api/single, use setReactions(data)
   // for /api/, use setReactions(data.results)
   let getReactions = async () => {
+    let filters = ""
+    for (const [key, value] of Object.entries(queries)) {
+        filters += "&" + value[0] + "=" + value[1]
+    }
+    console.log(filters)
     let response = await fetch(`/api/single/?limit=${limit}${ordering}` + 
-                                Object.keys(queries).map((key) => 
-                                    key + "=" + queries[key] + "").join("") +
+                                filters + 
                                 search)
     if (response.status === 500) {
         setReactions("serverError")
+        return;
+    } else if (response.status >= 400) {
+        setReactions("blank")
         return;
     }
     let data = await response.json()
@@ -63,7 +73,7 @@ const getPaginatedReactions = async (currentPage) => {
     let offset = ( currentPage - 1 ) * limit
     let response = await fetch(`/api/single/?limit=${limit}&offset=${offset}${ordering}` + 
                                 Object.keys(queries).map((key) => 
-                                key + "=" + queries[key] + "").join("") +
+                                "&" + key + "=" + queries[key] + "").join("") +
                                 search)
     let data = await response.json()
     return data.results
@@ -74,6 +84,7 @@ const getPaginatedReactions = async (currentPage) => {
     <>
         <Container onKeyPress={handleEnterKeyPressed}>
             <Row as="h4" className='mt-4 mb-3'>Advanced Reaction Search</Row>
+            {JSON.stringify(queries)}
             <Row className='mt-3'> This will return all reactions that meet the selected criteria 
             (every additional filter will be joined with an AND statement). For search filters, 
             only results which EXACTLY match the input will be included (they are case sensitive). 
@@ -85,99 +96,36 @@ const getPaginatedReactions = async (currentPage) => {
             {/* {Object.keys(queries).map((key) => 
                                     key + "=" + queries[key] + "").join("")} */}
             
-            <Row className='mt-3'> 
-            <Col className='mt-3'> Parent synthetase (if synthetase) 
-                <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>setQueries({
-                            ...queries,
-                            "&synthetase__parent_synthetase__parent_name": e.target.value
-                        })} 
-                        type="text" placeholder="" >
-                    </Form.Control>
-                </div>
-            </Col>
-            <Col className='mt-3'> Flexizyme name (if flexizyme) 
-                <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>setQueries({
-                            ...queries,
-                            "&flexizyme__flex_name": e.target.value
-                        })} 
-                        type="text" placeholder="" >
-                    </Form.Control>
-                </div>
-            </Col>
-            <Col className='mt-3'> Monomer name
-                <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>setQueries({
-                            ...queries,
-                            "&monomer__monomer_name": e.target.value
-                        })}  
-                        type="text" placeholder="" >
-                    </Form.Control>
-                </div>
-            </Col>
-            <Col className='mt-3'> Monomer LG
-                <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>setQueries({
-                            ...queries,
-                            "&monomer__monomer_LG": e.target.value
-                        })}  
-                        type="text" placeholder="" >
-                    </Form.Control>
-                </div>
-            </Col>
-            <Col className='mt-3'> Organisms (for synthetases)
-                <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>setQueries({
-                            ...queries,
-                            "&synthetase__organisms__organism_name": e.target.value
-                        })}   
-                        type="text" placeholder="" >
-                    </Form.Control>
-                </div>
-            </Col>
-            <Col className='mt-3'> Reference DOI 
-                <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>setQueries({
-                            ...queries,
-                            "&references__DOI": e.target.value
-                        })}   
-                        type="text" placeholder="" >
-                    </Form.Control>
-                </div>
-            </Col>
-            <Col className='mt-3'> Substructure SMILES
-                <div style={{width:300}}>
-                    <Form.Control
-                        onChange={(e)=>{
-                            let queryString = e.target.value
-                            if (queryString.length > 0) {
-                                queryString = queryString.split('=').join('%3D')
-                                queryString = queryString.split('#').join('%23')
-                                queryString = queryString.split('(').join('%28')
-                                queryString = queryString.split(')').join('%29')
-                                queryString = queryString.split('+').join('%2B')
+
+
+            <Row className = 'mt-3 justify-content-start align-items-center'>
+                <button className = 'btn btn-outline-primary mx-3' style={{width:'25%'}} 
+                        onClick = {() => {
+                            setFilterIndices(filterIndices => [...filterIndices, filterIndices.length + 1])
+                        }}> 
+                    Add filter
+                </button>
+                <button className = 'btn btn-outline-danger mx-3' style={{width:'25%'}}
+                        onClick = {() => {
+                            if (filterIndices.length > 1) {
+                                delete queries[filterIndices.length]
+                                setFilterIndices(filterIndices => filterIndices.slice(0, filterIndices.length - 1))
                             }
-                            setQueries({
-                                ...queries,
-                                "&monomer__monomer_smiles__substruct": queryString
-                            }
-                        )}}
-                        type="text" placeholder="" >
-                    </Form.Control>
-                </div>
-            </Col>
+                        }}> 
+                    Remove filter
+                </button>
+                {filterIndices}
             </Row>
 
-            <hr className='mt-4 mb-2' style={{color:'black', backgroundColor:'black'}}></hr>
 
-            <Row>
+            {filterIndices.map(index => 
+                <SearchFilter setQueries={setQueries} queries={queries} filterID ={index}/>
+            )}
+            
+
+            <hr className='mt-4 mb-2' style={{color:'black', backgroundColor:'black'}}></hr>
+            
+            <Row className="align-items-end">
             <Col className='mt-3'> Other search terms:
                 <div style={{width:625}}>
                     <Form.Control
@@ -199,18 +147,17 @@ const getPaginatedReactions = async (currentPage) => {
                     </select>
                 </div>
             </Col>
-            <Col className='mt-3'> Display:
+            <Col className='mt-3'>
                 <div style={{width:300}}>
-                    <select
-                        onChange={(e)=>setCardView(!cardView)} 
-                        onSubmit={(e)=>setCardView(e.target.value)} className="form-select">
-                        <option value={false}> List view </option>
-                        <option value={true}> Card (structure) view </option>
-                    </select>
+                    <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="View structures"
+                            onClick={() => {setCardView(!cardView)}} >
+                    </Form.Check>
                 </div>
                 </Col>
             </Row>
-
             <Row>
                 <Col>
                     <button className="btn btn-outline-primary mb-3 mt-4 w-25" 
@@ -223,9 +170,9 @@ const getPaginatedReactions = async (currentPage) => {
         </Container>
         {(reactions.length !== 0) ? 
             ((reactions === "blank") ? 
-                <h6 className="text-center">No reactions with those parameters found.</h6> : 
+                <h6 className="text-center mt-3">No reactions with those parameters found.</h6> : 
                 (reactions === "serverError") ?
-                    <h6 className="text-center">Server error (server may not be running).</h6> :
+                    <h6 className="text-center mt-3">Server error (server may not be running).</h6> :
                     <Container>
                         <Row className = 'mb-4 mt-4 align-items-center'>
                             <div style={{padding:0, width:'200px'}}>
