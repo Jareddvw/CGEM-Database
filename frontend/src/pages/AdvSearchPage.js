@@ -19,6 +19,7 @@ const AdvSearchPage = () => {
     let [pageCount, setPageCount] = useState(1)
 
     let [filterIndices, setFilterIndices] = useState([1])
+    let [filterCountUp, setFilterCountUp] = useState(1)
 
   // for /api/single, use setReactions(data)
   // for /api/, use setReactions(data.results)
@@ -70,10 +71,13 @@ const AdvSearchPage = () => {
 }
 
 const getPaginatedReactions = async (currentPage) => {
+    let filters = ""
+    for (const [key, value] of Object.entries(queries)) {
+        filters += "&" + value[0] + "=" + value[1]
+    }
     let offset = ( currentPage - 1 ) * limit
     let response = await fetch(`/api/single/?limit=${limit}&offset=${offset}${ordering}` + 
-                                Object.keys(queries).map((key) => 
-                                "&" + key + "=" + queries[key] + "").join("") +
+                                filters +
                                 search)
     let data = await response.json()
     return data.results
@@ -84,43 +88,43 @@ const getPaginatedReactions = async (currentPage) => {
     <>
         <Container onKeyPress={handleEnterKeyPressed}>
             <Row as="h4" className='mt-4 mb-3'>Advanced Reaction Search</Row>
-            {JSON.stringify(queries)}
             <Row className='mt-3'> This will return all reactions that meet the selected criteria 
-            (every additional filter will be joined with an AND statement). For search filters, 
-            only results which EXACTLY match the input will be included (they are case sensitive). 
-            <p></p>Input to "Other search terms" does not need to be exact. 
-            You can also use this field to search for multiple mutations (e.g "Y271G L274M C313V") 
-            or for multiple additional organisms.
+            (every additional filter will be joined with an AND statement). Filters are not case sensitive. 
             Empty fields will be ignored so you don’t need to fill in every box. </Row>
             <Row></Row>
             {/* {Object.keys(queries).map((key) => 
                                     key + "=" + queries[key] + "").join("")} */}
+
+            <div className="wrapper">
+            <div className='insidewrapper'>
+                {filterIndices.map(index => 
+                    <Row className='align-items-center search-filter justify-content-between' style={{width:'100%', marginLeft:0}} key={index}>
+                        <SearchFilter setQueries={setQueries} queries={queries} filterID ={index} key={index} />
+                        <button className='btn btn-outline-danger mt-3' 
+                                style={{width:'8em'}}
+                                onClick={() => {
+                                    if (filterIndices.length > 1) {
+                                        delete queries[index]
+                                        setFilterIndices(filterIndices => filterIndices.filter(value => value != index))
+                                    }
+                                }}> 
+                            Remove
+                        </button>
+                    </Row>
+                )}
+                
+                <button className = 'btn btn-outline-primary mt-3' style={{width:'10em'}} 
+                        onClick = {() => {
+                            setFilterIndices(filterIndices => [...filterIndices, filterCountUp + 1])
+                            setFilterCountUp(filterCountUp + 1)
+                        }}> 
+                    {"+ Add Filter"}
+                </button>
+                
+            </div>
+            </div>
+
             
-
-
-            <Row className = 'mt-3 justify-content-start align-items-center'>
-                <button className = 'btn btn-outline-primary mx-3' style={{width:'25%'}} 
-                        onClick = {() => {
-                            setFilterIndices(filterIndices => [...filterIndices, filterIndices.length + 1])
-                        }}> 
-                    Add filter
-                </button>
-                <button className = 'btn btn-outline-danger mx-3' style={{width:'25%'}}
-                        onClick = {() => {
-                            if (filterIndices.length > 1) {
-                                delete queries[filterIndices.length]
-                                setFilterIndices(filterIndices => filterIndices.slice(0, filterIndices.length - 1))
-                            }
-                        }}> 
-                    Remove filter
-                </button>
-                {filterIndices}
-            </Row>
-
-
-            {filterIndices.map(index => 
-                <SearchFilter setQueries={setQueries} queries={queries} filterID ={index}/>
-            )}
             
 
             <hr className='mt-4 mb-2' style={{color:'black', backgroundColor:'black'}}></hr>

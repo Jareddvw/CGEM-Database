@@ -62,12 +62,12 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
 
     // what the user sees for options
     let filterKeyNames = [
-        'id',
+        'reaction id',
         'microhelix assay acylation yield',
         'flexizyme',
         'flexizyme name',
         'synthetase',
-        'synthetase common_name',
+        'synthetase common name',
         'parent synthetase name',
         'organism name',
         'synthetase mutation name',
@@ -112,11 +112,11 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
     }
 
   return (
-    <Row className='mt-2 align-items-center justify-content-start search-filter'>
+    <>
         <Form.Select 
             className='mt-3'
             size='md' 
-            style={{width:'30%', marginLeft:'0.5em', marginRight:'0.5em'}}
+            style={{width:'28%'}}
             onChange={(e)=>setTerm(e.target.value)}
             >
                 {Object.keys(filterFields).map((key, index) => (
@@ -126,7 +126,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         <Form.Select 
             className='mt-3'
             size='md' 
-            style={{width:'30%', marginLeft:'0.5em', marginRight:'0.5em'}}
+            style={{width:'28%'}}
             onChange={(e)=> {
                 setOperation(e.target.value); 
                 operation !== "exact" ? 
@@ -141,7 +141,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         <Form.Control 
             className='mt-3'
             size='md' 
-            style={{width:'30%', marginLeft:'0.5em', marginRight:'0.5em'}}
+            style={{width:'28%'}}
             onChange={(e)=> {
                 if (term === "monomer__monomer_smiles") {
                     let queryString = e.target.value
@@ -166,7 +166,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         {/* for debugging:
         {operation !== "" ? (term + "__" + operation + ": " + value) : (term + operation + ": " + value)}
         {leftSide} */}
-    </Row>
+    </>
   )
 }
 
