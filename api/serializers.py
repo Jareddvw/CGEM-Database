@@ -207,8 +207,8 @@ class ReactionSerializer(serializers.ModelSerializer):
 
     def get_username(self, reaction):
         if reaction.user:
-            name = reaction.user.__str__()
-            return name
+            email = reaction.user.__str__()
+            return email
         else:
             return None
 
@@ -318,7 +318,7 @@ class ReactionSerializer(serializers.ModelSerializer):
                 new_flex = Flexizyme.objects.get(flex_name=flexizyme['flex_name'])
             except:
                 new_flex = Flexizyme.objects.create(**flexizyme)
-            currentObj.update(flexizyme=new_flex)    
+            currentObj.update(flexizyme=new_flex)
         synthetase = validated_data.get('synthetase', 0)
         if synthetase: 
             validated_data.pop('synthetase')
@@ -356,4 +356,16 @@ class ReactionSerializer(serializers.ModelSerializer):
     # should also send the ID of the thing you want to change, but for post requests you don't need it.
     
 
-        
+class ReactionDraftSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReactionDraft
+        fields = '__all__'
+    
+    user = serializers.SerializerMethodField('get_username')
+    
+    def get_username(self, reaction):
+        if reaction.user:
+            email = reaction.user.__str__()
+            return email
+        else:
+            return None

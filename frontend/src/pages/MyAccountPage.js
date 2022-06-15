@@ -45,6 +45,8 @@ const MyAccountPage = () => {
                     <p></p>
                     ORCID ID: {" " + userInfo.orcid_id}
                     <p></p>
+                    Admin user? {userInfo.is_admin === true ? "Yes" : "No"}
+                    <p></p>
                     Date joined: {" " + userInfo.date_joined}
                     <p></p>
                     <button 

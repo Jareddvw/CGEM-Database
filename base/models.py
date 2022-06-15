@@ -76,7 +76,8 @@ class ParentSynth(models.Model):
     parent_name = models.CharField(max_length=50, null=False, blank=False)
     # potentially will only have pbd structure codes for parent synthetase, not for synthetase mutant
     parent_pbd_id = models.CharField(max_length=10, blank=True, default='')
-
+    def __str__(self):
+        return self.parent_name
 
 class Synthetase(models.Model):
     synth_common_name = models.CharField(max_length=100)
@@ -163,4 +164,12 @@ class Reaction(models.Model):
         ordering = ('id',)
         
 
+## Model for reaction drafts to be added by non-admin users ##
+class ReactionDraft(models.Model):
 
+    # field containing data to be pushed to actual Reaction model
+    reactionDraft = models.JSONField()
+    # field from which to display data to users
+    truncatedReactionDraft = models.JSONField()
+    # the user who added this draft object
+    user = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)

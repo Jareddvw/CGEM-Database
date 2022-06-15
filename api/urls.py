@@ -14,6 +14,7 @@ router.register('mutations', views.MutationView, basename='mutations')
 router.register('flexizymes', views.FlexizymeView, basename='flexizymes')
 router.register('assays', views.AssayView, basename='microhelixAssays')
 router.register('organisms', views.OrganismView, basename='organisms')
+router.register('drafts', views.ReactionDraftView, basename='reaction_drafts')
 # note for later: when deleting a reaction, will need to use assay view to also delete the associated assay.
 
 

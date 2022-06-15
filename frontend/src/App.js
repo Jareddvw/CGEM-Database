@@ -20,6 +20,7 @@ import MyReactionsPage from './pages/MyReactionsPage';
 import DrawSubstructPage from './pages/DrawSubstructPage';
 import AboutPage from './pages/AboutPage';
 import MyAccountPage from './pages/MyAccountPage';
+import ReactionDraftsPage from './pages/ReactionDraftsPage';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
               <Route path="/reaction/:id" exact element={<ReactionPage />} />
               <Route path="/search/:searchTerm" exact element={<GeneralSearch />} />
               <Route path="/advanced" exact element={<AdvSearchPage />} />
+              <Route path="/reaction-drafts" exact element={<ReactionDraftsPage />} />
               <Route exact path='/contribute' element={
                 <PrivateRoute>
                   <ContributePage />

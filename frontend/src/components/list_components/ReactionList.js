@@ -6,7 +6,7 @@ import { Container } from 'react-bootstrap'
 import ReactionLI2 from './ReactionLI2'
 
 
-const ReactionList = ({ reactions, verbose }) => {
+const ReactionList = ({ reactions, verbose, nolink }) => {
     
   return (
     <>
@@ -29,7 +29,7 @@ const ReactionList = ({ reactions, verbose }) => {
                                 (reactions.map((reaction, index) => (
                                     <ReactionLI2 key = {reaction.id || index} reaction = {reaction}/>))) :
                                 (reactions.map((reaction, index) => (
-                                    <ReactionListItem key = {reaction.id || index} reaction = {reaction}/>)))) : 
+                                    <ReactionListItem key = {reaction.id || index} reaction = {reaction} nolink={nolink}/>)))) : 
                             <></>}
                     </tbody>
                 </Table>

@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
         if (localStorage.getItem('authTokens')) {
             initialUser = jwt_decode(initialTokens.access)
         }
+        console.log(initialUser)
         return initialUser
     }
 

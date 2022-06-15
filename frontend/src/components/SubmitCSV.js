@@ -17,7 +17,7 @@ const SubmitCSV = () => {
     // destination for file upload
     const inputRef = useRef(null);
     let history = createBrowserHistory()
-    let {authTokens} = useContext(AuthContext)
+    let { authTokens, user } = useContext(AuthContext)
     // check if all POST requests are successful.
     let [postError, setPostError] = useState([false, 'message'])
     let [postErrorHeader, setPostErrorHeader] = useState("")
@@ -82,17 +82,27 @@ const SubmitCSV = () => {
         let currentRow = 1
         for (const reaction of postData) {
             currentRow += 1
-            let response = await fetch('/api/single/', {
-                method: 'post',
-                headers: {
-                    'Content-Type':'application/json',
-                    'Authorization':'Bearer ' + String(authTokens.access)
-                },
-                body: JSON.stringify(reaction)
-            })
-            .catch((error) => {
-                console.error(error);
-            })
+            let response;
+            // if user is admin, they can submit reactions directly. Otherwise, they POST data to reaction drafts instead.
+            if (user.is_admin) {
+                response = await fetch('/api/single/', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type':'application/json',
+                        'Authorization':'Bearer ' + String(authTokens.access)
+                    },
+                    body: JSON.stringify(reaction)
+                })
+            } else {
+                response = await fetch('/api/drafts/', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type':'application/json',
+                        'Authorization':'Bearer ' + String(authTokens.access)
+                    },
+                    body: JSON.stringify({'reactionDraft': reaction, 'truncatedReactionDraft': displayedData[currentRow - 2]})
+                })
+            }
             if (!response.ok) {
                 setPostError([true, `Error submitting data from row ${currentRow}. ` +
                             `Any rows prior to row ${currentRow} were submitted successfully. ` +
@@ -103,7 +113,7 @@ const SubmitCSV = () => {
             }
         }
         setLoading(false)
-        setPostSuccess([true, `Successfully submitted all reactions!`])
+        setPostSuccess([true, `Successfully submitted all reactions${user.is_admin ? "!" : " to reaction-drafts!"}`])
         return;
     }
 
@@ -290,8 +300,13 @@ const SubmitCSV = () => {
                 bodyText = {postSuccess[1]}
                 show={postSuccess[0] === true ? true : false} 
                 onHide={() => {
-                    history.push("/my-reactions")
-                    window.location.reload()
+                    if (user.is_admin) {
+                        history.push("/my-reactions")
+                        window.location.reload()
+                    } else {
+                        history.push("/reaction-drafts")
+                        window.location.reload()
+                    }
                     // setPostSuccess([false, 'message'])
                 }} 
             />
@@ -302,7 +317,7 @@ const SubmitCSV = () => {
                                     verbose={false} nolink={true} />) :
                     (<ReactionList
                         reactions={(displayedData)} 
-                        verbose={false} />) : 
+                        verbose={false} nolink={true} />) : 
                 (<></>)}
             {/* {postData.length !== 0 ? JSON.stringify(postData) + "2: " + JSON.stringify(displayedData) : <></>} */}
         </>

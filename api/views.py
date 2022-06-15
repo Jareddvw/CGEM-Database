@@ -90,6 +90,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         # Add custom claims
         token['username'] = user.username
+        token['is_admin'] = user.is_admin
         # ...
         return token
 
@@ -227,6 +228,15 @@ class UserReactionsView(generics.ListAPIView):
     def get_queryset(self):
         return Reaction.objects.filter(user=self.request.user)
 
+class ReactionDraftView(viewsets.ModelViewSet):
+    serializer_class = ReactionDraftSerializer
+    pagination_class = ReactionTableViewPagination
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    def get_queryset(self):
+        drafts = ReactionDraft.objects.all()
+        return drafts
+    
 
 """
 functions needed:

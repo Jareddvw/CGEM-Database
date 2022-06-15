@@ -1,15 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const ReactionListItem = ({ reaction, verbose }) => {
+const ReactionListItem = ({ reaction, verbose, nolink }) => {
 
 
   return (
     <tr className="text-center">
         <td> 
-            <Link to={`/reaction/${reaction.id}`} className="Link" style={{textDecoration: 'none', color: 'maroon'}} target="_blank"> 
+            {nolink ? 
+            <div style={{textDecoration: 'none', color: 'maroon'}}>{reaction.monomer}</div> 
+            :
+            (<Link to={`/reaction/${reaction.id}`} className="Link" style={{textDecoration: 'none', color: 'maroon'}} target="_blank"> 
             {reaction.monomer} 
-            </Link>
+            </Link>)}
         </td>
         <td> {reaction.flexizyme} </td>
         <td> {reaction.synthetase} </td>

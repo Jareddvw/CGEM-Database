@@ -30,6 +30,7 @@ const Header = () => {
                     {/* <NavDropdown.Item href="/smiles-structures">Substructure SMILES</NavDropdown.Item> */}
                     <NavDropdown.Item href="/draw-structures">Substructure Search</NavDropdown.Item>
                     <NavDropdown.Item href="/all-reactions">Browse All Reactions</NavDropdown.Item>
+                    <NavDropdown.Item href="/reaction-drafts">Reaction drafts</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/contribute">Contribute</NavDropdown.Item>
                 </NavDropdown>
