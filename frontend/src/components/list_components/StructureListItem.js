@@ -18,6 +18,9 @@ const StructureListItem = ({ id, smiles, width, height, name,
         }
     }
 
+    let cardHeight = height * 1.666
+    let cardWidth = width * 1.2
+
     // const popover = (
     //     <Popover id="popover-basic">
     //       <Popover.Header as="h3">{name}</Popover.Header>
@@ -26,8 +29,6 @@ const StructureListItem = ({ id, smiles, width, height, name,
     //       </Popover.Body>
     //     </Popover>
     //   ); 
-    
-    let returnStatement = (<></>)
 
     const InnerCard = (
         <>
@@ -44,27 +45,22 @@ const StructureListItem = ({ id, smiles, width, height, name,
         </>);
 
 
-    if (nolink) {
-        returnStatement = (
+    
+    let returnStatement = (
             <>
-                <Card className="m-1 hoverCard mb-3" style={{width: 400, height:350}}>
-                    {InnerCard}
-                </Card>
-            </>
-        )
-    } else {
-        returnStatement = (
-            <>
-                <Card className="m-1 hoverCard mb-3" style={{width: 400, height:350}}>
-                    <Link to={`/reaction/${id}`} className="Link" 
+                <Card className="m-1 hoverCard mb-3" style={{width: cardWidth, height: cardHeight}}>
+                    {nolink === true ? 
+                        InnerCard :
+                        (<Link to={`/reaction/${id}`} className="Link" 
                             style={{textDecoration: 'none', color:'black'}}
                             target="_blank"> 
                         {InnerCard}
-                    </Link>
+                        </Link>)
+                    }
+                    
                 </Card>
             </>
         )
-    }
 
   return returnStatement
 }

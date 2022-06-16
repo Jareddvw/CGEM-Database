@@ -4,10 +4,20 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 const StructureList = ({ reactions, nolink, verbose }) => {
 
+  // const width = 350
+  // const height = 250
+
+
+  const width = 267
+  const height = 200
+  const cardsPerRowLG = 4
+  const cardsPerRowMD = 3
+  const cardsPerRowSM = 2
+
   return (
     <>
         <>
-            <Row className="g-0 structure-list" lg={3} md={2} sm={1}>
+            <Row className="g-0 structure-list" lg={cardsPerRowLG} md={cardsPerRowMD} sm={cardsPerRowSM}>
                 {reactions.map((reaction, index) => 
                     <Col key={reaction.id || index}>
 
@@ -18,15 +28,15 @@ const StructureList = ({ reactions, nolink, verbose }) => {
                           synthetase = {reaction.synthetase?.synth_common_name} 
                           acylation_yield={reaction.assay?.acylation_yield} 
                           smiles={reaction.monomer?.monomer_smiles} 
-                          width="350" height="250" nolink={nolink} /> : 
-                          
+                          width={width} height={height} nolink={nolink} /> 
+                          : 
                           <StructureListItem id = {reaction?.id} 
                           name = {reaction.monomer} 
                           flexizyme = {reaction.flexizyme} 
                           synthetase = {reaction.synthetase} 
                           acylation_yield={reaction.acylation_yield} 
                           smiles={reaction.monomer_smiles} 
-                          width="350" height="250" nolink={nolink} /> 
+                          width={width} height={height} nolink={nolink} /> 
                         }
                         
                     </Col>

@@ -103,7 +103,7 @@ const getPaginatedReactions = async (currentPage) => {
                         <button className='btn btn-outline-danger mt-3' 
                                 style={{width:'8em'}}
                                 onClick={() => {
-                                    if (filterIndices.length > 1) {
+                                    if (filterIndices.length >= 1) {
                                         delete queries[index]
                                         setFilterIndices(filterIndices => filterIndices.filter(value => value != index))
                                     }
@@ -129,17 +129,20 @@ const getPaginatedReactions = async (currentPage) => {
 
             <hr className='mt-4 mb-2' style={{color:'black', backgroundColor:'black'}}></hr>
             
-            <Row className="align-items-end">
-            <Col className='mt-3'> Other search terms:
-                <div style={{width:625}}>
+            <Row className="align-items-center justify-content-center">
+            <Col className='mt-3'>
+                <div style={{width:495}}>
                     <Form.Control
                         onChange={(e)=>setSearch("&search=" + e.target.value)} 
                         onSubmit={(e)=>setSearch("&search=" + e.target.value)} 
-                        type="text" placeholder="" >
+                        type="text" placeholder="Other search terms" >
                     </Form.Control>
                 </div>
             </Col>
-            <Col className='mt-3'> Order results by: 
+            <Col className='mt-3'>
+                Order results by: 
+            </Col>
+            <Col className='mt-3'>
                 <div style={{width:300}}>
                     <select 
                         onChange={(e)=>setOrdering("&ordering=" + e.target.value)} 

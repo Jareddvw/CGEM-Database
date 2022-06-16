@@ -7,7 +7,7 @@ const Trna_info = ( {trna} ) => {
     } else {
         return (
             <>
-            <Card id="trna" style={{ width: 400 }} className="mx-3">
+            <Card id="trna" style={{ width: 400 }} className="mx-3 px-0">
                 <Card.Header><strong>{trna.tRNA_name}</strong></Card.Header>
                 <Card.Body>
                     <Card.Text>

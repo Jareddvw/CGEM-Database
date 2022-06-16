@@ -47,7 +47,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         'synthetase__organisms__organism_name': ['iexact', 'icontains'],
         'synthetase__mutations__mutation_name': ['iexact', 'icontains'],
         'monomer__monomer_name': ['iexact', 'icontains'],
-        'monomer__monomer_smiles': ['iexact', 'substruct'],
+        'monomer__monomer_smiles': ['substruct'],
         'monomer__monomer_LG': ['iexact', 'icontains'],
         // date added is exact
         'date_added': ['exact'],
@@ -73,7 +73,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         'synthetase mutation name',
         'monomer name',
         // this is monomer smiles
-        'monomer',
+        'substructure SMILES',
         'monomer leaving group',
         'date added', // format is YYYY-MM-DD
         'ribosomal readout',
@@ -103,7 +103,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
             case 'isnull':
                 return 'is null (true or false)'
             case 'substruct':
-                return 'has substructure:'
+                return 'is exactly:'
             case 'exact':
                 return 'is exactly'
             default:
@@ -116,7 +116,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         <Form.Select 
             className='mt-3'
             size='md' 
-            style={{width:'28%'}}
+            style={{width:325}}
             onChange={(e)=>setTerm(e.target.value)}
             >
                 {Object.keys(filterFields).map((key, index) => (
@@ -126,7 +126,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         <Form.Select 
             className='mt-3'
             size='md' 
-            style={{width:'28%'}}
+            style={{width:325}}
             onChange={(e)=> {
                 setOperation(e.target.value); 
                 operation !== "exact" ? 
@@ -141,7 +141,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         <Form.Control 
             className='mt-3'
             size='md' 
-            style={{width:'28%'}}
+            style={{width:325 }}
             onChange={(e)=> {
                 if (term === "monomer__monomer_smiles") {
                     let queryString = e.target.value

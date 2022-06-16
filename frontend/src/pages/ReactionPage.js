@@ -130,7 +130,7 @@ const ReactionPage = () => {
         </Table>
         <br></br>
         <Row id="figRow" className="figureRow">
-            <Card className = "reactionPageCard" id = "rxnCard" style={{width: 400, height: '100%'}}>
+            <Card className = "reactionPageCard px-0" id = "rxnCard" style={{width: 400, height: '100%'}}>
                 <Card.Header> <strong>Monomer Structure</strong></Card.Header>
                 <Card.Body>
                     <MonomerDrawing smiles={reaction?.monomer?.monomer_smiles} width="350" height={height} />
