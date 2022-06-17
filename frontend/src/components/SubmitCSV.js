@@ -26,6 +26,7 @@ const SubmitCSV = () => {
     let [formatError, setFormatError] = useState([false, 'message'])
     let [cardView, setCardView] = useState(false)
     let [loading, setLoading] = useState(false)
+    let [currRow, setCurrRow] = useState(0)
 
     const handleUpload = () => {
         inputRef.current?.click();
@@ -82,6 +83,7 @@ const SubmitCSV = () => {
         let currentRow = 1
         for (const reaction of postData) {
             currentRow += 1
+            setCurrRow(currentRow)
             let response;
             // if user is admin, they can submit reactions directly. Otherwise, they POST data to reaction drafts instead.
             if (user.is_admin) {
@@ -114,6 +116,7 @@ const SubmitCSV = () => {
         }
         setLoading(false)
         setPostSuccess([true, `Successfully submitted all reactions${user.is_admin ? "!" : " to reaction-drafts!"}`])
+        setCurrRow(0)
         return;
     }
 
@@ -275,7 +278,7 @@ const SubmitCSV = () => {
                     label="View structures"
                     onClick={() => {setCardView(!cardView)}} >
                 </Form.Check>
-                {loading === true ? <Spinner animation="grow" role="status" variant="success" /> : <></>}
+                {currRow !== 0 ? <ProgressBar now={currRow} role="status" variant="success" /> : <></>}
             </div>
             <AlertModal 
                 headerText = "Error formatting data for submission."

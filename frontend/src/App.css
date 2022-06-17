@@ -136,3 +136,12 @@
 .test {
     background-color: green;
 }
+
+.gray-link {
+    color: gray;
+    text-decoration: none;
+}
+
+.gray-link:hover {
+    color: maroon;
+}

@@ -8,11 +8,11 @@ const StructureList = ({ reactions, nolink, verbose }) => {
   // const height = 250
 
 
-  const width = 267
+  const width = 340
   const height = 200
-  const cardsPerRowLG = 4
-  const cardsPerRowMD = 3
-  const cardsPerRowSM = 2
+  const cardsPerRowLG = 3
+  const cardsPerRowMD = 2
+  const cardsPerRowSM = 1
 
   return (
     <>

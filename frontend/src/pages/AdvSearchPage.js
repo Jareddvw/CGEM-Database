@@ -90,7 +90,7 @@ const getPaginatedReactions = async (currentPage) => {
             <Row as="h4" className='mt-4 mb-3'>Advanced Reaction Search</Row>
             <Row className='mt-3'> This will return all reactions that meet the selected criteria 
             (every additional filter will be joined with an AND statement). Filters are not case sensitive. 
-            Empty fields will be ignored so you don’t need to fill in every box. </Row>
+            To search for multiple mutations, write them in the "Other search terms" box. </Row>
             <Row></Row>
             {/* {Object.keys(queries).map((key) => 
                                     key + "=" + queries[key] + "").join("")} */}

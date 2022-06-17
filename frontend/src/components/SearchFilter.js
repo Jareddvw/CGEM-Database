@@ -60,30 +60,30 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         'rib_incorporation_notes': ['iexact', 'icontains'],
     }
 
-    // what the user sees for options
-    let filterKeyNames = [
-        'reaction id',
-        'microhelix assay acylation yield',
-        'flexizyme',
-        'flexizyme name',
-        'synthetase',
-        'synthetase common name',
-        'parent synthetase name',
-        'organism name',
-        'synthetase mutation name',
-        'monomer name',
+    // Object with actual query term: what the user sees for term names
+    let filterKeyNames = {
+        'id':'reaction ID',
+        'assay__acylation_yield':'microhelix assay acylation yield',
+        'flexizyme':'flexizyme',
+        'flexizyme__flex_name':'flexizyme name',
+        'synthetase':'synthetase',
+        'synthetase__synth_common_name':'synthetase common name',
+        'synthetase__parent_synthetase__parent_name':'parent synthetase name',
+        'synthetase__organisms__organism_name':'organism name',
+        'synthetase__mutations__mutation_name':'synthetase mutation name',
+        'monomer__monomer_name':'monomer name',
         // this is monomer smiles
-        'substructure SMILES',
-        'monomer leaving group',
-        'date added', // format is YYYY-MM-DD
-        'ribosomal readout',
-        'reference DOI',
-        // 'n_term_incorporation',
-        // 'internal_incorporation',
-        'n-terminal incorporation percent',
-        'internal incorporation percent',
-        'ribosomal incorporation notes'
-    ]
+        'monomer__monomer_smiles':'substructure SMILES',
+        'monomer__monomer_LG':'monomer leaving group',
+        'date_added':'date added', // format is YYYY-MM-DD
+        'rib_readout':'ribosomal readout',
+        'references__DOI':'reference DOI',
+        // 'n-terminal incorporation':'n_term_incorporation',
+        // 'internal incorporation':'internal_incorporation',
+        'n_term_percent':'n-terminal incorporation percent',
+        'internal_percent':'internal incorporation percent',
+        'rib_incorporation_notes':'ribosomal incorporation notes'
+    }
 
     let newOperationName = (operation) => {
         if (term === "date_added") {
@@ -119,8 +119,8 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
             style={{width:325}}
             onChange={(e)=>setTerm(e.target.value)}
             >
-                {Object.keys(filterFields).map((key, index) => (
-                    <option key={key} value={key}>{filterKeyNames[index]}</option>))
+                {Object.keys(filterFields).map((key) => (
+                    <option key={key} value={key}>{filterKeyNames[key]}</option>))
                 }
         </Form.Select>
         <Form.Select 

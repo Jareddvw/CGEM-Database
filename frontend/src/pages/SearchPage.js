@@ -1,4 +1,5 @@
-import { Container, Row, Form } from 'react-bootstrap'
+import { Container, Row, Form, Col } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { createBrowserHistory } from 'history'
 
@@ -30,7 +31,12 @@ const SearchPage = () => {
                             onChange={event => {setSearchTerm(event.target.value)}} onSubmit={(e) => e.preventDefault()} 
                             onKeyPress={handleEnterKeyPressed} />  
                 </Form>
-            </Row> 
+            </Row>
+            <Row className = "mx-auto" lg={3} style={{width: '50vw', marginTop:'10vw'}}> 
+                <Col> <Link to="/advanced" className="gray-link"> Advanced Search </Link> </Col>
+                <Col> <Link to="/draw-structures" className="gray-link"> Substructure Search </Link> </Col>
+                <Col> <Link to="/all-reactions" className="gray-link"> Browse All Reactions </Link> </Col>
+            </Row>
         </Container>
       </>
   )
