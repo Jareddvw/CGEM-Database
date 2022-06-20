@@ -26,7 +26,9 @@ const SubmitCSV = () => {
     let [formatError, setFormatError] = useState([false, 'message'])
     let [cardView, setCardView] = useState(false)
     let [loading, setLoading] = useState(false)
+
     let [currRow, setCurrRow] = useState(0)
+    let [resultLength, setResultLength] = useState(0)
 
     const handleUpload = () => {
         inputRef.current?.click();
@@ -60,6 +62,8 @@ const SubmitCSV = () => {
             return;
         }
         
+        setResultLength(result.length)
+
         // get the list of objects in a format to be displayed as a table to the user.
         let displayedData = result.map((reaction) => {
             return {
@@ -278,7 +282,9 @@ const SubmitCSV = () => {
                     label="View structures"
                     onClick={() => {setCardView(!cardView)}} >
                 </Form.Check>
-                {currRow !== 0 ? <ProgressBar now={currRow} role="status" variant="success" /> : <></>}
+                {(currRow !== 0 && resultLength !== 0) ? 
+                    <ProgressBar className="mt-3" now={currRow} role="status" striped variant="success" max={resultLength} min={0} /> : 
+                    <></>}
             </div>
             <AlertModal 
                 headerText = "Error formatting data for submission."

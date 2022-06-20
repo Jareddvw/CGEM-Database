@@ -2,7 +2,9 @@ import React, { useEffect } from 'react'
 import { Form, Row } from 'react-bootstrap'
 import { useState } from 'react'
 
-const SearchFilter = ({ queries, setQueries, filterID }) => {
+const SearchFilter = ({ queries, setQueries, filterID, selected, setSelected }) => {
+    // selected is a list of search filter terms currently open. 
+    // Then need to just choose the next one in the filter terms list.
 
     // will construct entry to add to queries like {id__gte: 5} 
     // where term='id', operation='gte', and value={5}
@@ -37,7 +39,8 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
 
     // what we use to build queries
     let filterFields = {
-        'id': ['exact', 'gte', 'lte'],
+        'n_term_percent': ['exact', 'gte', 'lte'],
+        'internal_percent': ['exact', 'gte', 'lte'],
         'assay__acylation_yield': ['exact', 'gte', 'lte'],
         'flexizyme': ['isnull'],
         'flexizyme__flex_name': ['iexact', 'icontains'],
@@ -52,17 +55,33 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         // date added is exact
         'date_added': ['exact'],
         'rib_readout': ['iexact', 'icontains'],
-        'references__DOI': ['iexact'],
+        'references__DOI': ['iexact', 'icontains'],
         // 'n_term_incorporation': ['iexact'],
         // 'internal_incorporation': ['iexact'],
-        'n_term_percent': ['exact', 'gte', 'lte'],
-        'internal_percent': ['exact', 'gte', 'lte'],
         'rib_incorporation_notes': ['iexact', 'icontains'],
+        'id': ['exact', 'gte', 'lte'],
     }
+
+    // reformat filterFields so that already selected fields come last
+    // let reformatFilters = () => {
+    //     let sel=[]
+    //     let selectedDict = {}
+    //     for (const [key, value] in Object.entries(filterFields)) {
+    //         if (sel.includes(key)) {
+    //             selectedDict[key] = value
+    //             delete filterFields[key]
+    //         }
+    //     }
+    //     filterFields = {
+    //         ...filterFields,
+    //         ...selectedDict
+    //     }
+    // }
 
     // Object with actual query term: what the user sees for term names
     let filterKeyNames = {
-        'id':'reaction ID',
+        'n_term_percent':'n-terminal incorporation percent',
+        'internal_percent':'internal incorporation percent',
         'assay__acylation_yield':'microhelix assay acylation yield',
         'flexizyme':'flexizyme',
         'flexizyme__flex_name':'flexizyme name',
@@ -80,10 +99,32 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
         'references__DOI':'reference DOI',
         // 'n-terminal incorporation':'n_term_incorporation',
         // 'internal incorporation':'internal_incorporation',
-        'n_term_percent':'n-terminal incorporation percent',
-        'internal_percent':'internal incorporation percent',
-        'rib_incorporation_notes':'ribosomal incorporation notes'
+        
+        'rib_incorporation_notes':'ribosomal incorporation notes',
+        'id':'reaction ID',
     }
+
+    // let putUnselectedFirst = (dict) => {
+    //     let selected = []
+    //     for (const [key, value] in Object.entries(queries)) {
+    //         if (value) {
+    //             selected.push(value[0])
+    //         }
+    //     }
+    //     let selectedDict = {}
+    //     for (const [key, value] in Object.entries(dict)) {
+    //         if (selected.includes(key)) {
+    //             selectedDict[key] = value
+    //             delete dict[key]
+    //         }
+    //     }
+    //     dict = {
+    //         ...dict,
+    //         ...selectedDict
+    //     }
+    //     console.log(dict)
+    //     return dict
+    // }
 
     let newOperationName = (operation) => {
         if (term === "date_added") {
@@ -101,15 +142,28 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
             case 'lte':
                 return 'is less than or equal to'
             case 'isnull':
-                return 'is null (true or false)'
+                return 'true or false'
             case 'substruct':
-                return 'is exactly:'
+                return 'is exactly'
             case 'exact':
                 return 'is exactly'
             default:
                 return operation
         }
     }
+    // is null true or false should be reversed!
+
+    // rotates array items by n and returns new array
+    // let rotate = (arr1, n) => {
+    //     let result = arr1.slice()
+    //     for (let i=n; i > 0; i -= 1) {
+    //         result.unshift(result.pop())
+    //         console.log('result')
+    //     }
+    //     return result
+    // }
+
+    // let rotatedKeys = rotate(Object.keys(filterFields), parseInt(Object.keys(queries)[Object.keys(queries).length - 1]))
 
   return (
     <>
@@ -143,7 +197,14 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
             size='md' 
             style={{width:325 }}
             onChange={(e)=> {
-                if (term === "monomer__monomer_smiles") {
+                if (term === "synthetase" || term === "flexizyme") {
+                    if (e.target.value === "true") {
+                        setValue("false")
+                    } else if (e.target.value === "false") {
+                        setValue("true")
+                    }
+                }
+                else if (term === "monomer__monomer_smiles" || term === "monomer__monomer_name") {
                     let queryString = e.target.value
                         if (queryString.length > 0) {
                             queryString = queryString.split('=').join('%3D')
@@ -151,6 +212,7 @@ const SearchFilter = ({ queries, setQueries, filterID }) => {
                             queryString = queryString.split('(').join('%28')
                             queryString = queryString.split(')').join('%29')
                             queryString = queryString.split('+').join('%2B')
+                            queryString = queryString.split('@').join('%40')
                         }
                     setValue(queryString)
                 } else {

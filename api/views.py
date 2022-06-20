@@ -68,7 +68,7 @@ defaultFilteringFields = {
     'monomer__monomer_LG': ['iexact', 'icontains'],
     'date_added': ['exact'],
     'rib_readout': ['iexact', 'icontains'],
-    'references__DOI': ['iexact'],
+    'references__DOI': ['iexact', 'icontains'],
     'n_term_incorporation': ['iexact'],
     'internal_incorporation': ['iexact'],
     'n_term_percent': ['exact', 'gte', 'lte'],
@@ -154,6 +154,11 @@ class ReferenceViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
     search_fields = ['DOI', 'title', 'journal']
 
 
+class MonomerView(viewsets.ModelViewSet):
+    serializer_class = MonomerSerializer
+    def get_queryset(self):
+        return Monomer.objects.all()
+
 class FlexizymeView(viewsets.ModelViewSet):
     serializer_class = FlexizymeSerializer
 
@@ -231,6 +236,7 @@ class UserReactionsView(generics.ListAPIView):
 
     def get_queryset(self):
         return Reaction.objects.filter(user=self.request.user)
+
 
 class ReactionDraftView(viewsets.ModelViewSet):
     serializer_class = ReactionDraftSerializer

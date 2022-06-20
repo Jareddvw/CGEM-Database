@@ -105,7 +105,8 @@ class SynthetaseSerializer(WritableNestedModelSerializer):
         instance.mutations.clear()
 
         if parent:
-            updated_parent, created = ParentSynth.objects.update_or_create(**parent)
+            parentID = parent.pop(id)
+            updated_parent, created = ParentSynth.objects.update_or_create(id=parentID, defaults=parent)
             instance.parent_synthetase = updated_parent
             instance.save()
         if organisms:
@@ -287,19 +288,21 @@ class ReactionSerializer(serializers.ModelSerializer):
         return new_reaction
 
 
-        # handles PUT requests for existing reactions. Data must be valid first and can't be partial (unlike with PATCH)
+        # handles PUT requests for existing reactions. 
+        # main idea: get the existing object if it exists, then update the values.
+        # Otherwise, create new instance of the field and replace previous field with it.
     def update(self, instance, validated_data):
         # Assay is OneToOneField
         # Monomer, tRNA, Flexizyme, and Synthetase are ForeignKeys. TRNA and Monomer may not be False.
         # References is a ManyToManyField
 
-        currentObj = Reaction.objects.filter(id=instance.id)
+        currentObj = Reaction.objects.get(id=instance.id)
         assay = validated_data.get('assay', 0)
         if assay:
             validated_data.pop('assay')
             try: 
                 current_assay=MicrohelixAssay.objects.get(id=instance.assay.id)
-                MicrohelixAssay.objects.filter(id=current_assay.id).update(**assay)
+                MicrohelixAssay.objects.get(id=current_assay.id).update(**assay)
             except:
                 new_assay = MicrohelixAssay.objects.create(**assay)
                 currentObj.update(assay=new_assay)

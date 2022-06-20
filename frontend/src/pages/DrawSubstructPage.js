@@ -63,6 +63,7 @@ const DrawSubstructPage = () => {
             queryString = queryString.split('(').join('%28')
             queryString = queryString.split(')').join('%29')
             queryString = queryString.split('+').join('%2B')
+            queryString = queryString.split('@').join('%40')
         }
         let response = await fetch(`/api/?limit=${limit}&monomer__monomer_smiles__substruct=${queryString}`)
                         .catch((err) => console.log(err))

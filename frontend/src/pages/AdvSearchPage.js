@@ -43,6 +43,9 @@ const AdvSearchPage = () => {
 
     setReactions(data.results)
     const totalCount = data.count
+    if (totalCount === 0) {
+        setReactions("blank")
+    }
     setPageCount(Math.ceil(totalCount / limit))
     setResultCount(totalCount)
     let length = await data.length
@@ -82,7 +85,6 @@ const getPaginatedReactions = async (currentPage) => {
     let data = await response.json()
     return data.results
 }
-  
 
   return (
     <>
@@ -95,7 +97,7 @@ const getPaginatedReactions = async (currentPage) => {
             {/* {Object.keys(queries).map((key) => 
                                     key + "=" + queries[key] + "").join("")} */}
 
-            <div className="wrapper">
+            <div className="wrapper mt-1">
             <div className='insidewrapper'>
                 {filterIndices.map(index => 
                     <Row className='align-items-center search-filter justify-content-between' style={{width:'100%', marginLeft:0}} key={index}>
@@ -113,7 +115,7 @@ const getPaginatedReactions = async (currentPage) => {
                     </Row>
                 )}
                 
-                <button className = 'btn btn-outline-primary mt-3' style={{width:'10em'}} 
+                <button className = 'btn btn-outline-success mt-3' style={{width:'10em'}} 
                         onClick = {() => {
                             setFilterIndices(filterIndices => [...filterIndices, filterCountUp + 1])
                             setFilterCountUp(filterCountUp + 1)
