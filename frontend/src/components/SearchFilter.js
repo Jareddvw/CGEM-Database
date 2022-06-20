@@ -8,7 +8,7 @@ const SearchFilter = ({ queries, setQueries, filterID, selected, setSelected }) 
 
     // will construct entry to add to queries like {id__gte: 5} 
     // where term='id', operation='gte', and value={5}
-    let [term, setTerm] = useState("id")
+    let [term, setTerm] = useState("n_term_percent")
     let [operation, setOperation] = useState("exact")
     let [value, setValue] = useState('')
     let [leftSide, setLeftSide] = useState('')

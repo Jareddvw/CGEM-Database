@@ -1,4 +1,4 @@
-import { Container, Row, Col, Button, Form, Stack } from 'react-bootstrap'
+import { Container, Row, Col, Button, Form, Stack, Spinner } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 import ReactionList from '../components/list_components/ReactionList'
 import StructureList from '../components/list_components/StructureList'
@@ -21,9 +21,12 @@ const AdvSearchPage = () => {
     let [filterIndices, setFilterIndices] = useState([1])
     let [filterCountUp, setFilterCountUp] = useState(1)
 
+    let [searchLoading, setSearchLoading] = useState(false)
+
   // for /api/single, use setReactions(data)
   // for /api/, use setReactions(data.results)
   let getReactions = async () => {
+    setSearchLoading(true)
     let filters = ""
     for (const [key, value] of Object.entries(queries)) {
         filters += "&" + value[0] + "=" + value[1]
@@ -32,6 +35,9 @@ const AdvSearchPage = () => {
     let response = await fetch(`/api/single/?limit=${limit}${ordering}` + 
                                 filters + 
                                 search)
+    if (response) {
+        setSearchLoading(false)
+    }
     if (response.status === 500) {
         setReactions("serverError")
         return;
@@ -74,6 +80,7 @@ const AdvSearchPage = () => {
 }
 
 const getPaginatedReactions = async (currentPage) => {
+    setSearchLoading(true)
     let filters = ""
     for (const [key, value] of Object.entries(queries)) {
         filters += "&" + value[0] + "=" + value[1]
@@ -83,7 +90,20 @@ const getPaginatedReactions = async (currentPage) => {
                                 filters +
                                 search)
     let data = await response.json()
+    setSearchLoading(false)
     return data.results
+}
+
+// download all data from advanced search in CSV format, not just those returned on current page.
+const handleCSVDownload = async () => {
+    let filters = ""
+    for (const [key, value] of Object.entries(queries)) {
+        filters += "&" + value[0] + "=" + value[1]
+    }
+    let response = await fetch(`/api/single/?{ordering}` + 
+                                filters +
+                                search)
+    
 }
 
   return (
@@ -167,14 +187,16 @@ const getPaginatedReactions = async (currentPage) => {
                 </div>
                 </Col>
             </Row>
-            <Row>
+            <Row className="justify-content-between">
                 <Col>
-                    <button className="btn btn-outline-primary mb-3 mt-4 w-25" 
+                    <button className="btn btn-outline-primary mb-3 mt-4" 
                             onClick={getReactions} 
-                            onSubmit={getReactions}> 
+                            onSubmit={getReactions}
+                            style={{width:250}}> 
                         Search 
                     </button>
                 </Col>
+                {searchLoading === true ? (<Spinner className="mt-4" animation="border" variant="success"></Spinner>) : <></>}
             </Row>
         </Container>
         {(reactions.length !== 0) ? 
@@ -224,8 +246,11 @@ const getPaginatedReactions = async (currentPage) => {
                             activeClassName={"active"}
                         />
                         <Row>
-                            {<VerboseCSV reactions={reactions} 
-                            name="cgemdb_adv_search_results" />}
+                            {<VerboseCSV 
+                                reactions={reactions}
+                                name="cgemdb_adv_search_results"
+                                onClick={handleCSVDownload}
+                            />}
                         </Row>
                     </Container>
                 ) : 

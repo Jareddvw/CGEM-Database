@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { CSVLink } from "react-csv"
 
+// button to download all data from REACTIONS. CSV is downloaded on click.
 const VerboseCSV = ( { reactions, name } ) => {
 
     const headers = [
@@ -60,20 +61,23 @@ const VerboseCSV = ( { reactions, name } ) => {
       data.push(reaction)
     }
 
+    const csvLinkRef = useRef()
+
   return (
     <>
-      <div className="mt-3 mb-3">
         <CSVLink
             headers={headers}
             data={data}
             filename={`${name}.csv`}
             target="_blank"
+            className="mt-1 mb-4"
+
+            ref={csvLinkRef}
         >
           <button className="btn btn-outline-secondary">
-            Download these results (CSV file)
+            Download all results (CSV file)
           </button>
         </CSVLink>
-      </div>
     </>
   )
 }
