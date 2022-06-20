@@ -53,6 +53,7 @@ export const AuthProvider = ({ children }) => {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem('authTokens', JSON.stringify(data))
+            localStorage.setItem('access_created_time', Date.now())
             history.push('/')
             window.location.reload()
         } else {
@@ -62,6 +63,18 @@ export const AuthProvider = ({ children }) => {
 
     let updateToken = async () => {
         console.log("updateToken called.")
+        // ten minutes in milliseconds
+        let tenMinutes = 1000 * 60 * 10
+        let now = Date.now()
+        let prevAccessTime = localStorage.getItem('access_created_time')
+        if (prevAccessTime) {
+            if (now - prevAccessTime < tenMinutes) {
+                console.log("no need to update token")
+                setLoading(false)
+                return;
+            }
+        }
+
         let response = await fetch('/api/token/refresh/',{
             method: 'POST',
             headers: {
@@ -83,6 +96,7 @@ export const AuthProvider = ({ children }) => {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem('authTokens', JSON.stringify(data))
+            localStorage.setItem('access_created_time', Date.now())
             if (loading) {
                 setLoading(false)
             }
@@ -100,6 +114,7 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(null);
         setUser(null);
         localStorage.removeItem('authTokens')
+        localStorage.removeItem('access_created_time')
     }
 
     // can access username and email through user.username and user.email

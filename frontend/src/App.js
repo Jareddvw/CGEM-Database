@@ -23,6 +23,7 @@ import MyAccountPage from './pages/MyAccountPage';
 import ReactionDraftsPage from './pages/ReactionDraftsPage';
 
 function App() {
+  
   return (
     <div className="App">
       <Router>

@@ -8,7 +8,7 @@ const Canvas = ({ draw, width, height }) => {
     useEffect(() => {                             
         const current = canvas.current
         draw(current)
-    });
+    }, [draw]);
 
     return (
         <canvas

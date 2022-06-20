@@ -8,6 +8,8 @@ const StructureListItem = ({ id, smiles, width, height, name,
     flexizyme, synthetase, acylation_yield, nolink }) => {
 
     let drawTree = (current) => {
+        // get rid of console logs from within SmilesDrawer code
+        console.log = () => {}
         let smilesDrawer = new SmilesDrawer.Drawer({ width: width, height: height})
         if (current !== null && smiles) {
             SmilesDrawer.parse(smiles, function (tree) {
