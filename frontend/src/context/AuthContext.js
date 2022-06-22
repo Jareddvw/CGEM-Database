@@ -13,21 +13,22 @@ export const AuthProvider = ({ children }) => {
     let [loading, setLoading] = useState(true);
     let [error, setError] = useState(false)
 
-    let initialTokens = null;
-    let initialUser = null;
     const getAuthTokens = () => {
         if (localStorage.getItem('authTokens')) {
-            initialTokens = JSON.parse(localStorage.getItem('authTokens'));
-            initialUser = jwt_decode(initialTokens.access)
+            let initialTokens = JSON.parse(localStorage.getItem('authTokens'));
+            return initialTokens
         }
-        return initialTokens
+        return null
     }
     const getUser = () => {
         if (localStorage.getItem('authTokens')) {
-            initialUser = jwt_decode(initialTokens.access)
+            let initialTokens = JSON.parse(localStorage.getItem('authTokens'));
+            let initialUser = jwt_decode(initialTokens.access)
+            console.log("user " + initialUser)
+            return initialUser
         }
-        console.log(initialUser)
-        return initialUser
+        console.log("no user")
+        return "me";
     }
 
     let [authTokens, setAuthTokens] = useState(() => getAuthTokens());
@@ -128,14 +129,13 @@ export const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-
         if (loading && localStorage.getItem('authTokens')) {
             updateToken()
         }
 
         let fourMin = 4 * 60 * 1000 * (Math.random() + 1)
         let interval = setInterval(() => {
-            if (authTokens) {
+            if (localStorage.getItem('authTokens')) {
                 updateToken()
             } 
         }, fourMin)
@@ -145,7 +145,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={contextData} >
-            {loading ? null : children}
+            {children}
         </AuthContext.Provider>
     )
 }
