@@ -2,7 +2,7 @@ asgiref==3.5.0
 Django==4.0.2
 django-cors-headers==3.11.0
 django-filter==21.1
-django-rdkit==0.3.1
+git+https://github.com/rdkit/django-rdkit.git@v0.3.1
 django-rest-auth==0.9.5
 djangorestframework==3.13.1
 djangorestframework-simplejwt==5.1.0
