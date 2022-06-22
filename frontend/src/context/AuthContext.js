@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
 
-        if (loading) {
+        if (loading && localStorage.getItem('authTokens')) {
             updateToken()
         }
 
