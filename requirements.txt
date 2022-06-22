@@ -1,33 +1,14 @@
 asgiref==3.5.0
-certifi==2022.5.18.1
-cycler @ file:///home/conda/feedstock_root/build_artifacts/cycler_1635519461629/work
 Django==4.0.2
 django-cors-headers==3.11.0
-django-dbbackup==4.0.0b0
 django-filter==21.1
-django-rdkit @ git+https://github.com/rdkit/django-rdkit.git@9bbbebb45b8af15006e1e2ffec7744705de2a295
+django-rdkit==0.3.1
 django-rest-auth==0.9.5
-djangorestframework @ file:///home/conda/feedstock_root/build_artifacts/djangorestframework_1639677796037/work
+djangorestframework==3.13.1
 djangorestframework-simplejwt==5.1.0
 drf-writable-nested==0.6.3
-fonttools @ file:///Users/runner/miniforge3/conda-bld/fonttools_1651017884113/work
-greenlet @ file:///Users/runner/miniforge3/conda-bld/greenlet_1648882470730/work
-kiwisolver @ file:///Users/runner/miniforge3/conda-bld/kiwisolver_1648854444971/work
-matplotlib @ file:///Users/runner/miniforge3/conda-bld/matplotlib-suite_1651609507828/work
-munkres==1.1.4
-numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1651020470972/work
-packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1637239678211/work
-pandas==1.4.2
-Pillow @ file:///Users/runner/miniforge3/conda-bld/pillow_1652815070326/work
 psycopg2==2.9.3
-pycairo==1.21.0
 PyJWT==2.3.0
-pyparsing @ file:///home/conda/feedstock_root/build_artifacts/pyparsing_1652235407899/work
-python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
 pytz==2021.3
-reportlab==3.5.68
-six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
-SQLAlchemy @ file:///Users/runner/miniforge3/conda-bld/sqlalchemy_1651018027924/work
+six==1.16.0
 sqlparse==0.4.2
-typing_extensions @ file:///opt/conda/conda-bld/typing_extensions_1647553014482/work
-unicodedata2 @ file:///Users/runner/miniforge3/conda-bld/unicodedata2_1649111971342/work
