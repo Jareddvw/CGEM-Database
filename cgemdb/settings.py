@@ -78,7 +78,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'https://gem-net.net'
+    'https://db.gem-net.net'
 ]
 
 # db backup is stored in backup folder of base_dir
