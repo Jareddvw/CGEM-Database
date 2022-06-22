@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0648763a.css",
+    "main.js": "/static/js/main.b149dd59.js",
+    "static/media/cgem_logo.png": "/static/media/cgem_logo.c87ba545b71379740aba.png",
+    "index.html": "/index.html",
+    "main.0648763a.css.map": "/static/css/main.0648763a.css.map",
+    "main.b149dd59.js.map": "/static/js/main.b149dd59.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0648763a.css",
+    "static/js/main.b149dd59.js"
+  ]
+}
