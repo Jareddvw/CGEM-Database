@@ -153,18 +153,21 @@ const SearchFilter = ({ queries, setQueries, filterID, selected, setSelected }) 
     }
     // is null true or false should be reversed!
 
-    // rotates array items by n and returns new array
-    // let rotate = (arr1, n) => {
-    //     let result = arr1.slice()
-    //     for (let i=n; i > 0; i -= 1) {
-    //         result.unshift(result.pop())
-    //         console.log('result')
+    // let [rotatedKeys, setRotatedKeys] = useState({})
+
+    // useEffect(() => {
+    //     let rotate = (arr1, n) => {
+    //         let result = arr1.slice()
+    //         for (let i=n; i > 0; i -= 1) {
+    //             result.unshift(result.pop())
+    //             console.log('result')
+    //         }
+    //         return result
     //     }
-    //     return result
-    // }
-
-    // let rotatedKeys = rotate(Object.keys(filterFields), parseInt(Object.keys(queries)[Object.keys(queries).length - 1]))
-
+    //     setRotatedKeys(rotate(Object.keys(filterFields), parseInt(Object.keys(queries)[Object.keys(queries).length - 1])))
+    // }, [])
+    // rotates array items by n and returns new array
+    
   return (
     <>
         <Form.Select 

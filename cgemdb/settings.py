@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'base',
     'account',
     'corsheaders',
-    'django_rdkit'
+    'django_rdkit',
+    'dbbackup',
+    'django_crontab'
 ]
 
 MIDDLEWARE = [
@@ -64,6 +66,16 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://gem-net.net'
+]
+
+# db backup is stored in backup folder of base_dir
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backup'}
+
+# db backup happens every minute
+# keep last ten backups, delete older ones for storage money stuff
+CRONJOBS = [
+    ('*/1 * * * *', 'cgemdb.cron.backup')
 ]
 
 ROOT_URLCONF = 'cgemdb.urls'
@@ -191,7 +203,7 @@ SIMPLE_JWT = {
 }
 
 # Use custom account model instead of default User model. 
-AUTH_USER_MODEL = "account.Account" 
+AUTH_USER_MODEL = "account.Account"
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.AllowAllUsersModelBackend',
     'account.backends.CaseInsensitiveModelBackend'

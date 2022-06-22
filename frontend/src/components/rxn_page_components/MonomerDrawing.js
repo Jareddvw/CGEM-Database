@@ -8,6 +8,7 @@ const MonomerDrawing = ({ smiles, width, height }) => {
     let [error, setError] = useState(null)
 
     let drawTree = (current) => {
+        // get rid of console logs from within SmilesDrawer code
         console.log = () => {}
         let smilesDrawer = new SmilesDrawer.Drawer({ width: width, height: height})
         if (current !== null && smiles) {
