@@ -26,7 +26,7 @@ const DrawSubstructPage = () => {
         newComposer.setCommonToolButtons(
             ['loadData', 'saveData', 'zoomIn', 'zoomOut', 'reset', 'undo', 'redo', 'copy', 'cut', 'paste']
         );
-        newComposer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atomAndFormula', 'ring', 'charge']);
+        newComposer.setChemToolButtons(['erase', 'manipulate', 'bond', 'atomAndFormula', 'ring', 'charge']);
         setComposer(newComposer)
 
         // also want to set toggle to active for viewing structures first
@@ -166,32 +166,35 @@ const DrawSubstructPage = () => {
                     </Col>
                 </Row> 
                 
-                <Row className='mt-3 mb-3 align-items-center justify-content-center'> 
+                <Row className='mx-3 mt-3 mb-3 align-items-center justify-content-center'> 
                     <button 
                         className='btn btn-outline-primary mb-3 mt-3 w-25 mx-2' 
                         onClick={generateSMILES} >
-                        Generate SMILES and Search
+                        Search
                     </button>
                     <div className="mb-3 mt-3 mx-2 w-25">
                         {(SMILES !== "" && SMILES !== null) ? "Molecule SMILES: " + SMILES : ""}
                     </div>
-                    <div className="mb-3 mt-3 mx-2 w-25">
+                    <Col className="mb-3 mt-3 mx-2 w-25">
                         <Form.Check
                             type="switch"
                             id="custom-switch"
                             label="View structures"
                             onClick={() => {setCardView(!cardView)}} >
                         </Form.Check>
-                    </div>
+                    </Col>
+                    <Col style={{width:300, display:'flex', justifyContent:'start', alignItems:'center'}}>
                         Show
-                        <Form.Select size='sm' style={{width:100, marginLeft:'1em', marginRight:'1em'}}
+                        <Form.Select size='sm' style={{width:100, marginLeft:'0.5em', marginRight:'0.5em'}}
                             onChange={(e)=>setLimit(e.target.value)}>
-                            <option value={10}>12</option>
+                            {/* <option value={6}>6</option> */}
+                            <option value={12}>12</option>
                             <option value={25}>25</option>
                             <option value={50}>50</option>
                             <option value={pageCount * limit}>All</option>
                         </Form.Select>
                         entries
+                    </Col>
                 </Row>
 
                 {returnStatement()}

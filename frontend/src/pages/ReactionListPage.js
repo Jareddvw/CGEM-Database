@@ -78,9 +78,10 @@ const ReactionListPage = () => {
             </Row>
             
             <Row className='mt-3 align-items-center'> 
-                <div style={{width:300, padding:0}}>
+                <div style={{width:300, padding:0, display:'flex', justifyContent:'start', alignItems:'center'}}>
                     Number of results: {results?.count} 
                 </div>
+                <Col style={{width:300, display:'flex', justifyContent:'start', alignItems:'center'}}>
                     Show
                     <Form.Select size='sm' style={{width:100, marginLeft:'0.5em', marginRight:'0.5em'}}
                         onChange={(e)=>setLimit(e.target.value)}>
@@ -91,6 +92,7 @@ const ReactionListPage = () => {
                         <option value={pageCount * limit}>All</option>
                     </Form.Select>
                     entries per page
+                </Col>
             </Row>
 
             {loading === true ? (<Row className="align-items-center justify-content-center mt-5"> <Spinner animation="border" className="mx-3"/>Waiting for data to load... </Row>) :
@@ -102,7 +104,7 @@ const ReactionListPage = () => {
                     verbose={false} />
             </Row>
             </>)}
-            
+
             <ReactPaginate
                 previousLabel={"previous"}
                 nextLabel={"next"}
