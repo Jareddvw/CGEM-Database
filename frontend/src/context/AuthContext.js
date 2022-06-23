@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
             return initialUser
         }
         console.log("no user")
-        return "me";
+        return null;
     }
 
     let [authTokens, setAuthTokens] = useState(() => getAuthTokens());

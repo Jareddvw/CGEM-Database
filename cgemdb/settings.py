@@ -24,21 +24,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = DJANGO_CGEMDB_SECRETKEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = SECRET_KEY == "a"
 
-ALLOWED_HOSTS = ["db.gem-net.net"]
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = ["db.gem-net.net", "localhost"]
 
-SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = False
 
-CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = False
 
-SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = False
 
-SECURE_HSTS_SECONDS = 60
+    SECURE_HSTS_SECONDS = 0
 
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 
-SECURE_HSTS_PRELOAD = True
+    SECURE_HSTS_PRELOAD = False
 
 
 # Application definition
@@ -77,8 +80,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'https://db.gem-net.net'
+    'http://localhost',
+    'https://db.gem-net.net',
 ]
 
 # db backup is stored in backup folder of base_dir
