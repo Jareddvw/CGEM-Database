@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useState, useEffect } from 'react'
-import { Container, Row, Col, Form } from 'react-bootstrap'
+import { Container, Row, Col, Form, Spinner } from 'react-bootstrap'
 import StructureList from '../components/list_components/StructureList'
 import ReactionList from '../components/list_components/ReactionList'
 import ReactPaginate from 'react-paginate'
@@ -17,6 +17,7 @@ const DrawSubstructPage = () => {
     const [cardView, setCardView] = useState(false)
     let [pageCount, setPageCount] = useState(1)
     let [limit, setLimit] = useState(12)
+    let [loading, setLoading] = useState(false)
 
     let queryString = ''
 
@@ -53,7 +54,9 @@ const DrawSubstructPage = () => {
     }, [])
 
     let getReactions = async () => {
+        setLoading(true)
         if (SMILES === "Error. More than one structure drawn.") {
+            setLoading(false)
             return;
         }
         if (SMILES.length > 0) {
@@ -69,6 +72,7 @@ const DrawSubstructPage = () => {
                         .catch((err) => console.log(err))
         if (response.status === 500 || !response.ok) {
             setSMILES("serverError")
+            setLoading(false)
             return;
         } 
         let data = await response.json()
@@ -77,6 +81,7 @@ const DrawSubstructPage = () => {
             const totalCount = data.count
             setPageCount(Math.ceil(totalCount / limit))
         }
+        setLoading(false)
     }
 
     const handlePageClick = async (data) => {
@@ -105,9 +110,7 @@ const DrawSubstructPage = () => {
     }
 
     const returnStatement = () => {
-        if (reactions === []) {
-            return (<> Waiting for data to load... </>)
-        } else if (SMILES === "Error. More than one structure drawn.") {
+        if (SMILES === "Error. More than one structure drawn.") {
             return;
         } else if (SMILES === "serverError") {
             return <div className = "text-center mb-3">  An error occurred! Your SMILES may not be valid. </div>
@@ -115,9 +118,12 @@ const DrawSubstructPage = () => {
             if (SMILES !== null) {
                 return (
                     <>
-                    {(cardView === true) ?
-                    <StructureList reactions={reactions} verbose={false} /> :
-                    <ReactionList reactions={reactions} verbose={false} />}
+                    {loading === true ? 
+                        (<Row className="align-items-center justify-content-center"> <Spinner animation="border" className="mx-3"/>Waiting for data to load... </Row>) : 
+                        ((cardView === true) ?
+                        <StructureList reactions={reactions} verbose={false} /> :
+                        (<ReactionList reactions={reactions} verbose={false} />))
+                    }
                     <ReactPaginate
                         previousLabel={"previous"}
                         nextLabel={"next"}

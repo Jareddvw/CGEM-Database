@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 import { useState, useEffect, } from 'react'
-import { Container, Row, Col, Form } from 'react-bootstrap'
+import { Container, Row, Col, Form, Spinner } from 'react-bootstrap'
 import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 import ReactPaginate from 'react-paginate'
@@ -14,6 +14,7 @@ const MyReactionsPage = () => {
     let [resultCount, setResultCount] = useState(0)
     let [pageCount, setPageCount] = useState(1)
     let [limit, setLimit] = useState(12)
+    let [loading, setLoading] = useState(true)
 
     let {authTokens, logoutUser, user} = useContext(AuthContext)
 
@@ -25,6 +26,7 @@ const MyReactionsPage = () => {
     }, [cardView])
 
     let getReactions = async () => {
+        setLoading(true)
         let response = await fetch(`/api/myreactions/?limit=${limit}&ordering=${ordering}`,
         {
             headers: {
@@ -46,6 +48,7 @@ const MyReactionsPage = () => {
         } else if (response.statusText === 'Unauthorized') {
             logoutUser()
         }
+        setLoading(false)
     }
 
     const handlePageClick = async (data) => {
@@ -104,7 +107,17 @@ const MyReactionsPage = () => {
                     </Form.Select>
                     entries per page
             </Row>
-            <Row className='mt-4'>{reactions === [] ? <></> : <ReactionOrStructureList reactions={reactions} cardView={cardView} /> } </Row>
+
+            {loading === true ? (<Row className="align-items-center justify-content-center mt-5"> <Spinner animation="border" className="mx-3"/>Waiting for data to load... </Row>) :
+            (<>
+            <Row className='mt-4'>
+                <ReactionOrStructureList 
+                    reactions={reactions} 
+                    cardView={cardView} 
+                    verbose={false} />
+            </Row>
+            </>)}
+
             <ReactPaginate
                 previousLabel={"previous"}
                 nextLabel={"next"}

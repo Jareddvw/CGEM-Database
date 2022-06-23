@@ -3,6 +3,8 @@ import MonomerDrawing from '../components/rxn_page_components/MonomerDrawing'
 import { Container, Row, Form} from 'react-bootstrap'
 import StructureList from '../components/list_components/StructureList'
 
+// page where you can input a monomer smiles and search monomers with those substructures
+
 const StructureListPage = () => {
 
     let [reactions, setReactions] = useState([])
@@ -47,7 +49,7 @@ const StructureListPage = () => {
             return <div className = "text-center mb-3">  An error occurred! Your SMILES may not be valid. </div>
         } else {
             return (<StructureList reactions={reactions} verbose={false} />)
-        } 
+        }
     }
 
     return (

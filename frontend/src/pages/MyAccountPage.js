@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
-import { Container } from 'react-bootstrap'
+import { Container, Spinner } from 'react-bootstrap'
 import EditAccountModal from '../components/EditAccountModal'
 
 const MyAccountPage = () => {
 
     let [userInfo, setUserInfo] = useState({})
     let [showEditModal, setShowEditModal] = useState(false)
+    let [loading, setLoading] = useState(true)
 
     let {authTokens} = useContext(AuthContext)
 
@@ -23,20 +24,21 @@ const MyAccountPage = () => {
         })
         let data = await response.json()
         setUserInfo(data)
+        setLoading(false)
     }
 
     useEffect(() => {
         getUserInfo()
     }, [])
 
-    if (userInfo === {}) {
-        return (<div className = "mt-5 text-center"> 
+    return (loading === true ? 
+                (<div className = "mt-5 text-center"> 
+                    <Spinner animation="border" />
                     <strong> 
                         Waiting for account information to load...
                     </strong> 
-                </div>)
-    } else {
-        return (<Container className = "mt-5"> 
+                </div>) :
+                (<Container className = "mt-5"> 
                     Name: {" " + userInfo.username}
                     <p></p>
                     Email: {" " + userInfo.email}
@@ -59,8 +61,7 @@ const MyAccountPage = () => {
                         onHide={() => setShowEditModal(false)}
                         authTokens = {authTokens} 
                         userInfo = {userInfo} />
-                </Container>)
-    }
+                </Container>))
 }
 
 export default MyAccountPage

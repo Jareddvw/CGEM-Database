@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { Container, Row, Col, Form } from 'react-bootstrap'
+import { Container, Row, Col, Form, Spinner } from 'react-bootstrap'
 import ReactPaginate from 'react-paginate'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
 
@@ -11,8 +11,10 @@ const ReactionDraftsPage = () => {
     let [cardView, setCardView] = useState(false)
     let [pageCount, setPageCount] = useState(1)
     let [limit, setLimit] = useState(12)
+    let [loading, setLoading] = useState(true)
 
     let getReactions = async () => {
+        setLoading(true)
         let response = await fetch(`/api/drafts/?limit=${limit}`)
         let data = await response.json()
         let truncRxns = []
@@ -24,6 +26,7 @@ const ReactionDraftsPage = () => {
         const totalCount = data.count
         setPageCount(Math.ceil(totalCount / limit))
         setResults(data)
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -83,12 +86,15 @@ const ReactionDraftsPage = () => {
                     entries per page
             </Row>
 
+            {loading === true ? (<Row className="align-items-center justify-content-center mt-5"> <Spinner animation="border" className="mx-3"/>Waiting for data to load... </Row>) :
+            (<>
             <Row className='mt-4'>
                 <ReactionOrStructureList 
                     reactions={truncatedReactions} 
                     cardView={cardView} 
-                    verbose={false} nolink={true} />
+                    verbose={false} />
             </Row>
+            </>)}
             <ReactPaginate
                 previousLabel={"previous"}
                 nextLabel={"next"}
