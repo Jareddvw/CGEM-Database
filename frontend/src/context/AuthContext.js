@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }) => {
 
     let [authTokens, setAuthTokens] = useState(() => getAuthTokens());
     let [user, setUser] = useState(() => getUser());
+    console.log(user)
 
     const history = createBrowserHistory()
 
@@ -66,10 +67,9 @@ export const AuthProvider = ({ children }) => {
         console.log("updateToken called.")
         // ten minutes in milliseconds
         let tenMinutes = 1000 * 60 * 10
-        let now = Date.now()
         let prevAccessTime = localStorage.getItem('access_created_time')
         if (prevAccessTime) {
-            if (now - prevAccessTime < tenMinutes) {
+            if (Date.now() - prevAccessTime < tenMinutes) {
                 console.log("no need to update token")
                 setLoading(false)
                 return;
