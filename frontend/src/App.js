@@ -21,6 +21,7 @@ import DrawSubstructPage from './pages/DrawSubstructPage';
 import AboutPage from './pages/AboutPage';
 import MyAccountPage from './pages/MyAccountPage';
 import ReactionDraftsPage from './pages/ReactionDraftsPage';
+import DraftPage from './pages/DraftPage';
 
 function App() {
   
@@ -42,6 +43,7 @@ function App() {
               <Route path="/search/:searchTerm" exact element={<GeneralSearch />} />
               <Route path="/advanced" exact element={<AdvSearchPage />} />
               <Route path="/reaction-drafts" exact element={<ReactionDraftsPage />} />
+              <Route path="/reaction-drafts/:id" exact element={<DraftPage />} />
               <Route exact path='/contribute' element={
                 <PrivateRoute>
                   <ContributePage />

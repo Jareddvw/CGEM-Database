@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
     let [authTokens, setAuthTokens] = useState(() => getAuthTokens());
     let [user, setUser] = useState(() => getUser());
-    console.log("user: " + user)
+    console.log(user)
 
     const history = createBrowserHistory()
 

@@ -5,7 +5,7 @@ import Canvas from '../Canvas'
 import { Link } from 'react-router-dom'
 
 const StructureListItem = ({ id, smiles, width, height, name, 
-    flexizyme, synthetase, acylation_yield, nolink }) => {
+    flexizyme, synthetase, acylation_yield, nolink, drafts }) => {
 
     let drawTree = (current) => {
         // get rid of console logs from within SmilesDrawer code
@@ -53,7 +53,7 @@ const StructureListItem = ({ id, smiles, width, height, name,
                 <Card className="m-1 hoverCard mb-3" style={{width: cardWidth, height: cardHeight}}>
                     {nolink === true ? 
                         InnerCard :
-                        (<Link to={`/reaction/${id}`} className="Link" 
+                        (<Link to={`/${drafts===true ? "reaction-drafts/" : "reaction/"}${id}`} className="Link" 
                             style={{textDecoration: 'none', color:'black'}}
                             target="_blank"> 
                         {InnerCard}

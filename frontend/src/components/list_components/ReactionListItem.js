@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const ReactionListItem = ({ reaction, verbose, nolink }) => {
+const ReactionListItem = ({ reaction, verbose, nolink, drafts }) => {
 
 
   return (
@@ -10,7 +10,7 @@ const ReactionListItem = ({ reaction, verbose, nolink }) => {
             {nolink ? 
             <div style={{textDecoration: 'none', color: 'maroon'}}>{reaction.monomer}</div> 
             :
-            (<Link to={`/reaction/${reaction.id}`} className="Link" style={{textDecoration: 'none', color: 'maroon'}} target="_blank"> 
+            (<Link to={`/${drafts===true ? "reaction-drafts/" : "reaction/"}${reaction.id}`} className="Link" style={{textDecoration: 'none', color: 'maroon'}} target="_blank"> 
             {reaction.monomer} 
             </Link>)}
         </td>

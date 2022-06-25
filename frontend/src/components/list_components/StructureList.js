@@ -2,7 +2,7 @@ import React from 'react'
 import StructureListItem from './StructureListItem'
 import { Container, Row, Col } from 'react-bootstrap'
 
-const StructureList = ({ reactions, nolink, verbose }) => {
+const StructureList = ({ reactions, nolink, verbose, drafts }) => {
 
   // const width = 350
   // const height = 250
@@ -20,7 +20,6 @@ const StructureList = ({ reactions, nolink, verbose }) => {
             <Row className="g-0 structure-list" lg={cardsPerRowLG} md={cardsPerRowMD} sm={cardsPerRowSM}>
                 {reactions.map((reaction, index) => 
                     <Col key={reaction.id || index}>
-
                       {(verbose === true) ? 
                           <StructureListItem id = {reaction?.id} 
                           name = {reaction.monomer.monomer_name || reaction.monomer.monomer_smiles} 
@@ -28,7 +27,7 @@ const StructureList = ({ reactions, nolink, verbose }) => {
                           synthetase = {reaction.synthetase?.synth_common_name} 
                           acylation_yield={reaction.assay?.acylation_yield} 
                           smiles={reaction.monomer?.monomer_smiles} 
-                          width={width} height={height} nolink={nolink} /> 
+                          width={width} height={height} nolink={nolink} drafts={drafts}/> 
                           : 
                           <StructureListItem id = {reaction?.id} 
                           name = {reaction.monomer} 
@@ -36,7 +35,7 @@ const StructureList = ({ reactions, nolink, verbose }) => {
                           synthetase = {reaction.synthetase} 
                           acylation_yield={reaction.acylation_yield} 
                           smiles={reaction.monomer_smiles} 
-                          width={width} height={height} nolink={nolink} /> 
+                          width={width} height={height} nolink={nolink} drafts={drafts}/> 
                         }
                         
                     </Col>

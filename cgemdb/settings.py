@@ -28,6 +28,7 @@ DEBUG = SECRET_KEY == "a"
 
 if DEBUG:
     ALLOWED_HOSTS = []
+
 else:
     ALLOWED_HOSTS = ["db.gem-net.net", "localhost"]
 
@@ -176,13 +177,15 @@ STATIC_URL = 'static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ['rest_framework.permissions.AllowAny']
 
 # token authentication settings
 

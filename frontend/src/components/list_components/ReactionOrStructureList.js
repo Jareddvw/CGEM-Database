@@ -3,7 +3,7 @@ import ReactionList from './ReactionList'
 import StructureList from './StructureList'
 import { useEffect } from 'react'
 
-const ReactionOrStructureList = ( {cardView, reactions, verbose, nolink } ) => {
+const ReactionOrStructureList = ( {cardView, reactions, verbose, nolink, drafts } ) => {
 
     useEffect(() => {
     }, [cardView])
@@ -14,8 +14,8 @@ const ReactionOrStructureList = ( {cardView, reactions, verbose, nolink } ) => {
 
     return (
         <>
-            {cardView === false ? <ReactionList reactions={reactions} verbose={verbose} nolink={nolink} /> :
-                                    <StructureList reactions={reactions} verbose={verbose} nolink={nolink} />}
+            {cardView === false ? <ReactionList reactions={reactions} verbose={verbose} nolink={nolink} drafts={drafts}/> :
+                                    <StructureList reactions={reactions} verbose={verbose} nolink={nolink} drafts={drafts}/>}
         </>
     )
 }

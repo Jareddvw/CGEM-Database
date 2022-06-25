@@ -2,12 +2,12 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 import { createBrowserHistory } from 'history'
 
-const DeleteModal = ({ show, reactionId, onHide, authTokens }) => {
+const DeleteModal = ({ show, reactionId, onHide, authTokens, draft }) => {
 
     const history = createBrowserHistory()
 
     const handleDelete = async () => {
-        let response = await fetch(`/api/single/${reactionId}`, {
+        let response = await fetch(`/api/${draft===true ? "drafts" : "single"}/${reactionId}`, {
                 method: 'delete',
                 headers: {
                     'Content-Type':'application/json',

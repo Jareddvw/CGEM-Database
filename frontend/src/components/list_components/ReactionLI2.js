@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 
 //version of ReactionListItem component which uses reaction object from api/single/ 
 // call to api rather than just api/. This may be slower but gets more information.
-const ReactionLI2 = ({ reaction }) => {
+const ReactionLI2 = ({ reaction, drafts }) => {
   return (
     <tr className="text-center">
         <td> 
-            <Link to={`/reaction/${reaction.id}`} className="Link" style={{textDecoration: 'none', color: 'maroon'}} target="_blank"> 
+            <Link to={`/${drafts===true ? "reaction-drafts/" : "reaction/"}${reaction.id}`} className="Link" style={{textDecoration: 'none', color: 'maroon'}} target="_blank"> 
             {reaction.monomer.monomer_name || reaction.monomer.monomer_smiles} 
             </Link>
         </td>

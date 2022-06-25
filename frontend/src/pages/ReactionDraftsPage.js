@@ -19,6 +19,7 @@ const ReactionDraftsPage = () => {
         let data = await response.json()
         let truncRxns = []
         for (const rxnDraft of data.results) {
+            rxnDraft.truncatedReactionDraft.id = rxnDraft.id
             truncRxns.push(rxnDraft.truncatedReactionDraft)
         }
         console.log(truncRxns)
@@ -59,7 +60,7 @@ const ReactionDraftsPage = () => {
     <>
         <Container className='mb-4 mt-4'>
             <Row as="h4" className='mt-3 mb-3'> Reaction Drafts </Row>
-            <Row className='mt-3'> This is a table of reactions that have not been verified by an admin user. ("Reaction purgatory") </Row>
+            <Row className='mt-3'> The following reactions were added by unverified users, and have not yet been verified by an admin user. </Row>
             <Row className='mt-3 align-items-center'>
                 <Col>
                     <div>
@@ -92,7 +93,8 @@ const ReactionDraftsPage = () => {
                 <ReactionOrStructureList 
                     reactions={truncatedReactions} 
                     cardView={cardView} 
-                    verbose={false} />
+                    verbose={false} 
+                    drafts={true} />
             </Row>
             </>)}
             <ReactPaginate

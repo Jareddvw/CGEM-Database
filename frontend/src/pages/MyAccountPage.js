@@ -29,6 +29,7 @@ const MyAccountPage = () => {
 
     useEffect(() => {
         getUserInfo()
+        console.log(userInfo)
     }, [])
 
     return (loading === true ? 
@@ -48,6 +49,8 @@ const MyAccountPage = () => {
                     ORCID ID: {" " + userInfo.orcid_id}
                     <p></p>
                     Admin user? {userInfo.is_admin === true ? "Yes" : "No"}
+                    <p></p>
+                    Staff user? {userInfo.is_staff === true ? "Yes" : "No"}
                     <p></p>
                     Date joined: {" " + userInfo.date_joined}
                     <p></p>

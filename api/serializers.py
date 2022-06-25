@@ -192,7 +192,8 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
 # for individual reaction page — gives all attributes of the given reaction
 class ReactionSerializer(serializers.ModelSerializer):
 
-    user = serializers.SerializerMethodField('get_username')
+    # can edit the get_id function to change what info about user gets displayed.
+    user = serializers.SerializerMethodField('get_id')
 
     assay = AssaySerializer(allow_null=True)
     flexizyme = FlexizymeSerializer(allow_null=True)
@@ -206,10 +207,10 @@ class ReactionSerializer(serializers.ModelSerializer):
         model = Reaction
         fields = '__all__'
 
-    def get_username(self, reaction):
+    def get_id(self, reaction):
         if reaction.user:
-            email = reaction.user.__str__()
-            return email
+            id = reaction.user.id
+            return id
         else:
             return None
 
