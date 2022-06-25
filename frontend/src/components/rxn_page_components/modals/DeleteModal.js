@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { createBrowserHistory } from 'history'
 
 const DeleteModal = ({ show, reactionId, onHide, authTokens, draft }) => {
 
     const history = createBrowserHistory()
+    let [message, setMessage] = useState("")
 
     const handleDelete = async () => {
         let response = await fetch(`/api/${draft===true ? "drafts" : "single"}/${reactionId}`, {
@@ -20,10 +21,18 @@ const DeleteModal = ({ show, reactionId, onHide, authTokens, draft }) => {
 
         if (response.ok) {
             alert("success!"); 
-            history.push("/all-reactions")
+            history.push(`${draft===true ? "/reaction-drafts" : "/all-reactions"}`)
             window.location.reload()
+        } else {
+            setMessage("Error deleting draft. You may not have the proper permissions.")
         }
     }
+
+    useEffect(() => {
+        if (!show) {
+            setMessage("")
+        }
+    }, [show])
 
     return (
         <Modal show={show}
@@ -41,6 +50,7 @@ const DeleteModal = ({ show, reactionId, onHide, authTokens, draft }) => {
             <p>
               This reaction and its associated assays will be deleted.
             </p>
+            {message !== "" ? <p style={{color:'maroon'}}>{message}</p> : <></>}
           </Modal.Body>
           <Modal.Footer>
             <button className='btn btn-outline-secondary' 

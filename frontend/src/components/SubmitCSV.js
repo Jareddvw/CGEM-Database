@@ -29,6 +29,7 @@ const SubmitCSV = () => {
 
     let [currRow, setCurrRow] = useState(0)
     let [resultLength, setResultLength] = useState(0)
+    let [submitToDrafts, setSubmitToDrafts] = useState(false)
 
     const handleUpload = () => {
         inputRef.current?.click();
@@ -90,7 +91,7 @@ const SubmitCSV = () => {
             setCurrRow(currentRow)
             let response;
             // if user is admin, they can submit reactions directly. Otherwise, they POST data to reaction drafts instead.
-            if (user.is_admin) {
+            if (!submitToDrafts) {
                 response = await fetch('/api/single/', {
                     method: 'post',
                     headers: {
@@ -119,7 +120,7 @@ const SubmitCSV = () => {
             }
         }
         setLoading(false)
-        setPostSuccess([true, `Successfully submitted all reactions${user.is_admin ? "!" : " to reaction-drafts!"}`])
+        setPostSuccess([true, `Successfully submitted all reactions${!submitToDrafts ? "!" : " to reaction-drafts!"}`])
         setCurrRow(0)
         return;
     }
@@ -274,6 +275,15 @@ const SubmitCSV = () => {
                     Submit
                 </button>
                 <Form.Check
+                    style={{width:250}}
+                    className='mx-4'
+                    inline
+                    type="switch"
+                    id="custom-switch"
+                    label="Submit reactions as drafts"
+                    onClick={() => {setSubmitToDrafts(!submitToDrafts)}} >
+                </Form.Check>
+                <Form.Check
                     style={{width:200}}
                     className='mx-4'
                     inline
@@ -309,7 +319,7 @@ const SubmitCSV = () => {
                 bodyText = {postSuccess[1]}
                 show={postSuccess[0] === true ? true : false} 
                 onHide={() => {
-                    if (user.is_admin) {
+                    if (!submitToDrafts) {
                         history.push("/my-reactions")
                         window.location.reload()
                     } else {

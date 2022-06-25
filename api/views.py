@@ -6,6 +6,7 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import BasePermission
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -14,6 +15,7 @@ from django_filters import FilterSet, NumberFilter, BooleanFilter, CharFilter
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import F
+from sqlalchemy import true
 
 from base.models import *
 from .serializers import *
@@ -239,16 +241,30 @@ class UserReactionsView(generics.ListAPIView):
     def get_queryset(self):
         return Reaction.objects.filter(user=self.request.user)
 
+class PostPermission(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view, obj)
+    def has_permission(self, request, view):
+        if request.user.is_superuser:
+            return True
+        if request.method == 'GET':
+            return True
+        elif request.method == 'POST':
+            return True
+        else:
+            return request.user.is_staff
 
 class ReactionDraftView(viewsets.ModelViewSet):
+    permission_classes = [PostPermission]
     serializer_class = ReactionDraftSerializer
     pagination_class = ReactionTableViewPagination
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
     def get_queryset(self):
         drafts = ReactionDraft.objects.all()
         return drafts
-    
+
 
 """
 functions needed:

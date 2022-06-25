@@ -8,9 +8,10 @@ const ContributePage = () => {
     <>
         <Container className='mb-5 mt-4'>
             <h4 className='mt-3 mb-3'> Contribute to the CGEM database </h4>
-            <Row className='mb-3'> <p>To submit new reactions, please download 
+            <Row className='mb-3'> <p>To submit new reactions, download 
                 and edit the relevant template files so that your entries are in a usable format.
-                If your data does not include flexizymes or synthetases, you can use either format. 
+                If your data does not include flexizymes or synthetases, you can use either file. 
+                Percentages should be expressed as decimal values between 0 and 1.
                 For multiple mutations (or organisms) corresponding to the same synthetase, 
                 separate each mutation with a semicolon.
                 </p>
@@ -18,6 +19,10 @@ const ContributePage = () => {
                 Confirm that every row of your submission has the following required fields: 
                 <span style={{fontWeight: 'bold'}}> DOI, monomer SMILES, tRNA name, 
                 tRNA sequence, ribosome (name or WT)</span>.
+                </p>
+                <p>
+                  If you are not authorized to submit data directly to the database reactions, 
+                  please submit your reaction data as drafts instead.
                 </p>
             </Row>
             <SubmitCSV />

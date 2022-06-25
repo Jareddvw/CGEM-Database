@@ -11,6 +11,7 @@ import EditModal from '../components/rxn_page_components/modals/EditModal'
 import DeleteModal from '../components/rxn_page_components/modals/DeleteModal'
 import UnauthModal from '../components/rxn_page_components/modals/UnauthModal'
 import AuthContext from '../context/AuthContext'
+import ApproveModal from '../components/rxn_page_components/modals/ApproveModal'
 
 const DraftPage = () => {
     
@@ -28,7 +29,7 @@ const DraftPage = () => {
     let [status, setStatus] = useState(0)
     let [showUnauthorizedModal, setShowUnauthorizedModal] = useState(false)
     let [showDeleteModal, setShowDeleteModal] = useState(false)
-    let [showEditModal, setShowEditModal] = useState(false)
+    let [showApproveModal, setShowApproveModal] = useState(false)
 
     let {authTokens, user} = useContext(AuthContext)
 
@@ -83,7 +84,7 @@ const DraftPage = () => {
                     style={{width:200}} 
                     onClick={() => {
                         if (user) {
-                            handleApproval()
+                            setShowApproveModal(true)
                         } else {
                             setShowUnauthorizedModal(true)
                         }
@@ -105,10 +106,11 @@ const DraftPage = () => {
                 </button>
             </div>
         </Row>
-        <EditModal 
-            show={showEditModal} 
-            onHide={() => setShowEditModal(false)}
-            reactionId = {id} 
+        <ApproveModal 
+            show={showApproveModal} 
+            onHide={() => setShowApproveModal(false)}
+            reaction = {reaction}
+            reactionId = {id}
             authTokens = {authTokens}
             initialReactionData = {reaction} />
         <DeleteModal 
