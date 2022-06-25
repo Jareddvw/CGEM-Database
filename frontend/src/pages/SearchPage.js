@@ -20,22 +20,26 @@ const SearchPage = () => {
   return (
       <>
         <Container>
-            <Row className = 'mt-5 mb-3'>
-                <h5 style={{textDecoration: 'none', marginTop: '10vw'}} className='text-center'>
-                    Find a Reaction
-                </h5>
-            </Row>
-            <Row className='align-items-center mx-auto' style={{width:'65vw'}}>
-                <Form className = 'mt-3'>
-                        <Form.Control size="lg" type="text" placeholder="Search by Monomer, Flexizyme, Synthetase, tRNA, SMILES..." 
-                            onChange={event => {setSearchTerm(event.target.value)}} onSubmit={(e) => e.preventDefault()} 
-                            onKeyPress={handleEnterKeyPressed} />  
-                </Form>
-            </Row>
-            <Row className = "mx-auto" lg={3} sm={1} style={{width: '50vw', marginTop:'4vw'}}> 
-                <Col> <Link to="/advanced" className="gray-link mt-3"> Advanced Search </Link> </Col>
-                <Col> <Link to="/draw-structures" className="gray-link mt-3"> Substructure Search </Link> </Col>
-                <Col> <Link to="/all-reactions" className="gray-link mt-3"> Browse All Reactions </Link> </Col>
+            <Row className="justify-content-center">
+                <div className="searchBox">
+                    <Row className = 'mt-5 mb-3'>
+                        <h5 className='text-center'>
+                            Find a Reaction
+                        </h5>
+                    </Row>
+                    <Row className='align-items-center mx-auto' style={{width:'90%'}}>
+                        <Form className = 'mt-3'>
+                                <Form.Control size="md" type="text" placeholder="Search by Monomer, Flexizyme, Synthetase, tRNA, SMILES..." 
+                                    onChange={event => {setSearchTerm(event.target.value)}} onSubmit={(e) => e.preventDefault()} 
+                                    onKeyPress={handleEnterKeyPressed} />  
+                        </Form>
+                    </Row>
+                    <Row className = "mb-5 justify-content-center mx-auto" lg={3} md={1} sm={1} xs={1} style={{width: '50vw', marginTop:'2vw'}}> 
+                        <Col className="mt-3 mx-4" style={{width:'auto'}}> <Link to="/advanced" className="gray-link mt-3"> Advanced Search </Link> </Col>
+                        <Col className="mt-3 mx-4" style={{width:'auto'}}> <Link to="/draw-structures" className="gray-link mt-3"> Substructure Search </Link> </Col>
+                        <Col className="mt-3 mx-4" style={{width:'auto'}}> <Link to="/all-reactions" className="gray-link mt-3"> Browse All Reactions </Link> </Col>
+                    </Row>
+                </div>
             </Row>
         </Container>
       </>

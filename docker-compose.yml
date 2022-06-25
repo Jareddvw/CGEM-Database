@@ -1,6 +1,5 @@
 version: '3.8'
 
-
 # after running "docker-compose up", add server in pgadmin 
 # using ip address 192.168.0.2 and username/password. 
 
@@ -18,7 +17,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      app_net: 
+      app_net:
         ipv4_address: 192.168.0.2
 
   pgadmin:

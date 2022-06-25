@@ -31,17 +31,17 @@ if DEBUG:
 else:
     ALLOWED_HOSTS = ["db.gem-net.net", "localhost"]
 
-    SESSION_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = True
 
-    CSRF_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = True
 
-    SECURE_SSL_REDIRECT = False
+    SECURE_SSL_REDIRECT = True
 
-    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_SECONDS = 60
 
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
-    SECURE_HSTS_PRELOAD = False
+    SECURE_HSTS_PRELOAD = True
 
 
 # Application definition

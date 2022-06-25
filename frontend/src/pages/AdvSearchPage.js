@@ -103,21 +103,20 @@ const handleCSVDownload = async () => {
     let response = await fetch(`/api/single/?{ordering}` + 
                                 filters +
                                 search)
-    
 }
 
   return (
     <>
         <Container onKeyPress={handleEnterKeyPressed}>
-            <Row as="h4" className='mt-4 mb-3'>Advanced Reaction Search</Row>
-            <Row className='mt-3'> This will return all reactions that meet the selected criteria 
+            <Row as="h4" className='mt-4 mb-2'>Advanced Reaction Search</Row>
+            <Row className='mt-3 mb-2'> This will return all reactions that meet the selected criteria 
             (every additional filter will be joined with an AND statement). Filters are not case sensitive. 
             To search for multiple mutations, write them in the "Other search terms" box. </Row>
             <Row></Row>
             {/* {Object.keys(queries).map((key) => 
                                     key + "=" + queries[key] + "").join("")} */}
 
-            <div className="wrapper mt-1">
+            <div className="wrapper mt-2">
             <div className='insidewrapper'>
                 {filterIndices.map(index => 
                     <Row className='align-items-center search-filter justify-content-between' style={{width:'100%', marginLeft:0}} key={index}>

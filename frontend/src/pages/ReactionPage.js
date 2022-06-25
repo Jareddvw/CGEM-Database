@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { useMatch } from 'react-router-dom'
-import { Container, Table, Row, Card } from 'react-bootstrap'
+import { Container, Table, Row, Card, Spinner } from 'react-bootstrap'
 import MonomerDrawing from '../components/rxn_page_components/MonomerDrawing'
 import FlexOrSynthInfo from '../components/rxn_page_components/FlexOrSynthInfo'
 import RibosomeInfo from '../components/rxn_page_components/RibosomeInfo'
@@ -74,6 +74,7 @@ const ReactionPage = () => {
             <div style={{width:450, display:'flex', justifyContent:'between'}} >
                 <button 
                     className="btn btn-outline-primary mx-1" 
+                    disabled={user === null}
                     style={{width:200}} 
                     onClick={() => {
                         if (user) {
@@ -87,6 +88,7 @@ const ReactionPage = () => {
                 <button 
                     className="btn btn-outline-danger mx-1" 
                     style={{width:200}} 
+                    disabled={user === null}
                     onClick={() => {
                         if (user) {
                             setShowDeleteModal(true)
@@ -154,7 +156,7 @@ const ReactionPage = () => {
        return <div className = "mt-5 text-center"> 
             <strong> 
                 {(status >= 404) ? "Wrong page! Nothing to see here..." :
-                    "Waiting for reaction information to load..."}
+                    (<div className="d-flex justify-content-center align-items-center">Waiting for reaction information to load...<Spinner animation="border" className="mx-2"/></div>)}
             </strong> 
         </div>
    }

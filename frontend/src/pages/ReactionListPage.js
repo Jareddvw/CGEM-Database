@@ -20,12 +20,12 @@ const ReactionListPage = () => {
     let getReactions = async () => {
         setLoading(true)
         let response = await fetch(`/api/?limit=${limit}&ordering=${ordering}`)
+        setLoading(false)
         let data = await response.json()
         setReactions(data.results)
         const totalCount = data.count
         setPageCount(Math.ceil(totalCount / limit))
         setResults(data)
-        setLoading(false)
     }
 
     useEffect(() => {

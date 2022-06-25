@@ -155,18 +155,19 @@ const DrawSubstructPage = () => {
         <>
             <Container>
                 <Row as="h4" className='mt-4 mb-3'>Substructure Search</Row>
-                <Row className='mt-3'> Draw the substructure you want to search for below. </Row>
+                <Row className='mt-2 mb-1'> Draw the substructure you want to search for below. </Row>
 
-                <Row style={{width:'75vw'}} className="justify-content-center"> 
-                    <Col
+                <Row className="justify-content-start" style={{width:'100%'}}> 
+                    <div
                         id="composer"
                         className="mt-4"
                         ref = {comp}
+                        style={{width:'90%'}}
                         >
-                    </Col>
+                    </div>
                 </Row> 
                 
-                <Row className='mx-3 mt-3 mb-3 align-items-center justify-content-center'> 
+                <Row className='mx-3 mb-3 align-items-center justify-content-start'> 
                     <button 
                         className='btn btn-outline-primary mb-3 mt-3 w-25 mx-2' 
                         onClick={generateSMILES} >

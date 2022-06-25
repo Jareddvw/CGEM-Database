@@ -6,12 +6,10 @@ const AuthContext = createContext();
 
 export default AuthContext;
 
-// for some reason authTokens is getting set to NULL when it should not be.
-
 export const AuthProvider = ({ children }) => {
 
     let [loading, setLoading] = useState(true);
-    let [error, setError] = useState(false)
+    let [error, setError] = useState(false);
 
     const getAuthTokens = () => {
         if (localStorage.getItem('authTokens')) {
@@ -33,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
     let [authTokens, setAuthTokens] = useState(() => getAuthTokens());
     let [user, setUser] = useState(() => getUser());
-    console.log(user)
+    console.log("user: " + user)
 
     const history = createBrowserHistory()
 

@@ -28,7 +28,7 @@ const FlexOrSynthInfo = ({synthetase, flexizyme, readout}) => {
           )
     } else if (flexizyme != null) {
         return (
-            <Card id="flexsynth" style={{ width: 400 }} className="mx-3">
+            <Card id="flexsynth" style={{ width: 400 }} className="px-0">
                 <Card.Header> <strong>Flexizyme</strong></Card.Header>
                 <Card.Body>
                     <Card.Subtitle className="mb-2">name: {flexizyme.flex_name} </Card.Subtitle>
