@@ -27,7 +27,7 @@ SECRET_KEY = DJANGO_CGEMDB_SECRETKEY
 DEBUG = SECRET_KEY == "a"
 
 if DEBUG:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ["db.gem-net.net", "localhost"]
 
 else:
     ALLOWED_HOSTS = ["db.gem-net.net", "localhost"]
