@@ -62,9 +62,9 @@
 
 .searchBox {
     margin: 1em;
-    margin-top: 20vh;
+    margin-top: 20vh !important;
     margin-bottom:20vh;
-    width:75%;
+    width:85% !important;
     position: relative;
     border: 2px solid transparent;
     border-radius: 16px;
@@ -101,6 +101,16 @@
     /* background-color: #f6f6f6; */
     background-color: rgb(243, 243, 243);
     font-family: inherit;
+}
+
+.dropdown-menu{
+    background-color: rgb(243, 243, 243) !important;
+    margin-top:5px !important;
+    border: 1px solid rgb(237, 237, 237) !important;
+}
+
+.dropdown-item:hover {
+    background-color: rgb(210, 231, 255) !important;
 }
 
 .reaction-list {

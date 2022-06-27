@@ -15,12 +15,17 @@ const ReactionDraftsPage = () => {
 
     let getReactions = async () => {
         setLoading(true)
-        let response = await fetch(`/api/drafts/?limit=${limit}`)
-        let data = await response.json()
+        let data;
         let truncRxns = []
-        for (const rxnDraft of data.results) {
-            rxnDraft.truncatedReactionDraft.id = rxnDraft.id
-            truncRxns.push(rxnDraft.truncatedReactionDraft)
+        try {
+            let response = await fetch(`/api/drafts/?limit=${limit}`)
+            data = await response.json()
+            for (const rxnDraft of data.results) {
+                rxnDraft.truncatedReactionDraft.id = rxnDraft.id
+                truncRxns.push(rxnDraft.truncatedReactionDraft)
+            }
+        } catch {
+            setLoading(false)
         }
         console.log(truncRxns)
         setTruncatedReactions(truncRxns)
