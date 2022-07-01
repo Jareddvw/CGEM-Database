@@ -1,6 +1,6 @@
-// import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
-import './custom.scss'
+// import './custom.scss'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 import Header from './components/Header'

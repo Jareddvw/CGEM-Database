@@ -1,5 +1,10 @@
 
 
+:root {
+    --navbar-light-active-color: #006da0;
+    --navbar-light-hover-color: #00699a;
+}
+
 /* overriding default react-bootstrap font */
 .App {
     font-family: 'Roboto', sans-serif !important;

@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.e4332460.css",
+    "main.css": "/static/css/main.55b1e8d9.css",
     "main.js": "/static/js/main.c4a59674.js",
     "static/media/cgem_logo.png": "/static/media/cgem_logo.c87ba545b71379740aba.png",
     "index.html": "/index.html",
-    "main.e4332460.css.map": "/static/css/main.e4332460.css.map",
+    "main.55b1e8d9.css.map": "/static/css/main.55b1e8d9.css.map",
     "main.c4a59674.js.map": "/static/js/main.c4a59674.js.map"
   },
   "entrypoints": [
-    "static/css/main.e4332460.css",
+    "static/css/main.55b1e8d9.css",
     "static/js/main.c4a59674.js"
   ]
 }
