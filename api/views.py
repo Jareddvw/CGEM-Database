@@ -252,7 +252,7 @@ class PostPermission(BasePermission):
         elif request.method == 'POST':
             return True
         else:
-            return request.user.is_staff
+            return super().has_permission(request, view)
 
 class ReactionDraftView(viewsets.ModelViewSet):
     permission_classes = [PostPermission]

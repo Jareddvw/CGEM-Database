@@ -41,7 +41,7 @@ const ApproveModal = ({ show, reactionId, onHide, authTokens, reaction }) => {
             history.push("/reaction-drafts")
             window.location.reload()
         } else {
-            setMessage("something went wrong with deleting this draft.")
+            setMessage("Something went wrong with deleting this draft. However, the reaction was added successfully.")
         }
     }
 
