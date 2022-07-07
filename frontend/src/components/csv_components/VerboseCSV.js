@@ -5,6 +5,7 @@ import { CSVLink } from "react-csv"
 const VerboseCSV = ( { reactions, name } ) => {
 
     const headers = [
+      {label: "id", key: "id"},
       {label: "DOI", key: "DOI"},
       {label: "Flexizyme name", key: "flexizyme.flex_name"},
       {label: "Flexizyme sequence", key:"flexizyme.flex_sequence"},
@@ -38,25 +39,28 @@ const VerboseCSV = ( { reactions, name } ) => {
     let data = []
     // console.log(reactions)
 
-    // keep getting error that "_reaction$synthetase$.map is not a function"
     for (const reaction of reactions) {
-      if (!reaction.synthetase) {
-        data.push(reaction)
-        continue
+      if (reaction.synthetase) {
+        let muts = ""
+        if (reaction.synthetase.mutations) {
+          for (const mut of reaction?.synthetase?.mutations) {
+            muts += mut?.mutation_name + "; "
+        } }
+        reaction.synthetase["muts"] = muts
+        let orgs = ""
+        for (const org of reaction.synthetase.organisms) {
+          orgs += org.organism_name + "; "
+        }
+        reaction.synthetase["orgs"] = orgs
       }
 
-      let muts = ""
-      if (reaction.synthetase.mutations) {
-        for (const mut of reaction?.synthetase?.mutations) {
-          muts += mut?.mutation_name + "; "
-      } }
-      reaction.synthetase["muts"] = muts
-
-      let orgs = ""
-      for (const org of reaction.synthetase.organisms) {
-        orgs += org.organism_name + "; "
+      let dois = ""
+      console.log(reaction.references)
+      for (const reference of reaction.references) {
+        dois += reference.DOI + "; "
       }
-      reaction.synthetase["orgs"] = orgs
+      console.log(dois)
+      reaction["DOI"] = dois
 
       data.push(reaction)
     }

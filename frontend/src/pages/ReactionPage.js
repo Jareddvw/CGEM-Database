@@ -43,7 +43,7 @@ const ReactionPage = () => {
     }, [reaction])
 
     useEffect(() => {
-        if (document.getElementById('figRow')) {
+        if (document.getElementById('figRow') && loading===false) {
             const h = document.getElementById('figRow').clientHeight;
             setHeight(h - 50)
         }
@@ -67,38 +67,10 @@ const ReactionPage = () => {
     if (!loading) {
    return (
     <Container className = "mb-3">
-        <Row className="mt-4 mb-4 align-items-center justify-content-between"> 
+        <Row className="mt-4 mb-4 align-items-center justify-content-start"> 
             <h5 style={{color: "maroon", width:300}}> 
                 Reaction CGEM ID: {reaction?.id} 
             </h5>
-            <div style={{width:450, display:'flex', justifyContent:'between'}} >
-                <button 
-                    className="btn btn-outline-primary mx-1" 
-                    disabled={user === null}
-                    style={{width:200}} 
-                    onClick={() => {
-                        if (user) {
-                            setShowEditModal(true)
-                        } else {
-                            setShowUnauthorizedModal(true)
-                        }
-                    }} >
-                        Edit this reaction
-                </button>
-                <button 
-                    className="btn btn-outline-danger mx-1" 
-                    style={{width:200}} 
-                    disabled={user === null}
-                    onClick={() => {
-                        if (user) {
-                            setShowDeleteModal(true)
-                        } else {
-                            setShowUnauthorizedModal(true)
-                        }
-                    }} >
-                        Delete this reaction
-                </button>
-            </div>
         </Row>
         <EditModal 
             show={showEditModal} 
@@ -150,6 +122,34 @@ const ReactionPage = () => {
         <div>
             <References references={reaction?.references} />
         </div>
+        <div style={{display:'flex', justifyContent:'flex-end'}} >
+                <button 
+                    className="btn btn-outline-primary mx-1" 
+                    disabled={user === null}
+                    style={{width:200}} 
+                    onClick={() => {
+                        if (user) {
+                            setShowEditModal(true)
+                        } else {
+                            setShowUnauthorizedModal(true)
+                        }
+                    }} >
+                        Edit this reaction
+                </button>
+                <button 
+                    className="btn btn-outline-danger mx-1" 
+                    style={{width:200}} 
+                    disabled={user === null}
+                    onClick={() => {
+                        if (user) {
+                            setShowDeleteModal(true)
+                        } else {
+                            setShowUnauthorizedModal(true)
+                        }
+                    }} >
+                        Delete this reaction
+                </button>
+            </div>
     </Container>
   );
    } else {

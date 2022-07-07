@@ -248,7 +248,7 @@ const handleCSVDownload = async () => {
                             {<VerboseCSV 
                                 reactions={reactions}
                                 name="cgemdb_adv_search_results"
-                                onClick={handleCSVDownload}
+                                // onClick={handleCSVDownload}
                             />}
                         </Row>
                     </Container>

@@ -196,8 +196,8 @@ REST_FRAMEWORK = {
     )
 }
 
-if DEBUG:
-    REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ['rest_framework.permissions.AllowAny',]
+# if DEBUG:
+#     REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ['rest_framework.permissions.AllowAny',]
 
 # token authentication settings
 
