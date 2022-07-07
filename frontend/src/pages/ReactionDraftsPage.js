@@ -55,9 +55,9 @@ const ReactionDraftsPage = () => {
         let data = await response.json()
         let truncRxns = []
         for (const rxnDraft of data.results) {
+            rxnDraft.truncatedReactionDraft.id = rxnDraft.id
             truncRxns.push(rxnDraft.truncatedReactionDraft)
         }
-        setTruncatedReactions(truncRxns)
         return truncRxns
     }
 
