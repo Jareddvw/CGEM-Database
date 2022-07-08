@@ -6,7 +6,7 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, DjangoModelPermissionsOrAnonReadOnly
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -241,11 +241,11 @@ class UserReactionsView(generics.ListAPIView):
     def get_queryset(self):
         return Reaction.objects.filter(user=self.request.user)
 
-class PostPermission(BasePermission):
+class PostPermission(DjangoModelPermissionsOrAnonReadOnly):
     def has_object_permission(self, request, view, obj):
         return super().has_object_permission(request, view, obj)
     def has_permission(self, request, view):
-        if request.user.is_superuser:
+        if request.user.is_superuser or request.user.is_staff:
             return True
         if request.method == 'GET':
             return True

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Modal, Form, Spinner } from 'react-bootstrap'
 import { createBrowserHistory } from 'history'
 
-const BulkApproveModal = ({ show, onHide, authTokens, totalCount }) => {
+const BulkDeleteModal = ({ show, onHide, authTokens, totalCount }) => {
 
     const history = createBrowserHistory()
     let [message, setMessage] = useState("")
@@ -61,22 +61,6 @@ const BulkApproveModal = ({ show, onHide, authTokens, totalCount }) => {
                 continue;
             }
             let reactionId = reaction.id
-            let response1 = await fetch(`/api/single/`, {
-                        method: 'post',
-                        headers: {
-                            'Content-Type':'application/json',
-                            'Authorization':'Bearer ' + String(authTokens.access)
-                        },
-                        body: JSON.stringify(reaction)
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    })
-            if (!response1.ok) {
-                setMessage(`Successfully approved ${count} drafts. Error approving draft ${reactionId}. You may not have the proper permissions, or there was a format error. Response text: ${await response1.text()}`)
-                setLoading(false)
-                return;
-            }
 
             let response2 = await fetch(`/api/drafts/${reactionId}`, {
                 method: 'delete',
@@ -92,13 +76,17 @@ const BulkApproveModal = ({ show, onHide, authTokens, totalCount }) => {
             if (response2.ok) {
                 count += 1
             } else {
-                setMessage(`Successfully approved ${count} drafts. Something went wrong with deleting draft ${reactionId}. However, the draft was added successfully to reactions. You may need to delete the draft manually.`)
+                setMessage(`Successfully deleted ${count} drafts. 
+                    Something went wrong with deleting draft ${reactionId} 
+                    and any subsequent drafts. 
+                    You may not have the proper permissions.`)
                 setLoading(false)
+                return;
             }
         }
         if (count > 0) {
             setLoading(false)
-            alert(`successfully approved ${count} drafts by ${userEmail}!`)
+            alert(`successfully deleted ${count} drafts by ${userEmail}!`)
             window.location.reload()
         } else {
             setLoading(false)
@@ -120,13 +108,13 @@ const BulkApproveModal = ({ show, onHide, authTokens, totalCount }) => {
             onHide={onHide} >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Approve multiple reaction drafts
+                    Delete multiple reaction drafts
                 </Modal.Title>
             </Modal.Header>
           <Modal.Body>
-            <h5>Approve drafts by user email</h5>
+            <h5>Delete drafts by user email</h5>
             <p>
-              Make sure you have the proper permissions (deleting drafts and adding reactions) before submitting.
+              Make sure you have the proper permissions (deleting drafts) before submitting.
             </p>
             <Form.Group className="mb-3" controlId="formBasicEmail" onChange={e=>setUserEmail(e.target.value)}>
                 <Form.Control type="email" placeholder="Enter email" onChange={e=>{setUserEmail(e.target.value); setMessage("")}}/>
@@ -135,17 +123,17 @@ const BulkApproveModal = ({ show, onHide, authTokens, totalCount }) => {
             {message !== "" ? <p style={{color:'maroon'}}>{message}</p> : <></>}
           </Modal.Body>
           <Modal.Footer>
-            <button className='btn btn-outline-danger' 
+            <button className='btn btn-outline-secondary' 
                     onClick={onHide}>
                 Cancel
             </button>
-            <button className='btn btn-outline-success' 
+            <button className='btn btn-outline-danger' 
                     onClick={handleSubmit}>
-                Approve drafts
+                DELETE all drafts by this user
             </button>
           </Modal.Footer>
     </Modal>
     )
 }
 
-export default BulkApproveModal
+export default BulkDeleteModal

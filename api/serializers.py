@@ -361,10 +361,7 @@ class ReactionSerializer(serializers.ModelSerializer):
     
 
 class ReactionDraftSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ReactionDraft
-        fields = '__all__'
-    
+
     user = serializers.SerializerMethodField('get_username')
     
     def get_username(self, reaction):
@@ -373,3 +370,7 @@ class ReactionDraftSerializer(serializers.ModelSerializer):
             return email
         else:
             return None
+            
+    class Meta:
+        model = ReactionDraft
+        fields = '__all__'

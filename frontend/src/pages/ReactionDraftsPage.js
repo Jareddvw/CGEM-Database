@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState, useEffect } from 'react'
 import { Container, Row, Col, Form, Spinner } from 'react-bootstrap'
 import ReactPaginate from 'react-paginate'
+import BulkApproveModal from '../components/BulkApproveModal'
+import BulkDeleteModal from '../components/BulkDeleteModal'
 import ReactionOrStructureList from '../components/list_components/ReactionOrStructureList'
+import AuthContext from '../context/AuthContext'
 
 const ReactionDraftsPage = () => {
   
@@ -13,6 +16,12 @@ const ReactionDraftsPage = () => {
     let [limit, setLimit] = useState(12)
     let [loading, setLoading] = useState(true)
 
+    let [showUnauthorizedModal, setShowUnauthorizedModal] = useState(false)
+    let [showDeleteModal, setShowDeleteModal] = useState(false)
+    let [showApproveModal, setShowApproveModal] = useState(false)
+
+    let {authTokens, user} = useContext(AuthContext)
+
     let getReactions = async () => {
         setLoading(true)
         let data;
@@ -20,6 +29,7 @@ const ReactionDraftsPage = () => {
         try {
             let response = await fetch(`/api/drafts/?limit=${limit}`)
             data = await response.json()
+            console.log(data)
             for (const rxnDraft of data.results) {
                 rxnDraft.truncatedReactionDraft.id = rxnDraft.id
                 truncRxns.push(rxnDraft.truncatedReactionDraft)
@@ -121,6 +131,41 @@ const ReactionDraftsPage = () => {
                 breakLinkClassName={"page-link"}
                 activeClassName={"active"}
             />
+
+            {user !== null ?
+                (<Row style={{justifyContent:'end', marginTop:'20px'}}>
+                <button 
+                    className="btn btn-outline-secondary mx-1" 
+                    disabled={user === null}
+                    style={{width:200}} 
+                    onClick={() => {
+                        setShowApproveModal(true)
+                    }} >
+                        Approve drafts
+                </button>
+                <button 
+                    className="btn btn-outline-secondary mx-1" 
+                    disabled={user === null}
+                    style={{width:200}} 
+                    onClick={() => {
+                        setShowDeleteModal(true)
+                    }} >
+                        Delete drafts
+                </button>
+                <BulkApproveModal 
+                    show={showApproveModal} 
+                    onHide={() => setShowApproveModal(false)}
+                    authTokens = {authTokens}
+                    totalCount = {results?.count}
+                />
+                <BulkDeleteModal 
+                    show={showDeleteModal} 
+                    onHide={() => setShowDeleteModal(false)}
+                    authTokens = {authTokens}
+                    totalCount = {results?.count}
+                />
+                </Row>) : 
+            <></>}
         </Container>
     </>
   );

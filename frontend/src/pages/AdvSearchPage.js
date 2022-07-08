@@ -233,7 +233,7 @@ const getAllCSVdata = async (pagesCount, limit) => {
                         <Row className="mx-2 mt-4 mb-5" style={{justifyContent:'space-between', alignItems:'center'}}>
                             {
                                 csvData.length === 0 && csvDataLoading === false ?
-                                <button className="btn btn-outline-secondary" style={{width:'290px'}} 
+                                <button className="btn btn-outline-success" style={{width:'290px'}} 
                                     onClick={() => getAllCSVdata(pageCount * limit, limit)}>
                                     <span style={{marginRight:"10px"}}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-download" viewBox="0 0 16 16">

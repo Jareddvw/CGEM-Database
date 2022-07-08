@@ -42,13 +42,13 @@ const DeleteModal = ({ show, reactionId, onHide, authTokens, draft }) => {
             onHide={onHide} >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Delete this reaction
+                    Delete this reaction {draft ? "draft " : ""}
                 </Modal.Title>
             </Modal.Header>
           <Modal.Body>
-            <h5>Are you sure you want to delete this entry from the database?</h5>
+            <h5>Are you sure you want to delete this {draft ? "draft " : "entry "}from the database?</h5>
             <p>
-              This reaction and its associated assays will be deleted.
+              This reaction {draft ? "draft " : ""}and its associated assays will be deleted.
             </p>
             {message !== "" ? <p style={{color:'maroon'}}>{message}</p> : <></>}
           </Modal.Body>

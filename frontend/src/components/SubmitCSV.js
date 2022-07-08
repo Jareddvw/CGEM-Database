@@ -296,7 +296,7 @@ const SubmitCSV = () => {
                     type="switch"
                     id="custom-switch"
                     label="Submit reactions as drafts"
-                    onClick={() => {setSubmitToDrafts(!submitToDrafts)}} >
+                    onClick={() => {setSubmitToDrafts(!submitToDrafts); setResultLength(0); setPostError([false, 'message'])}} >
                 </Form.Check>
                 {(currRow !== 0 && resultLength !== 0) ? 
                     <ProgressBar className="mt-3" now={currRow} role="status" striped variant="success" max={resultLength} min={0} /> : 
@@ -316,7 +316,7 @@ const SubmitCSV = () => {
                 bodyText = {postError[1]}
                 show={postError[0] === true ? true : false} 
                 onHide={() => {
-                    resetFileInput();
+                    // resetFileInput();
                     setPostError([false, 'message'])
                 }} 
             />
