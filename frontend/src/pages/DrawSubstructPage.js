@@ -4,6 +4,7 @@ import { Container, Row, Col, Form, Spinner } from 'react-bootstrap'
 import StructureList from '../components/list_components/StructureList'
 import ReactionList from '../components/list_components/ReactionList'
 import ReactPaginate from 'react-paginate'
+import VerboseCSV from '../components/csv_components/VerboseCSV'
 
 
 const DrawSubstructPage = () => {
@@ -18,6 +19,9 @@ const DrawSubstructPage = () => {
     let [pageCount, setPageCount] = useState(1)
     let [limit, setLimit] = useState(12)
     let [loading, setLoading] = useState(false)
+
+    let [csvDataLoading, setCSVDataLoading] = useState(false)
+    let [csvData, setCSVData] = useState([])
 
     let queryString = ''
 
@@ -39,21 +43,29 @@ const DrawSubstructPage = () => {
         if (smi.includes(".")) {
             smi = "Error. More than one structure drawn."
             setReactions([])
+        } else {
+            
         }
         setSMILES(smi)
     }
 
     useEffect(() => {
-        if (SMILES !== null) {
+        if (SMILES !== null && SMILES !== "Error. More than one structure drawn.") {
             getReactions()
         }
-    }, [SMILES, limit])
+    }, [limit])
+
+    useEffect(() => {
+        if (SMILES !== null && SMILES !== "Error. More than one structure drawn.") {
+            getReactions(true)
+        }
+    }, [SMILES])
 
     useEffect(() => {
         makeComposer()
     }, [])
 
-    let getReactions = async () => {
+    let getReactions = async (resetCSVData = false) => {
         setLoading(true)
         if (SMILES === "Error. More than one structure drawn.") {
             setLoading(false)
@@ -80,6 +92,11 @@ const DrawSubstructPage = () => {
             setReactions(data.results)
             const totalCount = data.count
             setPageCount(Math.ceil(totalCount / limit))
+
+            // if search has good results, get all the data to put in CSV.
+            if (resetCSVData === true) {
+                getAllCSVdata(totalCount)
+            }
         }
         setLoading(false)
     }
@@ -107,6 +124,24 @@ const DrawSubstructPage = () => {
         let response = await fetch(`/api/?limit=${limit}&offset=${offset}&monomer__monomer_smiles__substruct=${queryString}`)
         let data = await response.json()
         return data.results
+    }
+
+    const getAllCSVdata = async (totalCount) => {
+        setCSVDataLoading(true)
+        if (SMILES.length > 0) {
+            queryString = SMILES
+            queryString = queryString.split('=').join('%3D')
+            queryString = queryString.split('#').join('%23')
+            queryString = queryString.split('(').join('%28')
+            queryString = queryString.split(')').join('%29')
+            queryString = queryString.split('+').join('%2B')
+            queryString = queryString.split('@').join('%40')
+        }
+        let response = await fetch(`/api/single?limit=${totalCount}&monomer__monomer_smiles__substruct=${queryString}`)
+                        .catch((err) => console.log(err))
+        let data = await response.json()
+        setCSVDataLoading(false)
+        setCSVData(data.results)
     }
 
     const returnStatement = () => {
@@ -143,6 +178,13 @@ const DrawSubstructPage = () => {
                         breakLinkClassName={"page-link"}
                         activeClassName={"active"}
                     />
+                    <Row>
+                        {<VerboseCSV 
+                            reactions={csvData}
+                            name="cgemdb_adv_search_results"
+                            loading = {csvDataLoading}
+                        />}
+                    </Row>
                     </>
                 )
             } else {

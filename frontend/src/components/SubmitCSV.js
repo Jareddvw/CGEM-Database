@@ -130,14 +130,27 @@ const SubmitCSV = () => {
         for (const entry of parsedData) {
             try {
             // checking that all required columns are present in the parsed data.
-            if (!("DOI (required)" in entry &&
-                "Monomer SMILES (required)" in entry && 
-                "tRNA name (required)" in entry &&
-                "tRNA sequence (required)" in entry && 
-                "Ribosome name (required)" in entry)) {
-                    setFormatError([true, 'CSV is missing a required column.'])
+            if (!("DOI (required)" in entry)) {
+                setFormatError([true, 'CSV is missing column: DOI (required)'])
                 return;
             }
+            if (!("Monomer SMILES (required)" in entry)) {
+                setFormatError([true, 'CSV is missing column: Monomer SMILES (required)'])
+                return;
+            }
+            if (!("tRNA name (required)" in entry)) {
+                setFormatError([true, 'CSV is missing column: tRNA name (required)'])
+                return;
+            }
+            if (!("tRNA sequence (required)" in entry)) {
+                setFormatError([true, 'CSV is missing column: tRNA sequence (required)'])
+                return;
+            }
+            if (!("Ribosome name (required)" in entry)) {
+                setFormatError([true, 'CSV is missing column: Ribosome name (required)'])
+                return;
+            }
+            
             if ("Flexizyme name" in entry && "Synthetase common name" in entry) {
                 setFormatError([true, 'Please submit separate files for synthetase and flexizyme reactions.'])
                 return;
@@ -250,7 +263,9 @@ const SubmitCSV = () => {
     return (
         <>
             <div className="m-3 mb-4 mt-3 align-items-center">
-                <label className="mx-3">Choose file to upload:</label>
+                <label className="mx-3">
+                    Choose file to upload:
+                </label>
                 <input
                     ref={inputRef}
                     onChange={handleFileDetails}
@@ -282,15 +297,6 @@ const SubmitCSV = () => {
                     id="custom-switch"
                     label="Submit reactions as drafts"
                     onClick={() => {setSubmitToDrafts(!submitToDrafts)}} >
-                </Form.Check>
-                <Form.Check
-                    style={{width:200}}
-                    className='mx-4'
-                    inline
-                    type="switch"
-                    id="custom-switch"
-                    label="View structures"
-                    onClick={() => {setCardView(!cardView)}} >
                 </Form.Check>
                 {(currRow !== 0 && resultLength !== 0) ? 
                     <ProgressBar className="mt-3" now={currRow} role="status" striped variant="success" max={resultLength} min={0} /> : 
@@ -332,11 +338,31 @@ const SubmitCSV = () => {
             {/* {displayedData !== [] ? (<StructureList reactions={(displayedData)} nolink={true} />) : (<></>)} */}
             {displayedData.length !== 0 ? 
                 (cardView === true) ?
-                    (<StructureList reactions={(displayedData)} 
-                                    verbose={false} nolink={true} />) :
-                    (<ReactionList
+                    (<><Form.Check
+                        style={{width:200}}
+                        className='mx-4 mb-3'
+                        inline
+                        type="switch"
+                        id="custom-switch"
+                        label="View structures"
+                        onClick={() => {setCardView(!cardView)}} >
+                    </Form.Check>
+                    <StructureList reactions={(displayedData)} 
+                                    verbose={false} nolink={true} />
+                    </>) :
+                    (<><Form.Check
+                        style={{width:200}}
+                        className='mx-4 mb-3'
+                        inline
+                        type="switch"
+                        id="custom-switch"
+                        label="View structures"
+                        onClick={() => {setCardView(!cardView)}} >
+                    </Form.Check>
+                    <ReactionList
                         reactions={(displayedData)} 
-                        verbose={false} nolink={true} />) : 
+                        verbose={false} nolink={true} />
+                    </>) : 
                 (<></>)}
             {/* {postData.length !== 0 ? JSON.stringify(postData) + "2: " + JSON.stringify(displayedData) : <></>} */}
         </>

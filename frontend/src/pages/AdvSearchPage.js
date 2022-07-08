@@ -20,18 +20,20 @@ const AdvSearchPage = () => {
 
     let [filterIndices, setFilterIndices] = useState([1])
     let [filterCountUp, setFilterCountUp] = useState(1)
+    let [csvDataLoading, setCSVDataLoading] = useState(false)
+    let [csvData, setCSVData] = useState([])
 
     let [searchLoading, setSearchLoading] = useState(false)
 
   // for /api/single, use setReactions(data)
   // for /api/, use setReactions(data.results)
-  let getReactions = async () => {
+  let getReactions = async (resetCSVData = false) => {
     setSearchLoading(true)
     let filters = ""
     for (const [key, value] of Object.entries(queries)) {
         filters += "&" + value[0] + "=" + value[1]
     }
-    console.log(filters)
+    // console.log(filters)
     let response = await fetch(`/api/single/?limit=${limit}${ordering}` + 
                                 filters + 
                                 search)
@@ -57,6 +59,11 @@ const AdvSearchPage = () => {
     let length = await data.length
     if (length === 0) {
         setReactions("blank")
+    }
+
+    // if search has good results, get all the data to put in CSV.
+    if (resetCSVData === true) {
+        getAllCSVdata(Math.ceil(totalCount / limit), limit)
     }
   }
 
@@ -95,14 +102,18 @@ const getPaginatedReactions = async (currentPage) => {
 }
 
 // download all data from advanced search in CSV format, not just those returned on current page.
-const handleCSVDownload = async () => {
+const getAllCSVdata = async (pagesCount, limit) => {
+    setCSVDataLoading(true)
     let filters = ""
     for (const [key, value] of Object.entries(queries)) {
         filters += "&" + value[0] + "=" + value[1]
     }
-    let response = await fetch(`/api/single/?{ordering}` + 
+    let response = await fetch(`/api/single/?limit=${pagesCount * limit}&${ordering}` + 
                                 filters +
                                 search)
+    let data = await response.json()
+    setCSVDataLoading(false)
+    setCSVData(data.results)
 }
 
   return (
@@ -126,7 +137,7 @@ const handleCSVDownload = async () => {
                                 onClick={() => {
                                     if (filterIndices.length >= 1) {
                                         delete queries[index]
-                                        setFilterIndices(filterIndices => filterIndices.filter(value => value != index))
+                                        setFilterIndices(filterIndices => filterIndices.filter(value => value !== index))
                                     }
                                 }}> 
                             Remove
@@ -189,8 +200,8 @@ const handleCSVDownload = async () => {
             <Row className="justify-content-between">
                 <Col>
                     <button className="btn btn-outline-primary mb-3 mt-4" 
-                            onClick={getReactions} 
-                            onSubmit={getReactions}
+                            onClick={() => getReactions(true)} 
+                            onSubmit={() => getReactions(true)} 
                             style={{width:250}}> 
                         Search 
                     </button>
@@ -246,9 +257,9 @@ const handleCSVDownload = async () => {
                         />
                         <Row>
                             {<VerboseCSV 
-                                reactions={reactions}
+                                reactions={csvData}
                                 name="cgemdb_adv_search_results"
-                                // onClick={handleCSVDownload}
+                                loading = {csvDataLoading}
                             />}
                         </Row>
                     </Container>

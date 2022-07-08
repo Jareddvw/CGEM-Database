@@ -22,16 +22,16 @@ export const AuthProvider = ({ children }) => {
         if (localStorage.getItem('authTokens')) {
             let initialTokens = JSON.parse(localStorage.getItem('authTokens'));
             let initialUser = jwt_decode(initialTokens.access)
-            console.log("user " + initialUser)
+            // console.log("user " + initialUser)
             return initialUser
         }
-        console.log("no user")
+        // console.log("no user")
         return null;
     }
 
     let [authTokens, setAuthTokens] = useState(() => getAuthTokens());
     let [user, setUser] = useState(() => getUser());
-    console.log(user)
+    // console.log(user)
 
     const history = createBrowserHistory()
 
@@ -62,13 +62,13 @@ export const AuthProvider = ({ children }) => {
     }
 
     let updateToken = async () => {
-        console.log("updateToken called.")
+        // console.log("updateToken called.")
         // ten minutes in milliseconds
         let tenMinutes = 1000 * 60 * 10
         let prevAccessTime = localStorage.getItem('access_created_time')
         if (prevAccessTime) {
             if (Date.now() - prevAccessTime < tenMinutes) {
-                console.log("no need to update token")
+                // console.log("no need to update token")
                 setLoading(false)
                 return;
             }
