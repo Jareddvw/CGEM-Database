@@ -127,6 +127,11 @@ class SynthetaseSerializer(WritableNestedModelSerializer):
                 instance.mutations.add(new_mut)
         return instance
 
+class FlagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flag
+        fields = '__all__'
+
 
 ############### Reaction Content Serializers ##############
 
@@ -188,7 +193,6 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
         else:
             return None
 
-
 # for individual reaction page — gives all attributes of the given reaction
 class ReactionSerializer(serializers.ModelSerializer):
 
@@ -202,6 +206,8 @@ class ReactionSerializer(serializers.ModelSerializer):
     monomer = MonomerSerializer()
     tRNA = TRNASerializer()
     references = ReferenceSerializer(many=True)
+
+    is_flagged = FlagSerializer(allow_null=True)
 
     class Meta:
         model = Reaction
@@ -224,6 +230,11 @@ class ReactionSerializer(serializers.ModelSerializer):
         synthetase = validated_data.pop('synthetase')
         references = validated_data.pop('references')
         tRNA = validated_data.pop('tRNA')
+
+        # Flag object is only created when reaction is added, and flag.flagged is always initialized to False.
+        flag = validated_data.pop('is_flagged')
+        flag_dict = {"flagged": False}
+        new_flag = Flag.objects.create(**flag_dict)
 
         # assay is not a required field so this action should only be performed if assay is provided
         if assay:
@@ -260,20 +271,20 @@ class ReactionSerializer(serializers.ModelSerializer):
                 new_synth = Synthetase.objects.get(synth_common_name=synthetase['synth_common_name'])
             except:
                 new_synth = Synthetase.objects.filter(synth_common_name=synthetase['synth_common_name']).first()
-            print("1a", synthetase)
-            print("1b", new_synth)
+            # print("1a", synthetase)
+            # print("1b", new_synth)
             # If the synthetase doesn't yet exist, we need to make it.
             if not new_synth:
                 new_synth_serializer = SynthetaseSerializer(data=synthetase)
                 if new_synth_serializer.is_valid():
                     new_synth_serializer.save()
-                print("3a", new_synth_serializer)
+                # print("3a", new_synth_serializer)
                 new_synth = Synthetase.objects.filter(synth_common_name=synthetase['synth_common_name']).first()
-                print("3b", new_synth)
+                # print("3b", new_synth)
         else:
             new_synth = synthetase
 
-        new_reaction = Reaction.objects.create(assay=new_assay, monomer=new_monomer, tRNA=new_trna, **validated_data)
+        new_reaction = Reaction.objects.create(is_flagged=new_flag, assay=new_assay, monomer=new_monomer, tRNA=new_trna, **validated_data)
         new_reaction.flexizyme = new_flex
         new_reaction.synthetase = new_synth
         new_reaction.save()

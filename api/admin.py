@@ -17,4 +17,5 @@ admin.site.register(MicrohelixAssay)
 admin.site.register(SynthMutations)
 admin.site.register(ParentSynth)
 admin.site.register(ReactionDraft)
+admin.site.register(Flag)
 

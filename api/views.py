@@ -1,6 +1,7 @@
 # from django.shortcuts import render
 from asyncore import read
 from functools import partial
+from django import views
 from rest_framework import serializers
 from rest_framework import viewsets
 from rest_framework import status
@@ -13,7 +14,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import FilterSet, NumberFilter, BooleanFilter, CharFilter
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.db.models import F
 from sqlalchemy import true
 
@@ -76,6 +77,7 @@ defaultFilteringFields = {
     'n_term_percent': ['exact', 'gte', 'lte'],
     'internal_percent': ['exact', 'gte', 'lte'],
     'rib_incorporation_notes': ['iexact', 'icontains'],
+    'is_flagged__flagged': ['exact']
     # 'reaction_yield': ['iexact', 'gte', 'lte'],
     # 'reaction_Kcat': ['iexact', 'gte', 'lte'],
     # 'reaction_Km': ['iexact', 'gte', 'lte'],
@@ -193,6 +195,29 @@ class AssayView(viewsets.ModelViewSet):
     serializer_class = AssaySerializer
     def get_queryset(self):
         return MicrohelixAssay.objects.all()
+
+
+class FlagPermission(DjangoModelPermissionsOrAnonReadOnly):
+    # Because deleting a flag also deletes its reaction, 
+    # users can't delete flags unless authorized. They must be able to create and edit flags though.
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view, obj)
+    def has_permission(self, request, view):
+        if request.user.is_superuser or request.user.is_staff:
+            return True
+        if request.method == 'GET' or request.method == 'POST':
+            return True
+        elif request.method == 'PUT' or request.method == 'PATCH':
+            return True
+        else:
+            return super().has_permission(request, view)
+
+
+class FlagView(viewsets.ModelViewSet):
+    serializer_class = FlagSerializer
+    permission_classes = [FlagPermission]
+    def get_queryset(self):
+        return Flag.objects.all()
 
 
 ###### Views for a specific reaction. With GET, POST, PUT, and DELETE methods ###########

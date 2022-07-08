@@ -10,11 +10,11 @@ const UnauthModal = ({ show, onHide }) => {
         onHide={onHide} >
         <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-                Sign in to modify this reaction.
+                Sign in to modify this reaction!
             </Modal.Title>
         </Modal.Header>
       <Modal.Body style={{overflowWrap:'break-word'}}>
-        You must be signed in and authorized to edit or delete reactions.
+        You must be authenticated to make changes to reactions. Please log in or create an account to continue.
       </Modal.Body>
       <Modal.Footer>
         <button className='btn btn-outline-primary' onClick={onHide}>Close</button>

@@ -85,7 +85,7 @@ const SubmitCSV = () => {
 
     const handleSubmit = async () => {
         setLoading(true)
-        let currentRow = 1
+        let currentRow = 0
         for (const reaction of postData) {
             currentRow += 1
             setCurrRow(currentRow)
@@ -107,7 +107,7 @@ const SubmitCSV = () => {
                         'Content-Type':'application/json',
                         'Authorization':'Bearer ' + String(authTokens.access)
                     },
-                    body: JSON.stringify({'reactionDraft': reaction, 'truncatedReactionDraft': displayedData[currentRow - 2]})
+                    body: JSON.stringify({'reactionDraft': reaction, 'truncatedReactionDraft': displayedData[currentRow - 1]})
                 })
             }
             if (!response.ok) {
@@ -248,6 +248,8 @@ const SubmitCSV = () => {
             newEntry["ribosome_name"] = entry["Ribosome name (required)"]
             newEntry["rib_readout"] = entry["Readout"]
             newEntry["rib_incorporation_notes"] = entry["Ribosomal incorporation notes"]
+
+            newEntry["is_flagged"] = {'flagged': false}
             
             result.push(newEntry)
             } catch (err) {

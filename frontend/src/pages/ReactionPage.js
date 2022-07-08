@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { useMatch } from 'react-router-dom'
-import { Container, Table, Row, Card, Spinner } from 'react-bootstrap'
+import { Container, Table, Row, Card, Spinner, Toast } from 'react-bootstrap'
 import MonomerDrawing from '../components/rxn_page_components/MonomerDrawing'
 import FlexOrSynthInfo from '../components/rxn_page_components/FlexOrSynthInfo'
 import RibosomeInfo from '../components/rxn_page_components/RibosomeInfo'
@@ -11,6 +11,7 @@ import EditModal from '../components/rxn_page_components/modals/EditModal'
 import DeleteModal from '../components/rxn_page_components/modals/DeleteModal'
 import UnauthModal from '../components/rxn_page_components/modals/UnauthModal'
 import AuthContext from '../context/AuthContext'
+import FlagModal from '../components/rxn_page_components/modals/FlagModal'
 
 const ReactionPage = () => {
     
@@ -29,6 +30,7 @@ const ReactionPage = () => {
     let [showUnauthorizedModal, setShowUnauthorizedModal] = useState(false)
     let [showDeleteModal, setShowDeleteModal] = useState(false)
     let [showEditModal, setShowEditModal] = useState(false)
+    let [showFlagModal, setShowFlagModal] = useState(false)
 
     let {authTokens, user} = useContext(AuthContext)
 
@@ -61,17 +63,24 @@ const ReactionPage = () => {
         } else {
             let data = await response.json()
             setReaction(data)
+            console.log(data)
         }
     }
 
     if (!loading) {
    return (
     <Container className = "mb-3">
-        <Row className="mt-4 mb-4 align-items-center justify-content-start"> 
+        <Row className="mt-4 mb-2 align-items-center justify-content-between"> 
             <h5 style={{color: "maroon", width:300}}> 
                 Reaction CGEM ID: {reaction?.id} 
             </h5>
+            {reaction?.is_flagged?.flagged === true ? 
+            <p className="mb-2" style={{fontWeight:'bold'}}>
+                    This reaction has been flagged by a user for revision, meaning the data below might have errors that need to be reviewed. 
+            </p> :
+        <></>}
         </Row>
+       
         <EditModal 
             show={showEditModal} 
             onHide={() => setShowEditModal(false)}
@@ -86,6 +95,12 @@ const ReactionPage = () => {
         <UnauthModal 
             show={showUnauthorizedModal} 
             onHide={() => setShowUnauthorizedModal(false)} />
+        <FlagModal 
+            show={showFlagModal} 
+            onHide={() => setShowFlagModal(false)}
+            flagID = {reaction?.is_flagged?.id}
+            isCurrentlyFlagged = {reaction?.is_flagged?.flagged}
+            authTokens = {authTokens} />
         <Table responsive='sm' striped bordered>
             <thead>
                 <tr>
@@ -122,10 +137,10 @@ const ReactionPage = () => {
         <div>
             <References references={reaction?.references} />
         </div>
-        <div style={{display:'flex', justifyContent:'flex-end'}} >
+        <div style={{display:'flex', justifyContent:'start', marginTop:'30px'}} >
                 <button 
                     className="btn btn-outline-primary mx-1" 
-                    disabled={user === null}
+                    // disabled={user === null}
                     style={{width:200}} 
                     onClick={() => {
                         if (user) {
@@ -139,7 +154,7 @@ const ReactionPage = () => {
                 <button 
                     className="btn btn-outline-danger mx-1" 
                     style={{width:200}} 
-                    disabled={user === null}
+                    // disabled={user === null}
                     onClick={() => {
                         if (user) {
                             setShowDeleteModal(true)
@@ -148,6 +163,20 @@ const ReactionPage = () => {
                         }
                     }} >
                         Delete this reaction
+                </button>
+                <button 
+                    className="btn btn-outline-secondary w-auto"
+                    onClick={() => {
+                        if (user) {
+                            setShowFlagModal(true)
+                        } else {
+                            setShowUnauthorizedModal(true)
+                        }
+                    }} >
+                        {reaction?.is_flagged?.flagged === false ? 
+                            "Flag this reaction for revision" :
+                            "Remove flag from reaction"
+                        }
                 </button>
             </div>
     </Container>

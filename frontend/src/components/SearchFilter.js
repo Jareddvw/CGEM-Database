@@ -41,6 +41,7 @@ const SearchFilter = ({ queries, setQueries, filterID, selected, setSelected }) 
     let filterFields = {
         'n_term_percent': ['exact', 'gte', 'lte'],
         'internal_percent': ['exact', 'gte', 'lte'],
+        'is_flagged__flagged': ['exact'],
         'assay__acylation_yield': ['exact', 'gte', 'lte'],
         'flexizyme': ['isnull'],
         'flexizyme__flex_name': ['iexact', 'icontains'],
@@ -82,6 +83,7 @@ const SearchFilter = ({ queries, setQueries, filterID, selected, setSelected }) 
     let filterKeyNames = {
         'n_term_percent':'n-terminal incorporation percent',
         'internal_percent':'internal incorporation percent',
+        'is_flagged__flagged': 'flagged for revision',
         'assay__acylation_yield':'microhelix assay acylation yield',
         'flexizyme':'flexizyme',
         'flexizyme__flex_name':'flexizyme name',
@@ -129,6 +131,9 @@ const SearchFilter = ({ queries, setQueries, filterID, selected, setSelected }) 
     let newOperationName = (operation) => {
         if (term === "date_added") {
             return 'is exactly (YYYY-MM-DD)'
+        }
+        if (term == "is_flagged__flagged") {
+            return 'true or false'
         }
         switch(operation) {
             case '':

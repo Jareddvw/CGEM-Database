@@ -1,4 +1,5 @@
 from lib2to3.pgen2.parse import ParseError
+from tabnanny import verbose
 from django.db import models
 from account.models import Account
 
@@ -111,10 +112,22 @@ class MicrohelixAssay(models.Model):
     def __str__(self):
         return 'Assay # %d' % (self.pk)
 
+# Flag model: OneToOneField of Reaction model, if Flag.flagged == true, the rxn has been flagged by a user.
+# For permissions, anyone can send PUT requests to flag model. When Rxn is deleted, so is its corresponding flag.
+class Flag(models.Model):
+    flagged = models.BooleanField(verbose_name="is flagged", null=True)
+
+    # want to also delete corresponding reaction if we delete a flag
+    def delete(self, *args, **kwargs):
+        self.user.delete()
+        return super(self.__class__, self).delete(*args, **kwargs)
+
+
 ## Primary object of the database ##
 class Reaction(models.Model):
-    #a reference can have multiple rxns listed, and reaction can have multiple references
+    is_flagged = models.OneToOneField(Flag, on_delete=models.CASCADE, null=True)
 
+    #a reference can have multiple rxns listed, and reaction can have multiple references
     references = models.ManyToManyField(Reference, related_name="reactions")
 
     #a reaction will either have a flexizyme, a synthetase, or neither (chemical acylation) so null for both.
