@@ -21,10 +21,9 @@ const ApproveModal = ({ show, reactionId, onHide, authTokens, reaction }) => {
                 console.error(error);
             })
         if (!response1.ok) {
-            setMessage("Error approving drafts. You may not have the proper permissions.")
+            setMessage("Error approving drafts. You may not have the proper permissions. Response text: " + await response1.text())
             return;
         }
-
         let response2 = await fetch(`/api/drafts/${reactionId}`, {
             method: 'delete',
             headers: {
