@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { CSVLink } from "react-csv"
 
 // button to download all data from REACTIONS. CSV is downloaded on click.
@@ -65,6 +65,12 @@ const VerboseCSV = ( { reactions, name, loading } ) => {
 
     const csvLinkRef = useRef()
 
+    useEffect(() => {
+      if (loading === false) {
+        csvLinkRef.current.link.click()
+      }
+    }, [loading])
+
     let finalReturnValue = (
       <>
         <CSVLink
@@ -72,13 +78,13 @@ const VerboseCSV = ( { reactions, name, loading } ) => {
             data={data}
             filename={`${name}.csv`}
             target="_blank"
-            className="mt-1 mb-4 w-25"
 
+            style={{width:'290px'}}
             ref={csvLinkRef}
         >
-          <button className="btn btn-outline-secondary w-100">
+          <button className="btn btn-outline-success w-100">
             <span style={{marginRight:"10px"}}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-download" viewBox="0 0 16 16">
                 <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                 <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
               </svg>
@@ -92,8 +98,8 @@ const VerboseCSV = ( { reactions, name, loading } ) => {
 
   if (loading === true) {
     return (
-        <button className={`w-25 mt-1 mb-4 btn btn-outline-secondary ${loading === true ? "disabled" : ""}`}>
-          <span class="spinner-border spinner-border-sm" style={{marginRight:"10px"}} role="status" aria-hidden="true"></span>
+        <button className="btn btn-outline-success disabled" style={{width:'290px'}}>
+          <span className="spinner-border spinner-border-sm" style={{marginRight:"10px"}} role="status" aria-hidden="true"></span>
           Download all results (CSV)
         </button>
     )

@@ -27,7 +27,7 @@ const AdvSearchPage = () => {
 
   // for /api/single, use setReactions(data)
   // for /api/, use setReactions(data.results)
-  let getReactions = async (resetCSVData = false) => {
+  let getReactions = async () => {
     setSearchLoading(true)
     let filters = ""
     for (const [key, value] of Object.entries(queries)) {
@@ -59,11 +59,6 @@ const AdvSearchPage = () => {
     let length = await data.length
     if (length === 0) {
         setReactions("blank")
-    }
-
-    // if search has good results, get all the data to put in CSV.
-    if (resetCSVData === true) {
-        getAllCSVdata(Math.ceil(totalCount / limit), limit)
     }
   }
 
@@ -144,7 +139,6 @@ const getAllCSVdata = async (pagesCount, limit) => {
                         </button>
                     </Row>
                 )}
-                
                 <button className = 'btn btn-outline-success mt-3' style={{width:'10em'}} 
                         onClick = {() => {
                             setFilterIndices(filterIndices => [...filterIndices, filterCountUp + 1])
@@ -161,8 +155,8 @@ const getAllCSVdata = async (pagesCount, limit) => {
 
             <hr className='mt-4 mb-2' style={{color:'black', backgroundColor:'black'}}></hr>
             
-            <Row className="align-items-center justify-content-center">
-            <Col className='mt-3'>
+            <Row className="align-items-center justify-content-start">
+            <div className='mt-3 w-auto'>
                 <div style={{width:495}}>
                     <Form.Control
                         onChange={(e)=>setSearch("&search=" + e.target.value)} 
@@ -170,11 +164,11 @@ const getAllCSVdata = async (pagesCount, limit) => {
                         type="text" placeholder="Other search terms" >
                     </Form.Control>
                 </div>
-            </Col>
-            <Col className='mt-3'>
-                Order results by: 
-            </Col>
-            <Col className='mt-3'>
+            </div>
+            <div className='mt-3 w-auto' style={{display:'flex', flexDirection:"row", alignItems:'center'}}>
+                <div className='mx-3'>
+                    Order results by: 
+                </div>
                 <div style={{width:300}}>
                     <select 
                         onChange={(e)=>setOrdering("&ordering=" + e.target.value)} 
@@ -185,23 +179,13 @@ const getAllCSVdata = async (pagesCount, limit) => {
                         <option value="-assay__acylation_yield">Microhelix assay yield</option>
                     </select>
                 </div>
-            </Col>
-            <Col className='mt-3'>
-                <div style={{width:300}}>
-                    <Form.Check
-                            type="switch"
-                            id="custom-switch"
-                            label="View structures"
-                            onClick={() => {setCardView(!cardView)}} >
-                    </Form.Check>
-                </div>
-                </Col>
+            </div>
             </Row>
             <Row className="justify-content-between">
                 <Col>
                     <button className="btn btn-outline-primary mb-3 mt-4" 
-                            onClick={() => getReactions(true)} 
-                            onSubmit={() => getReactions(true)} 
+                            onClick={() => getReactions()} 
+                            onSubmit={() => getReactions()} 
                             style={{width:250}}> 
                         Search 
                     </button>
@@ -216,19 +200,29 @@ const getAllCSVdata = async (pagesCount, limit) => {
                     <h6 className="text-center mt-3">Server error (server may not be running).</h6> :
                     <Container>
                         <Row className = 'mb-4 mt-4 align-items-center'>
-                            <div style={{padding:0, width:'200px'}}>
+                            <div style={{padding:0, width:'200px'}} className="mr-3">
                                 Number of results: {resultCount} 
                             </div>
-                            Show
-                            <Form.Select size='sm' style={{width:100, marginLeft:'0.5em', marginRight:'0.5em'}}
-                                onChange={(e)=>setLimit(e.target.value)}>
-                                {/* <option value={6}>6</option> */}
-                                <option value={12}>12</option>
-                                <option value={25}>25</option>
-                                <option value={50}>50</option>
-                                <option value={pageCount * limit}>All</option>
-                            </Form.Select>
-                            entries per page
+                            <Row className='w-auto align-items-center mx-5'>
+                                Show
+                                <Form.Select size='sm' style={{width:100, marginLeft:'0.5em', marginRight:'0.5em'}}
+                                    onChange={(e)=>setLimit(e.target.value)}>
+                                    {/* <option value={6}>6</option> */}
+                                    <option value={12}>12</option>
+                                    <option value={25}>25</option>
+                                    <option value={50}>50</option>
+                                    <option value={pageCount * limit}>All</option>
+                                </Form.Select>
+                                entries per page
+                            </Row>
+                            <div style={{width:300}}>
+                                <Form.Check
+                                        type="switch"
+                                        id="custom-switch"
+                                        label="View structures"
+                                        onClick={() => {setCardView(!cardView)}} >
+                                </Form.Check>
+                            </div>
                         </Row>
                         <Row className="mt-3">
                             {<ReactionOrStructureList 
@@ -236,31 +230,44 @@ const getAllCSVdata = async (pagesCount, limit) => {
                                 cardView={cardView} 
                                 verbose={true}/>}
                         </Row>
-                        <ReactPaginate
-                            previousLabel={"previous"}
-                            nextLabel={"next"}
-                            breakLabel={"..."}
-                            pageCount={pageCount}
-                            marginPagesDisplayed={1}
-                            pageRangeDisplayed={3}
-                            onPageChange={handlePageClick}
-                            containerClassName={"pagination justify-content-end mt-3"}
-                            pageClassName={"page-item"}
-                            pageLinkClassName={"page-link"}
-                            previousClassName={"page-item"}
-                            previousLinkClassName={"page-link"}
-                            nextClassName={"page-item"}
-                            nextLinkClassName={"page-link"}
-                            breakClassName={"page-item"}
-                            breakLinkClassName={"page-link"}
-                            activeClassName={"active"}
-                        />
-                        <Row>
-                            {<VerboseCSV 
-                                reactions={csvData}
-                                name="cgemdb_adv_search_results"
-                                loading = {csvDataLoading}
-                            />}
+                        <Row className="mx-2 mt-4 mb-5" style={{justifyContent:'space-between', alignItems:'center'}}>
+                            {
+                                csvData.length === 0 && csvDataLoading === false ?
+                                <button className="btn btn-outline-secondary" style={{width:'290px'}} 
+                                    onClick={() => getAllCSVdata(pageCount * limit, limit)}>
+                                    <span style={{marginRight:"10px"}}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-download" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                    </svg>
+                                    </span>
+                                    Download all results (CSV)
+                                </button> :
+                                <VerboseCSV 
+                                    reactions={csvData}
+                                    name="cgemdb_adv_search_results"
+                                    loading = {csvDataLoading}
+                                />  
+                            }
+                            <ReactPaginate
+                                previousLabel={"previous"}
+                                nextLabel={"next"}
+                                breakLabel={"..."}
+                                pageCount={pageCount}
+                                marginPagesDisplayed={1}
+                                pageRangeDisplayed={3}
+                                onPageChange={handlePageClick}
+                                containerClassName={"pagination justify-content-end w-auto mt-2"}
+                                pageClassName={"page-item"}
+                                pageLinkClassName={"page-link"}
+                                previousClassName={"page-item"}
+                                previousLinkClassName={"page-link"}
+                                nextClassName={"page-item"}
+                                nextLinkClassName={"page-link"}
+                                breakClassName={"page-item"}
+                                breakLinkClassName={"page-link"}
+                                activeClassName={"active"}
+                            />
                         </Row>
                     </Container>
                 ) : 
