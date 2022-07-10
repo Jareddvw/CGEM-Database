@@ -77,7 +77,7 @@ defaultFilteringFields = {
     'n_term_percent': ['exact', 'gte', 'lte'],
     'internal_percent': ['exact', 'gte', 'lte'],
     'rib_incorporation_notes': ['iexact', 'icontains'],
-    'is_flagged__flagged': ['exact']
+    'is_flagged__flagged': ['exact'],
     # 'reaction_yield': ['iexact', 'gte', 'lte'],
     # 'reaction_Kcat': ['iexact', 'gte', 'lte'],
     # 'reaction_Km': ['iexact', 'gte', 'lte'],

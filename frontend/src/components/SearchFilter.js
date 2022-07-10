@@ -177,7 +177,7 @@ const SearchFilter = ({ queries, setQueries, filterID, selected, setSelected }) 
     <>
         <Form.Select 
             className='mt-3'
-            size='md' 
+            size='md'
             style={{width:325}}
             onChange={(e)=>setTerm(e.target.value)}
             >

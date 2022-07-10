@@ -69,7 +69,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_rdkit',
     'dbbackup',
-    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -94,12 +93,6 @@ CORS_ALLOWED_ORIGINS = [
 # db backup is stored in backup folder of base_dir
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backup'}
-
-# db backup happens every minute
-# keep last ten backups, delete older ones for storage money stuff
-CRONJOBS = [
-    ('*/1 * * * *', 'cgemdb.cron.backup', '>> /cron/django_cron.log 2>&1')
-]
 
 ROOT_URLCONF = 'cgemdb.urls'
 
@@ -144,7 +137,6 @@ DATABASES = {
         'PORT':'5432'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

@@ -92,9 +92,9 @@ const MyReactionsPage = () => {
                     </div>
                 </Col>
             </Row>
-            <Row className='mt-3 align-items-center'> 
+            <Row className='mt-3 align-items-center'>
                 <div style={{width:300, padding:0}}>
-                    Number of results: {resultCount} 
+                    Number of results: {resultCount}
                 </div>
                     Show
                     <Form.Select size='sm' style={{width:100, marginLeft:'0.5em', marginRight:'0.5em'}}

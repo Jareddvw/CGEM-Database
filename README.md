@@ -11,6 +11,7 @@
   * [About](#about)
   * [Requirements](#requirements)
   * [Usage](#usage)
+  * [Contributing](#contributing)
   * [License](#license)
   * [Acknowledgements](#acknowledgements)
 
@@ -36,11 +37,11 @@ Technologies used: PostgreSQL, Django REST Framework, React, Docker, RDKit.
     git clone https://github.com/Jareddvw/CGEM-DB.git
     cd CGEM-DB
 ```
-2. Docker version 3.8
+2. Docker version 3.8+
 3. Install RDKit: https://www.rdkit.org/docs/Install.html 
 4. Create a file called secret_key.py. For local development (DEBUG = True), set 
 ``` DJANGO_CGEMDB_SECRETKEY = "a" ``` 
-5. Use a virtual environment (or conda env) to install the required Python packages and start Docker containers: 
+5. Use a virtual environment to install the required Python packages and start Docker containers: 
 ```
 pip install -r requirements.txt
 docker compose-up
@@ -67,7 +68,10 @@ npm run build
 - Access the database from the gem-net site: [db.gem-net.net](https://db.gem-net.net/).
 - For API access: currently the only allowed origin is from https://db.gem-net.net. If you would like to use the API in your application, please email [sarah@gem-net.net](mailto:sarah@gem-net.net) with a description of your intended uses.
 
+## Contributing
+To contribute to the database directly, please submit data through the website. You will need to create an account with your name and email. At that point, please format your data in the CSV templates provided and then submit your data to drafts. We will review the reactions there to be added.
 
+[Contribute to the C-GEM Database](https://db.gem-net.net/contribute)
 
 ## License
 
@@ -75,6 +79,8 @@ npm run build
 ## Acknowledgements
 
 - Probst, Daniel, and Jean-Louis Reymond. “Smilesdrawer: Parsing and Drawing Smiles-Encoded Molecular Structures Using Client-Side JavaScript.” _Journal of Chemical Information and Modeling_, vol. 58, no. 1, 2018, pp. 1–7., https://doi.org/10.1021/acs.jcim.7b00425. 
+
+- Jiang, Chen, et al. “Kekule.js: An Open Source Javascript Chemoinformatics Toolkit.” _Journal of Chemical Information and Modeling_, vol. 56, no. 6, 2016, pp. 1132–1138., https://doi.org/10.1021/acs.jcim.6b00167. 
 
 - RDKit: Open-source cheminformatics; http://www.rdkit.org
 
