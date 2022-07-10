@@ -1,7 +1,6 @@
 asgiref==3.5.0
 Django==4.0.2
 django-cors-headers==3.11.0
-django-crontab==0.7.1
 django-dbbackup==4.0.0b0
 django-filter==21.1
 git+https://github.com/rdkit/django-rdkit.git@v0.3.1
