@@ -89,11 +89,11 @@ const ReactionPage = () => {
             reactionId = {id} 
             authTokens = {authTokens}
             initialReactionData = {reaction} /> */}
-        <DeleteModal 
+        {/* <DeleteModal 
             show={showDeleteModal} 
             onHide={() => setShowDeleteModal(false)}
             reactionId = {id}
-            authTokens = {authTokens} />
+            authTokens = {authTokens} /> */}
         <UnauthModal 
             show={showUnauthorizedModal} 
             onHide={() => setShowUnauthorizedModal(false)} />
@@ -154,7 +154,7 @@ const ReactionPage = () => {
                     }} >
                         Edit this reaction
                 </button> */}
-                <button 
+                {/* <button 
                     className="btn btn-outline-danger mx-1" 
                     style={{width:200}} 
                     // disabled={user === null}
@@ -166,7 +166,7 @@ const ReactionPage = () => {
                         }
                     }} >
                         Delete this reaction
-                </button>
+                </button> */}
                 <button 
                     className="btn btn-outline-secondary w-auto"
                     onClick={() => {
