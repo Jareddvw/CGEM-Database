@@ -63,7 +63,6 @@ class SynthetaseSerializer(WritableNestedModelSerializer):
         depth = 2
 
     def create(self, validated_data):
-
         organisms = validated_data.pop('organisms')
         mutations = validated_data.pop('mutations')
         parent = validated_data.pop('parent_synthetase')
@@ -90,6 +89,7 @@ class SynthetaseSerializer(WritableNestedModelSerializer):
             except:
                 new_mut = SynthMutations.objects.filter(mutation_name=mutation['mutation_name']).first()
             new_synth.mutations.add(new_mut)
+        new_synth.save()
         return new_synth
 
     # works for PUT but not PATCH
@@ -105,7 +105,7 @@ class SynthetaseSerializer(WritableNestedModelSerializer):
         instance.mutations.clear()
 
         if parent:
-            parentID = parent.pop(id)
+            parentID = parent.get(id)
             updated_parent, created = ParentSynth.objects.update_or_create(id=parentID, defaults=parent)
             instance.parent_synthetase = updated_parent
             instance.save()
@@ -197,17 +197,17 @@ class ReactionTableContentsSerializer(serializers.ModelSerializer):
 class ReactionSerializer(serializers.ModelSerializer):
 
     # can edit the get_id function to change what info about user gets displayed.
-    user = serializers.SerializerMethodField('get_id')
+    user = serializers.SerializerMethodField('get_id', read_only=True)
 
-    assay = AssaySerializer(allow_null=True)
-    flexizyme = FlexizymeSerializer(allow_null=True)
-    synthetase = SynthetaseSerializer(allow_null=True)
+    assay = AssaySerializer(allow_null=True, read_only=True)
+    flexizyme = FlexizymeSerializer(allow_null=True, read_only=True)
+    synthetase = SynthetaseSerializer(allow_null=True, read_only=True)
     ##### Not sure if monomer and tRNA should be allowed to be null.
-    monomer = MonomerSerializer()
-    tRNA = TRNASerializer()
+    monomer = MonomerSerializer(read_only=True)
+    tRNA = TRNASerializer(read_only=True)
     references = ReferenceSerializer(many=True)
 
-    is_flagged = FlagSerializer(allow_null=True)
+    is_flagged = FlagSerializer(allow_null=True, read_only=True)
 
     class Meta:
         model = Reaction
@@ -287,7 +287,6 @@ class ReactionSerializer(serializers.ModelSerializer):
         new_reaction = Reaction.objects.create(is_flagged=new_flag, assay=new_assay, monomer=new_monomer, tRNA=new_trna, **validated_data)
         new_reaction.flexizyme = new_flex
         new_reaction.synthetase = new_synth
-        new_reaction.save()
         for reference in references:
             try:
                 new_ref = Reference.objects.filter(DOI=reference['DOI']).first()
@@ -297,59 +296,15 @@ class ReactionSerializer(serializers.ModelSerializer):
                 Reference.objects.create(**reference)
                 new_ref = Reference.objects.filter(DOI=reference['DOI']).first()
             new_reaction.references.add(new_ref)
+        new_reaction.save()
         return new_reaction
 
 
         # handles PUT requests for existing reactions. 
         # main idea: get the existing object if it exists, then update the values.
         # Otherwise, create new instance of the field and replace previous field with it.
-    def update(self, instance, validated_data):
-        # Assay is OneToOneField
-        # Monomer, tRNA, Flexizyme, and Synthetase are ForeignKeys. TRNA and Monomer may not be False.
-        # References is a ManyToManyField
 
-        currentObj = Reaction.objects.get(id=instance.id)
-        assay = validated_data.get('assay', 0)
-        if assay:
-            validated_data.pop('assay')
-            try: 
-                current_assay=MicrohelixAssay.objects.get(id=instance.assay.id)
-                MicrohelixAssay.objects.get(id=current_assay.id).update(**assay)
-            except:
-                new_assay = MicrohelixAssay.objects.create(**assay)
-                currentObj.update(assay=new_assay)
-        monomer = validated_data.get('monomer', 0)
-        if monomer: 
-            validated_data.pop('monomer')
-            try:
-                new_monomer = Monomer.objects.get(monomer_smiles=monomer['monomer_smiles'])
-            except:
-                new_monomer = Monomer.objects.create(**monomer)
-            currentObj.update(monomer=new_monomer)
-        flexizyme = validated_data.get('flexizyme', 0)
-        if flexizyme: 
-            validated_data.pop('flexizyme')
-            try:
-                new_flex = Flexizyme.objects.get(flex_name=flexizyme['flex_name'])
-            except:
-                new_flex = Flexizyme.objects.create(**flexizyme)
-            currentObj.update(flexizyme=new_flex)
-        synthetase = validated_data.get('synthetase', 0)
-        if synthetase: 
-            validated_data.pop('synthetase')
-            try:
-                new_synth = Synthetase.objects.filter(synth_common_name=synthetase['synth_common_name']).first()
-            except:
-                new_synth = Synthetase.objects.create(**synthetase)
-            currentObj.update(synthetase=new_synth)
-        tRNA = validated_data.get('tRNA', 0)
-        if tRNA:
-            validated_data.pop('tRNA')
-            try:
-                new_trna = T_RNA.objects.get(tRNA_name=tRNA['tRNA_name'])
-            except:
-                new_trna = T_RNA.objects.create(**tRNA)
-            currentObj.update(tRNA = new_trna)
+    def update(self, instance, validated_data):
         references = validated_data.get('references', 0)
         if references:
             validated_data.pop('references')
@@ -359,16 +314,80 @@ class ReactionSerializer(serializers.ModelSerializer):
                 try: 
                     new_ref = Reference.objects.get(DOI=reference['DOI'])
                 except:
-                    new_ref = ReferenceSerializer.create(reference)
+                    new_ref = Reference.objects.create(**reference)
                 instance.references.add(new_ref)
-        currentObj.update(**validated_data)
-        return instance
+        instance.save()
+        return super().update(instance, validated_data)
 
+    # def update(self, instance, validated_data):
+    #     # Assay is OneToOneField
+    #     # Monomer, tRNA, Flexizyme, and Synthetase are ForeignKeys. TRNA and Monomer may not be False.
+    #     # References is a ManyToManyField
 
-# Serialize only reactions by a specific author! 
+    #     # currentObj = Reaction.objects.get(id=instance.id)
+    #     currentObj = instance
+    #     assay = validated_data.get('assay', 0)
+    #     if assay:
+    #         validated_data.pop('assay')
+    #         try: 
+    #             current_assay=MicrohelixAssay.objects.get(id=instance.assay.id)
+    #             MicrohelixAssay.objects.get(id=current_assay.id).update(**assay)
+    #             print("microhelix assay update")
+    #         except:
+    #             new_assay = MicrohelixAssay.objects.create(**assay)
+    #             currentObj.assay=new_assay
+    #     monomer = validated_data.get('monomer', 0)
+    #     if monomer: 
+    #         validated_data.pop('monomer')
+    #         x = Chem.MolFromSmiles(monomer['monomer_smiles'])
+    #         # make sure monomer smiles isn't being updated to invalid molecule.
+    #         if x is None:
+    #             raise serializers.ValidationError("invalid SMILES string provided.")
+    #         try:
+    #             new_monomer = Monomer.objects.get(monomer_smiles=monomer['monomer_smiles'])
+    #             print("monomer update")
+    #         except:
+    #             new_monomer = Monomer.objects.create(**monomer)
+    #             print("new monomer created")
+    #         currentObj.monomer=new_monomer
+    #     flexizyme = validated_data.get('flexizyme', 0)
+    #     if flexizyme: 
+    #         validated_data.pop('flexizyme')
+    #         try:
+    #             new_flex = Flexizyme.objects.get(flex_name=flexizyme['flex_name'])
+    #         except:
+    #             new_flex = Flexizyme.objects.create(**flexizyme)
+    #         currentObj.flexizyme=new_flex
+    #     synthetase = validated_data.get('synthetase', 0)
+    #     if synthetase: 
+    #         validated_data.pop('synthetase')
+    #         try:
+    #             new_synth = Synthetase.objects.filter(synth_common_name=synthetase['synth_common_name']).first()
+    #         except:
+    #             new_synth = Synthetase.objects.create(**synthetase)
+    #         currentObj.synthetase=new_synth
+    #     tRNA = validated_data.get('tRNA', 0)
+    #     if tRNA:
+    #         validated_data.pop('tRNA')
+    #         try:
+    #             new_trna = T_RNA.objects.get(tRNA_name=tRNA['tRNA_name'])
+    #         except:
+    #             new_trna = T_RNA.objects.create(**tRNA)
+    #         currentObj.tRNA = new_trna
+    #     references = validated_data.get('references', 0)
+    #     if references:
+    #         validated_data.pop('references')
+    #         # clears existing references for this Reaction before adding in the new ones. So when calling update on references, must be sure to treat as PUT rather than PATCH.
+    #         instance.references.clear()
+    #         for reference in references:
+    #             try: 
+    #                 new_ref = Reference.objects.get(DOI=reference['DOI'])
+    #             except:
+    #                 new_ref = ReferenceSerializer.create(reference)
+    #             instance.references.add(new_ref)
+    #     instance.save()
+    #     return instance
 
-    # for PUT and PATCH methods, should rely on ids. IE if you send a put or patch request you
-    # should also send the ID of the thing you want to change, but for post requests you don't need it.
     
 
 class ReactionDraftSerializer(serializers.ModelSerializer):

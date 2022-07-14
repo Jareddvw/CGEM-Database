@@ -12,8 +12,8 @@
   * [Requirements](#requirements)
   * [Usage](#usage)
   * [Contributing](#contributing)
-  * [License](#license)
   * [Acknowledgements](#acknowledgements)
+    <!-- * [License](#license) -->
 
 ## About
 This is a relational database for ribosomal reactions curated by the NSF Center for Genetically Encoded Materials (C-GEM). 
@@ -44,7 +44,7 @@ Technologies used: PostgreSQL, Django REST Framework, React, Docker, RDKit.
 5. Use a virtual environment to install the required Python packages and start Docker containers: 
 ```
 pip install -r requirements.txt
-docker compose-up
+docker-compose up
 ```
 6. Migrate models to the database and run Django server:
 ```
@@ -73,7 +73,7 @@ To contribute to the database directly, please submit data through the website. 
 
 [Contribute to the C-GEM Database](https://db.gem-net.net/contribute)
 
-## License
+<!-- ## License -->
 
 
 ## Acknowledgements
