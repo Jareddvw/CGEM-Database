@@ -4,6 +4,8 @@ import { Modal, Form } from 'react-bootstrap'
 
 const EditAccountModal = ({ show, onHide, authTokens, userInfo }) => {
 
+    let [message, setMessage] = useState("")
+
     const updateUserInfo = async (e) => {
         e.preventDefault()
         console.log("update user called")
@@ -25,7 +27,7 @@ const EditAccountModal = ({ show, onHide, authTokens, userInfo }) => {
         if (response.ok) {
             window.location.reload()
         } else {
-
+            setMessage("Error updating your information. Please try again.")
         }
     }
 
@@ -59,6 +61,7 @@ const EditAccountModal = ({ show, onHide, authTokens, userInfo }) => {
                     <Form.Control type="orcid_id" defaultValue={userInfo.orcid_id || ""} />
                 </Form.Group>
             </Form>
+            {message !== "" ? <p style={{color:'maroon'}}>{message}</p> : <></>}
           </Modal.Body>
           <Modal.Footer>
             <button className='btn btn-outline-danger' 

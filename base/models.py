@@ -118,11 +118,6 @@ class Flag(models.Model):
     flagged = models.BooleanField(verbose_name="is flagged", null=True)
     message = models.TextField(verbose_name="message", null=True)
 
-    # want to also delete corresponding reaction if we delete a flag
-    def delete(self, *args, **kwargs):
-        self.user.delete()
-        return super(self.__class__, self).delete(*args, **kwargs)
-
     def __str__(self):
         return 'Flag #%d: %r. Reasons: %s' % (self.pk, self.flagged, self.message)
 
@@ -179,6 +174,12 @@ class Reaction(models.Model):
 
     class Meta:
         ordering = ('id',)
+
+    def delete(self, *args, **kwargs):
+        self.is_flagged.delete()
+        if self.assay:
+            self.assay.delete()
+        return super(self.__class__, self).delete(*args, **kwargs)
         
 
 ## Model for reaction drafts to be added by non-admin users ##

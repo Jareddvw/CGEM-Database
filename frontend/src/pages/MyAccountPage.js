@@ -3,11 +3,13 @@ import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 import { Container, Spinner } from 'react-bootstrap'
 import EditAccountModal from '../components/EditAccountModal'
+import ChangePasswordModal from '../components/ChangePassword'
 
 const MyAccountPage = () => {
 
     let [userInfo, setUserInfo] = useState({})
     let [showEditModal, setShowEditModal] = useState(false)
+    let [showPasswordModal, setShowPasswordModal] = useState(false)
     let [loading, setLoading] = useState(true)
 
     let {authTokens} = useContext(AuthContext)
@@ -59,9 +61,19 @@ const MyAccountPage = () => {
                         onClick={() => setShowEditModal(true)}>
                         Edit my account details
                     </button>
+                    <button 
+                        className = 'mt-3 btn btn-outline-secondary mx-2' 
+                        onClick={() => setShowPasswordModal(true)}>
+                        Change password
+                    </button>
                     <EditAccountModal 
                         show={showEditModal} 
                         onHide={() => setShowEditModal(false)}
+                        authTokens = {authTokens} 
+                        userInfo = {userInfo} />
+                    <ChangePasswordModal
+                        show={showPasswordModal} 
+                        onHide={() => setShowPasswordModal(false)}
                         authTokens = {authTokens} 
                         userInfo = {userInfo} />
                 </Container>))

@@ -39,3 +39,13 @@ class AccountDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ['pk', 'username', 'email', 'is_admin', 'is_staff', 'institution', 'orcid_id', 'date_joined', 'first_name']
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model = Account
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+

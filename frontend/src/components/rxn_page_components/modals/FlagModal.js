@@ -30,7 +30,10 @@ const FlagModal = ({ show, flagID, onHide, authTokens, isCurrentlyFlagged, hasFl
                     message.push(reasons[i])
                 }
             }
-            console.log(message.join(', '))
+            if (message.length === 0) {
+                setText("Please select a reason from the above choices.")
+                return;
+            } 
         }
 
         let response = await fetch(`/api/flags/${flagID}/`, {
