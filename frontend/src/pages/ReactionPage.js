@@ -75,18 +75,20 @@ const ReactionPage = () => {
                 Reaction CGEM ID: {reaction?.id} 
             </h5>
             {reaction?.is_flagged?.flagged === true ? 
-            <p className="mb-2" style={{fontWeight:'bold'}}>
+            <>
+            <p className="mb-2 text-danger">
                     This reaction has been flagged by a user for revision, meaning the data below might have errors that need to be reviewed. 
-            </p> :
+                    Reasons provided for flag: {reaction?.is_flagged?.message}</p>
+            </> :
         <></>}
         </Row>
        
-        <EditModal 
+        {/* <EditModal 
             show={showEditModal} 
             onHide={() => setShowEditModal(false)}
             reactionId = {id} 
             authTokens = {authTokens}
-            initialReactionData = {reaction} />
+            initialReactionData = {reaction} /> */}
         <DeleteModal 
             show={showDeleteModal} 
             onHide={() => setShowDeleteModal(false)}
@@ -100,7 +102,8 @@ const ReactionPage = () => {
             onHide={() => setShowFlagModal(false)}
             flagID = {reaction?.is_flagged?.id}
             isCurrentlyFlagged = {reaction?.is_flagged?.flagged}
-            authTokens = {authTokens} />
+            authTokens = {authTokens} 
+            hasFlexizyme = {reaction?.flexizyme !== null} />
         <Table responsive='sm' striped bordered>
             <thead>
                 <tr>
@@ -138,7 +141,7 @@ const ReactionPage = () => {
             <References references={reaction?.references} />
         </div>
         <div style={{display:'flex', justifyContent:'start', marginTop:'30px'}} >
-                <button 
+                {/* <button 
                     className="btn btn-outline-primary mx-1" 
                     // disabled={user === null}
                     style={{width:200}} 
@@ -150,7 +153,7 @@ const ReactionPage = () => {
                         }
                     }} >
                         Edit this reaction
-                </button>
+                </button> */}
                 <button 
                     className="btn btn-outline-danger mx-1" 
                     style={{width:200}} 

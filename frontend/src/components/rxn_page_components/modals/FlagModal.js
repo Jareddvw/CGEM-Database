@@ -1,12 +1,38 @@
 import React, { useState, useEffect } from 'react'
-import { Modal } from 'react-bootstrap'
+import { Form, Modal } from 'react-bootstrap'
 import { createBrowserHistory } from 'history'
 
-const FlagModal = ({ show, flagID, onHide, authTokens, isCurrentlyFlagged }) => {
+const FlagModal = ({ show, flagID, onHide, authTokens, isCurrentlyFlagged, hasFlexizyme }) => {
 
-    let [message, setMessage] = useState("")
+    let [text, setText] = useState("")
+
+    let [flex, setFlex] = useState(false)
+    let [mon, setMon] = useState(false)
+    let [rib, setRib] = useState(false)
+    let [synth, setSynth] = useState(false)
+    let [refs, setRefs] = useState(false)
+    let [other, setOther] = useState(false)
 
     const handleFlagging = async () => {
+        let message = []
+        if (!isCurrentlyFlagged) {
+            let reasons = [
+                'Monomer information', 
+                'Flexizyme (includes Microhelix Assay results)',
+                'Synthetase information',
+                'Ribosome information',
+                'References',
+                'Other reaction parameters'
+            ]
+            let overlap = [mon, flex, synth, rib, refs, other]
+            for (let i=0; i < reasons.length; i += 1) {
+                if (overlap[i] === true) {
+                    message.push(reasons[i])
+                }
+            }
+            console.log(message.join(', '))
+        }
+
         let response = await fetch(`/api/flags/${flagID}/`, {
                 method: 'put',
                 headers: {
@@ -15,7 +41,8 @@ const FlagModal = ({ show, flagID, onHide, authTokens, isCurrentlyFlagged }) => 
                 },
                 body: JSON.stringify({
                     "id": flagID,
-                    "flagged": !isCurrentlyFlagged
+                    "flagged": !isCurrentlyFlagged,
+                    "message": (!isCurrentlyFlagged ? message.join(", ") : null)
                 })
             })
             .catch((error) => {
@@ -30,13 +57,13 @@ const FlagModal = ({ show, flagID, onHide, authTokens, isCurrentlyFlagged }) => 
             }
             window.location.reload()
         } else {
-            setMessage(`Error ${isCurrentlyFlagged ? "removing flag from" : "flagging"} reaction.` + await response.text())
+            setText(`Error ${isCurrentlyFlagged ? "removing flag from" : "flagging"} reaction.` + await response.text())
         }
     }
 
     useEffect(() => {
         if (!show) {
-            setMessage("")
+            setText("")
         }
     }, [show])
 
@@ -57,7 +84,7 @@ const FlagModal = ({ show, flagID, onHide, authTokens, isCurrentlyFlagged }) => 
                 This will remove the flag from this reaction. 
                 Please confirm that the reaction information is all correct before submitting.
             </p>
-            {message !== "" ? <p style={{color:'maroon'}}>{message}</p> : <></>}
+            {text !== "" ? <p style={{color:'maroon'}}>{text}</p> : <></>}
           </Modal.Body>
           <Modal.Footer>
             <button className='btn btn-outline-danger' 
@@ -90,7 +117,39 @@ const FlagModal = ({ show, flagID, onHide, authTokens, isCurrentlyFlagged }) => 
                 This will notify other researchers that this data may be inaccurate and should be revised.
                 You can sort out flagged results in the advanced search page.
             </p>
-            {message !== "" ? <p style={{color:'maroon'}}>{message}</p> : <></>}
+            <p>
+                Please check any of the following sections that should be reviewed:
+            </p>
+            <Form className='mx-2'>
+                <Form.Check 
+                    type='checkbox'
+                    label='Monomer information'
+                    onClick = {() => setMon(!mon)}
+                />
+                <Form.Check 
+                    type='checkbox'
+                    label={hasFlexizyme ? 
+                        'Flexizyme (includes Microhelix Assay results)' : 
+                        'Synthetase information'}
+                    onClick = {() => hasFlexizyme ? setFlex(!flex) : setSynth(!synth)}
+                />
+                <Form.Check 
+                    type='checkbox'
+                    label='Ribosome information'
+                    onClick = {() => setRib(!rib)}
+                />
+                <Form.Check 
+                    type='checkbox'
+                    label='References'
+                    onClick = {() => setRefs(!refs)}
+                />
+                <Form.Check 
+                    type='checkbox'
+                    label='Other reaction parameters'
+                    onClick = {() => setOther(!other)}
+                />
+            </Form>
+            {text !== "" ? <p style={{color:'maroon'}}>{text}</p> : <></>}
           </Modal.Body>
           <Modal.Footer>
             <button className='btn btn-outline-danger' 
@@ -99,7 +158,7 @@ const FlagModal = ({ show, flagID, onHide, authTokens, isCurrentlyFlagged }) => 
             </button>
             <button className='btn btn-outline-success' 
                     onClick={handleFlagging}>
-                Yes, flag this reaction for revision
+                Flag this reaction
             </button>
           </Modal.Footer>
     </Modal>
